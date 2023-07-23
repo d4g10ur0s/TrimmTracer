@@ -10,7 +10,7 @@ import { login } from '../utils/EnterApp';
 import { getEmployees } from '../utils/EmployeeHandling';
 
 const EmployeeMainScreen: React.FC = () => {
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState(1);
   const route = useRoute();
   const [employee, setEmployee] = useState(route.params.userData);
   const navigation = useNavigation(); // Initialize navigation
@@ -19,13 +19,18 @@ const EmployeeMainScreen: React.FC = () => {
     setContent(<Calendar />);
   }
 
+  const reloadShop = () => {
+    setContent(null);
+    toggleToShop();
+  }
+
   const toggleToShop = async () => {
     const employees = await getEmployees(employee.shop_id);
     setContent(<ShopContainer
                   employees={employees.employees}
                   employeeType={employee.typeofemployee}
                   shop_id={employee.shop_id}
-                  reload={toggleToShop}
+                  reload={reloadShop}
                 />);
   }
 
@@ -48,7 +53,7 @@ const EmployeeMainScreen: React.FC = () => {
           toShop={toggleToShop}
           toOptions={toggleOptions}
         />
-        {(content==null) ? (<Calendar />) : (content)}
+        {(content==1) ? (<Calendar />) : (content)}
       </View>
     </ScrollView>
   );

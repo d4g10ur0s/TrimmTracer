@@ -24,6 +24,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import { deleteEmployee } from '../utils/EmployeeHandling';
+
 interface EmployeeContainerProps {
   employee : {};
 }

@@ -5,18 +5,18 @@ interface RegistrationFormProps {
   onSubmit: (name : string , sirname : string , email: string, phone : string, password: string) => void;
   changeForm: () => void ;
   addEmployee : boolean ;
-  onSubmit2: (name : string , sirname : string , email: string, phone : string, typeofemployee : number ,password: string) => void;
+  onSubmit2: (name : string , sirname : string , email: string, phone : string, typeOfEmployee : number ,password: string) => void;
 }
 
 const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeForm,addEmployee,onSubmit2 }) => {
-  const [name, setName] = useState<string>('');
-  const [sirname, setSirname] = useState<string>('');
-  const [nickname, setNickname] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
+  const [name, setName] = useState<string>('Nikos');
+  const [sirname, setSirname] = useState<string>('Kalantas');
+  const [nickname, setNickname] = useState<string>('kalantas');
+  const [email, setEmail] = useState<string>('nikal@hotmail.com');
+  const [phone, setPhone] = useState<string>('6985698574');
   const [password, setPassword] = useState<string>('');
   const [password1, setPassword1] = useState<string>('');
-  const [typeOfEmployee , setTypeOfEmployee] = useState(3);
+  const [typeOfEmployee , setTypeOfEmployee] = useState('3');
   //errors
   const [nameError, setNameError] = useState(null);
   const [sirnameError, setSirnameError] = useState(null);
@@ -60,11 +60,11 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeFor
       // create dummy password
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let code = '';
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < 8; i++) {
         const randomIndex = Math.floor(Math.random() * characters.length);
         code += characters.charAt(randomIndex);
       }
-      onSubmit2(name,sirname,nickname,email,phone,typeofemployee,code);
+      onSubmit2(name,sirname,nickname,email,phone,typeOfEmployee,code);
     }
   };
 
@@ -72,15 +72,15 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeFor
   const [selected , setSelected] = useState([false, false, true]);
   const button1 = () => {
     setSelected([true ,false ,false]);
-    setTypeOfEmployee(1);
+    setTypeOfEmployee('1');
   }
   const button2 = () => {
     setSelected([false ,true ,false]);
-    setTypeOfEmployee(2);
+    setTypeOfEmployee('2');
   }
   const button3 = () => {
     setSelected([false ,false ,true]);
-    setTypeOfEmployee(3);
+    setTypeOfEmployee('3');
   }
 
   return (
@@ -93,14 +93,12 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeFor
       <TextInput
         style={styles.input}
         placeholder="Name"
-        secureTextEntry
         value={name}
         onChangeText={setName}
       />
       <TextInput
         style={styles.input}
         placeholder="Sirname"
-        secureTextEntry
         value={sirname}
         onChangeText={setSirname}
       />
@@ -108,9 +106,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeFor
         (<TextInput
           style={styles.input}
           placeholder="Nickname"
-          secureTextEntry
           value={sirname}
-          onChangeText={setSirname}
+          onChangeText={setNickname}
         />)
         :(null)
       }
@@ -123,7 +120,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeFor
       <TextInput
         style={styles.input}
         placeholder="Phone Number"
-        secureTextEntry
         value={phone}
         onChangeText={setPhone}
       />

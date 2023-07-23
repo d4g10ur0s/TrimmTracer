@@ -1,35 +1,24 @@
-const uuid = require('uuid');
+const { v4: uuidv4, parse: parseUUID } = require('uuid');
 const client = require('./db')
 
-// Sample user data (replace with your actual database schema)
-const users = [
-  { username: 'user1', password: 'pass1' },
-  { username: 'user2', password: 'pass2' },
-  // Add more users as needed
-];
-
 exports.registerEmployee = async (req, res) => {
-  const { name,sirname,nickname,email,phone,typeofemployee,code,shop_id } = req.body;
-
+  const { name,sirname,nickname,email,phone,typeofemployee,password,shop_id } = req.body;
+  console.log(shop_id)
   try {
     // Check if the username already exists in the database
     const userExists = await client.execute(
       'SELECT * FROM trimtracer.user WHERE email = ?',
       [email]
     );
-
     if (userExists.rows.length > 0) {
       return res.status(400).json({ error: 'Username already exists' });
     }
-
-    // Generate a unique ID for the new user
-    const newUserId = uuid.v4();
-
     // Insert the new user into the database
     await client.execute(
-      'INSERT INTO trimtracer.user (id, password , email ,employee ,shop_id , name, nickname , sirname , typeofemployee) VALUES (?, ?, ? , ? , ? ,? , ? ,? ,?)',
-      [newUserId, code , email ,true ,shop_id , name, nickname , sirname , typeofemployee]
+      'INSERT INTO trimtracer.user (email,phone,password,employee,shop_id,name,nickname,sirname,typeofemployee) VALUES (?,?,?,?,?,?,?,?,?)',
+      [email,phone,password,true,shop_id,name,nickname,sirname,typeofemployee], { prepare: true }
     );
+    console.log(shop_id)
 
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {

@@ -38,7 +38,7 @@ export const addEmployee = async (name : string , sirname : string , nickname : 
         email,
         phone,
         typeofemployee,
-        code,
+        password,
         shop_id,
       }),
     });
