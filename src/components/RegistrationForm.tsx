@@ -64,7 +64,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeFor
         const randomIndex = Math.floor(Math.random() * characters.length);
         code += characters.charAt(randomIndex);
       }
-      onSubmit2(name,sirname,email,phone,typeofemployee,code);
+      onSubmit2(name,sirname,nickname,email,phone,typeofemployee,code);
     }
   };
 

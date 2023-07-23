@@ -54,3 +54,28 @@ export const addEmployee = async (name : string , sirname : string , nickname : 
     throw error;
   }
 };
+
+// delete employee
+export const deleteEmployee = async (email : string) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/shop/deleteEmployee`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Invalid credentials');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+}

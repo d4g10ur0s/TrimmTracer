@@ -28,9 +28,13 @@ interface EmployeeContainerProps {
   employee : {};
 }
 
-const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee}) => {
+const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete,refresh}) => {
   const [employeeInfo, setEmployeeInfo] = useState(employee);
-  console.log(employeeInfo);
+
+  const employeeDeletion = () => {
+    deleteEmployee(employee.email);
+    refresh();
+  }
 
   return(
     <View
@@ -117,7 +121,9 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee}) => {
             </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.deleteButton}
+          style={(canDelete) ? styles.disabledDeleteButton : styles.deleteButton}
+          disabled={canDelete}
+          onPress={employeeDeletion}
         >
           <Text>
             {"Delete Employee"}
@@ -184,49 +190,13 @@ const styles = StyleSheet.create({
     marginHorizontal : 10,
     padding : 5,
   },
+  disabledDeleteButton : {
+    backgroundColor : '#E9769A77',
+    borderRadius : 8,
+    marginVertical : 5,
+    marginHorizontal : 10,
+    padding : 5,
+  },
 });
 
 export default EmployeeContainer;
-
-/*
-// delete employee
-const deleteEmployee = () => {
-  if(email===employee.email){
-    //prepei na valw modal
-    setModalVisible(false);
-    setModalErrorVisible(true);
-  }else{
-    if(type_of_employee === '1'){
-      fetch('http://192.168.1.226:8080/deleteEmployee', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({employee: employee})
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Network response was not ok');
-        }
-      })
-      .then(data => {
-        if(data.state==0){
-          //yparxei error , 8a to grapseis katw katw
-          setConnectionError(<ErrorInput msg = {data.msg} />);
-        }else{
-          // delete form
-          setEmployeeForm(null);
-          setFormExistence(false);
-        }
-      })
-      .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-      });
-    }else{
-      //kati allo edw
-    }
-  }
-}
-*/

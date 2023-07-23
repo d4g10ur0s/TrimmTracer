@@ -10,7 +10,7 @@ interface ShopContainerProps {
   employees : any[];
 }
 
-const ShopContainer: React.FC<ShopContainerProps> = ({employeeType , employees,shop_id}) => {
+const ShopContainer: React.FC<ShopContainerProps> = ({employeeType , employees,shop_id , reload}) => {
   const [shopEmployees , setShopEmployees] = useState(employees);
   const [employeeForm, setEmployeeForm] = useState(true);
 
@@ -21,14 +21,15 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType , employees,s
   const renderShopEmployees = () => {
     var employeeContainers = []
     for(emp in shopEmployees){
-      employeeContainers.push(<EmployeeContainer key={emp} employee={shopEmployees[emp]} />);
+      employeeContainers.push(<EmployeeContainer key={emp} employee={shopEmployees[emp]} canDelete={(employeeType==3)} refresh={reload}/>);
     }
     return employeeContainers;
   }
 
-  const addNewEmployee = (name,sirname,email,phone,typeofemployee,code) => {
+  const addNewEmployee = (name,sirname,nickname,email,phone,typeofemployee,code) => {
     addEmployee(name,sirname,nickname,email,phone,typeofemployee,code,shop_id)
     setEmployeeForm((prevState) => !prevState)
+    reload();
   }
 
   return (

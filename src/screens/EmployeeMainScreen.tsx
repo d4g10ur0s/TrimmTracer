@@ -24,6 +24,8 @@ const EmployeeMainScreen: React.FC = () => {
     setContent(<ShopContainer
                   employees={employees.employees}
                   employeeType={employee.typeofemployee}
+                  shop_id={employee.shop_id}
+                  reload={toggleToShop}
                 />);
   }
 
