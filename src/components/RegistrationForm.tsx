@@ -5,11 +5,13 @@ interface RegistrationFormProps {
   onSubmit: (name : string , sirname : string , email: string, phone : string, password: string) => void;
   changeForm: () => void ;
   addEmployee : boolean ;
+  onSubmit2: (name : string , sirname : string , email: string, phone : string, typeofemployee : number ,password: string) => void;
 }
 
-const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeForm,addEmployee }) => {
+const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeForm,addEmployee,onSubmit2 }) => {
   const [name, setName] = useState<string>('');
   const [sirname, setSirname] = useState<string>('');
+  const [nickname, setNickname] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -53,18 +55,21 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeFor
   }
   // Register in Application
   const handleRegister = () => {
-    // Perform any validation if needed before submitting the data
-    if (email.trim() === '' || password.trim() === '') {
-      Alert.alert('Error', 'Username and password are required.');
-      return;
+    // if no errors then register new employee
+    if( !nameError && !sirnameError && !emailError && !phoneError ){
+      // create dummy password
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let code = '';
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters.charAt(randomIndex);
+      }
+      onSubmit2(name,sirname,email,phone,typeofemployee,code);
     }
-
-    // Call the onSubmit prop with the entered email and password
-    onSubmit(email, password);
   };
 
   // employee types
-  const [selected , setSelected] = useState([false, false, false]);
+  const [selected , setSelected] = useState([false, false, true]);
   const button1 = () => {
     setSelected([true ,false ,false]);
     setTypeOfEmployee(1);
@@ -99,6 +104,16 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeFor
         value={sirname}
         onChangeText={setSirname}
       />
+      {(addEmployee)?
+        (<TextInput
+          style={styles.input}
+          placeholder="Nickname"
+          secureTextEntry
+          value={sirname}
+          onChangeText={setSirname}
+        />)
+        :(null)
+      }
       <TextInput
         style={styles.input}
         placeholder="E-Mail"
@@ -177,7 +192,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeFor
         </TouchableOpacity>)
       }
       {(addEmployee)?
-        (<TouchableOpacity style={styles.submitButton} onPress={toLogIn}>
+        (<TouchableOpacity style={styles.submitButton} onPress={handleRegister}>
           <Text style={{alignSelf : "center",}}> {"Submit"} </Text>
         </TouchableOpacity>)
         :(null)

@@ -9,13 +9,13 @@ const users = [
 ];
 
 exports.registerEmployee = async (req, res) => {
-  const { username, password , email ,employee ,shop_id , name, nickname , sirname , typeofemployee } = req.body;
+  const { name,sirname,nickname,email,phone,typeofemployee,code,shop_id } = req.body;
 
   try {
     // Check if the username already exists in the database
     const userExists = await client.execute(
-      'SELECT * FROM trimtracer.user WHERE email = ? and phone = ?',
-      [email,phone]
+      'SELECT * FROM trimtracer.user WHERE email = ?',
+      [email]
     );
 
     if (userExists.rows.length > 0) {
@@ -28,7 +28,7 @@ exports.registerEmployee = async (req, res) => {
     // Insert the new user into the database
     await client.execute(
       'INSERT INTO trimtracer.user (id, password , email ,employee ,shop_id , name, nickname , sirname , typeofemployee) VALUES (?, ?, ? , ? , ? ,? , ? ,? ,?)',
-      [newUserId, password , email ,employee ,shop_id , name, nickname , sirname , typeofemployee]
+      [newUserId, code , email ,true ,shop_id , name, nickname , sirname , typeofemployee]
     );
 
     res.status(201).json({ message: 'User registered successfully' });

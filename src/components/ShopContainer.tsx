@@ -3,13 +3,14 @@ import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity, Scro
 import ShopMenu from '../components/ShopMenu';
 import EmployeeContainer from '../components/EmployeeContainer';
 import RegistrationForm from '../components/RegistrationForm';
+import { addEmployee } from '../utils/EmployeeHandling';
 
 interface ShopContainerProps {
   employeeType : number;
   employees : any[];
 }
 
-const ShopContainer: React.FC<ShopContainerProps> = ({employeeType , employees}) => {
+const ShopContainer: React.FC<ShopContainerProps> = ({employeeType , employees,shop_id}) => {
   const [shopEmployees , setShopEmployees] = useState(employees);
   const [employeeForm, setEmployeeForm] = useState(true);
 
@@ -25,6 +26,11 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType , employees})
     return employeeContainers;
   }
 
+  const addNewEmployee = (name,sirname,email,phone,typeofemployee,code) => {
+    addEmployee(name,sirname,nickname,email,phone,typeofemployee,code,shop_id)
+    setEmployeeForm((prevState) => !prevState)
+  }
+
   return (
     <View
       style={styles.container}
@@ -36,7 +42,7 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType , employees})
       <View
         style={styles.employeeArea}
       >
-        {(employeeForm) ? (null) : (<RegistrationForm addEmployee={true}/>)}
+        {(employeeForm) ? (null) : (<RegistrationForm addEmployee={true} onSubmit2={addNewEmployee}/>)}
         {renderShopEmployees()}
       </View>
     </View>
