@@ -27,7 +27,7 @@ export const getServices = async (shop_id: string): Promise<any> => {
 // delete service
 export const deleteService = async (shop_id ,service_id) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/shop/deleteEmployee`, {
+    const response = await fetch(`${BASE_URL}/api/shop/deleteService`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
