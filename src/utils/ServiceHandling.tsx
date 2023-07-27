@@ -17,9 +17,35 @@ export const getServices = async (shop_id: string): Promise<any> => {
     }
 
     const data = await response.json();
-    return data
+    return data.services
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;
   }
 };
+
+// delete service
+export const deleteService = async (shop_id ,service_id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/shop/deleteEmployee`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        shop_id ,
+        service_id,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Invalid credentials');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+}

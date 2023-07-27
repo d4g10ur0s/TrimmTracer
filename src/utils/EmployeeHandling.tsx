@@ -23,7 +23,7 @@ export const getEmployees = async (shop_id: string): Promise<any> => {
     throw error;
   }
 };
-
+// add employee
 export const addEmployee = async (name : string , sirname : string , nickname : string, email: string, phone : string, typeofemployee : number ,password: string,shop_id): Promise<any> => {
   try {
     const response = await fetch(`${BASE_URL}/api/auth/registerEmployee`, {
