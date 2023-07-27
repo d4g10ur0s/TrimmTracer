@@ -13,6 +13,7 @@ interface ShopContainerProps {
 const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id}) => {
   const [employeeForm, setEmployeeForm] = useState(true);
   const [employeeContainers , setEmployeeContainers] = useState();
+  const [es , setES] = useState(true);
 
   const addForm = () => {
     setEmployeeForm((prevState) => !prevState)
@@ -34,18 +35,23 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id}) =>
   const addNewEmployee = (name,sirname,nickname,email,phone,typeofemployee,code) => {
     addEmployee(name,sirname,nickname,email,phone,typeofemployee,code,shop_id)
     setEmployeeForm((prevState) => !prevState)
-    reload();
+    renderShopEmployees();
+  }
+
+  const alter = () => {
+    setES((prevState) => !prevState);
   }
 
   useEffect(() => {
     renderShopEmployees();
-  }, []);
+  }, [es]);
 
   return (
     <View
       style={styles.container}
     >
       <ShopMenu
+        alter={alter}
         addForm={addForm}
         isType3={(employeeType==3)}
       />
@@ -53,7 +59,7 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id}) =>
         style={styles.employeeArea}
       >
         {(employeeForm) ? (null) : (<RegistrationForm addEmployee={true} onSubmit2={addNewEmployee}/>)}
-        {employeeContainers}
+        {(es) ? (employeeContainers) : (null)}
       </View>
     </View>
   );

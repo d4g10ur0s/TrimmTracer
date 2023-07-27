@@ -6,33 +6,57 @@ interface ShopMenuProps {
   isType3 : boolean;
 }
 
-const ShopMenu: React.FC<ShopMenuProps> = ({addForm,isType3}) => {
+const ShopMenu: React.FC<ShopMenuProps> = ({addForm,isType3,alter}) => {
 
   const toAddForm = () => {addForm();}
-  const shop = () => {toShop();}
-  const options = () => {toOptions();}
+
+  const [es , setES] = useState(true);
+  const alterButton = () => {
+    setES((prevState) => !prevState);
+    console.log(es)
+    alter();
+  }
 
   return (
     <View
       style={styles.containerMenu}
     >
-    <TouchableOpacity
-      style={(isType3) ? (styles.controlButtonDisabled) : (styles.controlButton)}
-      onPress={toAddForm}
-      disabled={isType3}
-    >
-      <Text>
-        {"Add Employee"}
-      </Text>
-    </TouchableOpacity>
-    <TouchableOpacity
-      style={styles.controlButton}
-      onPress={shop}
-    >
-      <Text>
-        {"To Services"}
-      </Text>
-    </TouchableOpacity>
+    {
+      (es) ?
+      (<TouchableOpacity
+        style={(isType3) ? (styles.controlButtonDisabled) : (styles.controlButton)}
+        onPress={toAddForm}
+        disabled={isType3}
+      >
+        <Text>
+          {"Add Employee"}
+        </Text>
+      </TouchableOpacity>) :
+      (<TouchableOpacity
+        style={(isType3) ? (styles.controlButtonDisabled) : (styles.controlButton)}
+        onPress={toAddForm}
+        disabled={isType3}
+      >
+        <Text>
+          {"Add Service"}
+        </Text>
+      </TouchableOpacity>)}
+      {(es) ? (<TouchableOpacity
+        style={styles.controlButton}
+        onPress={alterButton}
+      >
+        <Text>
+          {"To Services"}
+        </Text>
+      </TouchableOpacity>) :
+      (<TouchableOpacity
+        style={styles.controlButton}
+        onPress={alterButton}
+      >
+        <Text>
+          {"To Employees"}
+        </Text>
+      </TouchableOpacity>)}
     </View>
   );
 };
