@@ -7,7 +7,6 @@ import Calendar from '../components/Calendar';
 import ShopContainer from '../components/ShopContainer';
 import EmployeeAppMenu from '../components/EmployeeAppMenu';
 import { login } from '../utils/EnterApp';
-import { getEmployees } from '../utils/EmployeeHandling';
 
 const EmployeeMainScreen: React.FC = () => {
   const [content, setContent] = useState(1);
@@ -19,18 +18,10 @@ const EmployeeMainScreen: React.FC = () => {
     setContent(<Calendar />);
   }
 
-  const reloadShop = () => {
-    setContent(null);
-    toggleToShop();
-  }
-
-  const toggleToShop = async () => {
-    const employees = await getEmployees(employee.shop_id);
+  const toggleToShop = () => {
     setContent(<ShopContainer
-                  employees={employees.employees}
                   employeeType={employee.typeofemployee}
                   shop_id={employee.shop_id}
-                  reload={reloadShop}
                 />);
   }
 

@@ -17,7 +17,7 @@ export const getEmployees = async (shop_id: string): Promise<any> => {
     }
 
     const data = await response.json();
-    return data;
+    return data.employees;
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;

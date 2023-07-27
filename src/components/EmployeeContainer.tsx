@@ -32,7 +32,7 @@ interface EmployeeContainerProps {
 
 const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete,refresh}) => {
   const [employeeInfo, setEmployeeInfo] = useState(employee);
-
+  console.log(employee)
   const employeeDeletion = () => {
     deleteEmployee(employee.email);
     refresh();
@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderStyle: 'dashed',
     width: '95%',
+    marginVertical : 3,
   },
   container : {
     flexDirection : 'row',

@@ -1,29 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity, ScrollView } from 'react-native';
 import ShopMenu from '../components/ShopMenu';
 import EmployeeContainer from '../components/EmployeeContainer';
 import RegistrationForm from '../components/RegistrationForm';
 import { addEmployee } from '../utils/EmployeeHandling';
+import { getEmployees } from '../utils/EmployeeHandling';
 
 interface ShopContainerProps {
   employeeType : number;
-  employees : any[];
 }
 
-const ShopContainer: React.FC<ShopContainerProps> = ({employeeType , employees,shop_id , reload}) => {
-  const [shopEmployees , setShopEmployees] = useState(employees);
+const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id}) => {
   const [employeeForm, setEmployeeForm] = useState(true);
+  const [employeeContainers , setEmployeeContainers] = useState();
 
   const addForm = () => {
     setEmployeeForm((prevState) => !prevState)
   }
 
-  const renderShopEmployees = () => {
-    var employeeContainers = []
+  const reload = () => {
+    renderShopEmployees();
+  }
+
+  const renderShopEmployees = async () => {
+    const shopEmployees = await getEmployees(shop_id);
+    var empContainers = []
     for(emp in shopEmployees){
-      employeeContainers.push(<EmployeeContainer key={emp} employee={shopEmployees[emp]} canDelete={(employeeType==3)} refresh={reload}/>);
+      empContainers.push(<EmployeeContainer key={emp} employee={shopEmployees[emp]} canDelete={(employeeType==3)} refresh={reload}/>);
     }
-    return employeeContainers;
+    await setEmployeeContainers(empContainers);
   }
 
   const addNewEmployee = (name,sirname,nickname,email,phone,typeofemployee,code) => {
@@ -31,6 +36,10 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType , employees,s
     setEmployeeForm((prevState) => !prevState)
     reload();
   }
+
+  useEffect(() => {
+    renderShopEmployees();
+  }, []);
 
   return (
     <View
@@ -44,7 +53,7 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType , employees,s
         style={styles.employeeArea}
       >
         {(employeeForm) ? (null) : (<RegistrationForm addEmployee={true} onSubmit2={addNewEmployee}/>)}
-        {renderShopEmployees()}
+        {employeeContainers}
       </View>
     </View>
   );
