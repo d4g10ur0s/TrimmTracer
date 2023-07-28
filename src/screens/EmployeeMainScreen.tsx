@@ -22,6 +22,7 @@ const EmployeeMainScreen: React.FC = () => {
     setContent(<ShopContainer
                   employeeType={employee.typeofemployee}
                   shop_id={employee.shop_id}
+                  employee_email={employee.email}
                 />);
   }
 

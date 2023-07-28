@@ -6,20 +6,16 @@ interface ServiceFormProps {
 }
 
 const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>('Neo Service');
   const [hours, setHours] = useState<string>('0');
-  const [minutes, setMinutes] = useState<string>('0');
-  const [description, setDescription] = useState<string>('');
-
+  const [minutes, setMinutes] = useState<string>('45');
+  const [seconds, setSeconds] = useState<string>('0');
+  const [clientCost, setClientCost] = useState<string>('15 eur');
+  const [employeeCost, setEmployeeCost] = useState<string>('5 eur');
+  const [description, setDescription] = useState<string>('A new simple Service . \nCost is logically calculated.\n');
   // store service
   const handleService = () => {
-    // Perform any validation if needed before submitting the data
-    if (username.trim() === '' || password.trim() === '') {
-      Alert.alert('Error', 'Username and password are required.');
-      return;
-    }
-    // Call the onSubmit prop with the entered username and password
-    onSubmit(username, password);
+    onSubmit(name ,hours ,minutes ,seconds,employeeCost,clientCost,description);
   };
 
   return (
@@ -54,25 +50,25 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
         <TextInput
           style={styles.timeInput}
           keyboardType="numeric"
-          value={minutes}
-          onChangeText={setMinutes}
+          value={seconds}
+          onChangeText={setSeconds}
         />
         <Text style={styles.timeUnit}>s</Text>
       </View>
       <View style={styles.durationInput}>
         <Text style={styles.label}>Cost</Text>
         <TextInput
-          style={styles.timeInput}
+          style={styles.costInput}
           keyboardType="numeric"
-          value={hours}
-          onChangeText={setHours}
+          value={clientCost}
+          onChangeText={setClientCost}
         />
         <Text style={styles.timeUnit}>Client</Text>
         <TextInput
-          style={styles.timeInput}
+          style={styles.costInput}
           keyboardType="numeric"
-          value={minutes}
-          onChangeText={setMinutes}
+          value={employeeCost}
+          onChangeText={setEmployeeCost}
         />
         <Text style={styles.timeUnit}>Employee</Text>
       </View>
@@ -85,7 +81,10 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
         onChangeText={setDescription}
         placeholder="Enter your description here"
       />
-      <TouchableOpacity style={styles.submitButton}>
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={handleService}
+      >
         <Text style={{alignSelf : "center",}}> {"Submit"} </Text>
       </TouchableOpacity>
     </View>
@@ -136,6 +135,15 @@ const styles = StyleSheet.create({
   },
   timeInput: {
     width : '12%',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    marginHorizontal : 5,
+  },
+  costInput: {
+    width : '18%',
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,

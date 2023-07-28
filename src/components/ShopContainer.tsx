@@ -4,7 +4,7 @@ import ShopMenu from '../components/ShopMenu';
 import EmployeeContainer from '../components/EmployeeContainer';
 import { getEmployees,addEmployee } from '../utils/EmployeeHandling';
 import RegistrationForm from '../components/RegistrationForm';
-import { getServices } from '../utils/ServiceHandling';
+import { getServices,addService } from '../utils/ServiceHandling';
 import ServiceContainer from '../components/ServiceContainer';
 import ServiceForm from '../components/ServiceForm';
 
@@ -12,7 +12,7 @@ interface ShopContainerProps {
   employeeType : number;
 }
 
-const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id}) => {
+const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id,employee_email}) => {
   // state form both employees and services
   const [es , setES] = useState(true);
   const [formComponent , setFormComponent] = useState(<RegistrationForm
@@ -44,7 +44,9 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id}) =>
                         />);
     }else{
       renderShopServices();
-      setFormComponent(<ServiceForm/>);
+      setFormComponent(<ServiceForm
+                          onSubmit={addNewService}
+                        />);
     }
   }, [es]);
   // Employee Functions
@@ -75,9 +77,10 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id}) =>
     setEmployeeContainers(null);// don't waste
   }
   // add new service , store and refresh
-  const addNewService = (shop_id,dur,client_cost,employee_cost,employee_email,name) => {
-    addService(shop_id,dur,client_cost,employee_cost,employee_email,name)
-    setServiceForm((prevState) => !prevState)
+  const addNewService = (name ,hours ,minutes ,seconds,employeeCost,clientCost,description) => {
+    const dur = hours+'h'+minutes+'m'+seconds+'s';
+    addService(shop_id , [employee_email] ,name , dur , clientCost , employeeCost ,description )
+    setEnableForm((prevState) => !prevState)
     renderShopServices();
   }
 
