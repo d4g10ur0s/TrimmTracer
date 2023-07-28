@@ -32,7 +32,8 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id,empl
     setEnableForm((prevState) => !prevState)
   }
   const reload = () => {// refresh after deletion
-    renderShopEmployees();
+    if(es){renderShopEmployees();}
+    else{renderShopServices();}
   }
   useEffect(() => {
     if(!enableForm){setEnableForm((prevState) => !prevState);}
@@ -58,6 +59,7 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id,empl
       empContainers.push(<EmployeeContainer key={emp} employee={shopEmployees[emp]} canDelete={(employeeType==3)} refresh={reload}/>);
     }
     await setEmployeeContainers(empContainers);
+    setServiceContainers(null);
   }
   // add new employee , store and refresh
   const addNewEmployee = async (name,sirname,nickname,email,phone,typeofemployee,code) => {
@@ -77,9 +79,9 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id,empl
     setEmployeeContainers(null);// don't waste
   }
   // add new service , store and refresh
-  const addNewService = (name ,hours ,minutes ,seconds,employeeCost,clientCost,description) => {
+  const addNewService = async (name ,hours ,minutes ,seconds,employeeCost,clientCost,description) => {
     const dur = hours+'h'+minutes+'m'+seconds+'s';
-    addService(shop_id , [employee_email] ,name , dur , clientCost , employeeCost ,description )
+    await addService(shop_id , [employee_email] ,name , dur , clientCost , employeeCost ,description )
     setEnableForm((prevState) => !prevState)
     renderShopServices();
   }

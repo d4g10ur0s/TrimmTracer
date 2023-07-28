@@ -22,7 +22,7 @@ export const getServices = async (shop_id: string): Promise<any> => {
     console.error('Error logging in:', error);
     throw error;
   }
-};
+}
 // add a new shop service
 export const addService = async (shop_id , employee_email ,name , dur , client_cost , employee_cost ,description ) => {
   try {

@@ -48,6 +48,7 @@ const nanosecondsToHoursMinutesSeconds = (nanoseconds) => {
 
 const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,refresh}) => {
   const [serviceInfo, setServiceInfo] = useState(service);
+  console.log(serviceInfo);
   const nanosecondsToString = (nanoseconds) => {
     const { hours, minutes, seconds } = nanosecondsToHoursMinutesSeconds(nanoseconds)
     if(hours==0){return minutes + " m " + seconds + " s "}

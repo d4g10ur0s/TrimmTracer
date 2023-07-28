@@ -15,11 +15,11 @@ exports.getShopServices = async (req, res) => {
 };
 // delete service
 exports.deleteShopService = async (req, res) => {
-  const { shop_id , id } = req.body;
+  const { shop_id , service_id } = req.body;
   console.log(req.body);
   const shopEmployees = await client.execute(
     'DELETE FROM trimtracer.service WHERE shop_id = ? and id = ?',
-    [shop_id , id]
+    [shop_id , service_id]
   );
   const employees = shopEmployees.rows
   res.json({employees});
