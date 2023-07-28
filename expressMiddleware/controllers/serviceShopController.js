@@ -22,5 +22,29 @@ exports.deleteShopService = async (req, res) => {
   );
   const employees = shopEmployees.rows
   res.json({employees});
+};
+// add service
+exports.addShopService = async (req, res) => {
+  const { shop_id , employee_email ,name , dur , client_cost , employee_cost ,description } = req.body;
+  console.log(req.body)
+  try {
+    // Check if the service already exists in the database
+    const serviceExists = await client.execute(
+      'SELECT * FROM trimtracer.service WHERE shop_id = ? and name = ?',
+      [shop_id, name]
+    );
+    if (serviceExists.rows.length > 0) {
+      return res.status(400).json({ error: 'Service already exists' });
+    }
+    // Insert the new service into the database
+    await client.execute(
+      'INSERT INTO trimtracer.service (id, shop_id , employee_email ,name , dur , average_dur, client_cost , employee_cost ,description) VALUES (?,?,?,?,?,?,?,?,?)',
+      [id, shop_id , employee_email ,name , dur , dur, client_cost , employee_cost ,description], { prepare: true }
+    );
 
+    res.status(201).json({ message: 'Service stored successfully' });
+  } catch (err) {
+    console.error('Error during storing:', err);
+    res.status(500).json({ error: 'Error during storing' });
+  }
 };

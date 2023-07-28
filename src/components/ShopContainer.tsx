@@ -6,6 +6,7 @@ import { getEmployees,addEmployee } from '../utils/EmployeeHandling';
 import RegistrationForm from '../components/RegistrationForm';
 import { getServices } from '../utils/ServiceHandling';
 import ServiceContainer from '../components/ServiceContainer';
+import ServiceForm from '../components/ServiceForm';
 
 interface ShopContainerProps {
   employeeType : number;
@@ -14,29 +15,36 @@ interface ShopContainerProps {
 const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id}) => {
   // state form both employees and services
   const [es , setES] = useState(true);
+  const [formComponent , setFormComponent] = useState(<RegistrationForm
+                                                        addEmployee={true}
+                                                        onSubmit2={addNewEmployee}
+                                                      />);
+  const [enableForm, setEnableForm] = useState(true);
   // states for employees
-  const [employeeForm, setEmployeeForm] = useState(true);
   const [employeeContainers , setEmployeeContainers] = useState();
   // states for services
-  const [serviceForm, setServiceForm] = useState(true);
   const [serviceContainers , setServiceContainers] = useState();
   // Functions for both employees and services content
   const alter = () => {
     setES((prevState) => !prevState);
   }
   const addForm = () => {// add form
-    setEmployeeForm((prevState) => !prevState)
+    setEnableForm((prevState) => !prevState)
   }
   const reload = () => {// refresh after deletion
     renderShopEmployees();
   }
   useEffect(() => {
+    if(!enableForm){setEnableForm((prevState) => !prevState);}
     if(es){
-      if(!serviceForm){setServiceForm((prevState) => !prevState);}
       renderShopEmployees();
+      setFormComponent(<RegistrationForm
+                          addEmployee={true}
+                          onSubmit2={addNewEmployee}
+                        />);
     }else{
-      if(!employeeForm){setEmployeeForm((prevState) => !prevState);}
       renderShopServices();
+      setFormComponent(<ServiceForm/>);
     }
   }, [es]);
   // Employee Functions
@@ -52,7 +60,7 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id}) =>
   // add new employee , store and refresh
   const addNewEmployee = async (name,sirname,nickname,email,phone,typeofemployee,code) => {
     await addEmployee(name,sirname,nickname,email,phone,typeofemployee,code,shop_id)
-    setEmployeeForm((prevState) => !prevState)
+    setEnableForm((prevState) => !prevState)
     renderShopEmployees();
   }
   // Service Functions
@@ -85,7 +93,7 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id}) =>
       <View
         style={styles.employeeArea}
       >
-        {(employeeForm) ? (null) : (<RegistrationForm addEmployee={true} onSubmit2={addNewEmployee}/>)}
+        {(enableForm) ? (null) : (formComponent)}
         {(es) ? (employeeContainers) : (serviceContainers)}
       </View>
     </View>
