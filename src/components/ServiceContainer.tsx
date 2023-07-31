@@ -25,6 +25,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import { deleteService } from '../utils/ServiceHandling';
+import { getEmployees } from '../utils/EmployeeHandling';
 
 interface ServiceContainerProps {
   service : {};
@@ -48,7 +49,16 @@ const nanosecondsToHoursMinutesSeconds = (nanoseconds) => {
 
 const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,refresh}) => {
   const [serviceInfo, setServiceInfo] = useState(service);
+  const [modalVisible, setModalVisible ] = useState(false);
   console.log(serviceInfo);
+  // modal
+  const handleHideModal = () => {
+    setModalVisible(false);
+  };
+  const handleShowModal = () => {
+    setModalVisible(true);
+  };
+  // utils
   const nanosecondsToString = (nanoseconds) => {
     const { hours, minutes, seconds } = nanosecondsToHoursMinutesSeconds(nanoseconds)
     if(hours==0){return minutes + " m " + seconds + " s "}
@@ -58,6 +68,18 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   const serviceDeletion = () => {
     deleteService(service.shop_id, service.id);
     refresh();
+  }
+  // assign service
+  const toAssign = async () => {
+    const shopEmployees = await getEmployees(service.shop_id);
+    var assigned = []
+    var unassigned = []
+    for (i in shopEmployees){
+      if(shopEmployees[i].email in service.employee_email){
+        assigned.push(shopEmployees[i])
+      }else{unassigned.push(shopEmployees[i])}
+    }//end for
+    // show modal
   }
 
   return(
@@ -128,13 +150,6 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.deleteButton}
-        >
-          <Text>
-            {"Unassign Service"}
-            </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
           style={(canDelete) ? styles.disabledDeleteButton : styles.deleteButton}
           disabled={canDelete}
           onPress={serviceDeletion}
@@ -144,6 +159,13 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
           </Text>
         </TouchableOpacity>
       </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={handleHideModal}
+      >
+      </Modal>
     </View>
   )
 }
