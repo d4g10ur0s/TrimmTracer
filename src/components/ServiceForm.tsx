@@ -13,9 +13,26 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
   const [clientCost, setClientCost] = useState<string>('15 eur');
   const [employeeCost, setEmployeeCost] = useState<string>('5 eur');
   const [description, setDescription] = useState<string>('A new simple Service . \nCost is logically calculated.\n');
+  const [toSubmit, setToSubmit ] = useState(false);
   // store service
-  const handleService = () => {
-    onSubmit(name ,hours ,minutes ,seconds,employeeCost,clientCost,description);
+  const handleService = () => {// den exw valei to alert
+    // name constraint
+    if (typeof name === 'string' && name.length > 3 && containsLetters) {
+      setToSubmit(true);
+    }else{setToSubmit(false);}
+    // duration constraint
+    if (toSubmit && (/^\d+$/.test(hours) && /^\d+$/.test(minutes) && parseInt(minutes)>0 && /^\d+$/.test(seconds))){
+      setToSubmit(true);
+    }
+    else{setToSubmit(false);}
+    // cost constraints
+    if(toSubmit && (/^\d+(\.\d{1,2})?$/.test(clientCost) && parseFloat(clientCost) && /^\d+(\.\d{1,2})?$/.test(employeeCost) && parseFloat(employeeCost) )){
+      setToSubmit(true);
+    }else{setToSubmit(false);}
+    // constraints are satisfied
+    if(toSubmit){
+      onSubmit(name ,hours ,minutes ,seconds,employeeCost,clientCost,description);
+    }
   };
 
   return (
