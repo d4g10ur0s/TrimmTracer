@@ -27,6 +27,8 @@ import {
 import { deleteService } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
 
+import EmployeeSelection from '../components/EmployeeSelection';
+
 interface ServiceContainerProps {
   service : {};
 }
@@ -50,7 +52,8 @@ const nanosecondsToHoursMinutesSeconds = (nanoseconds) => {
 const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,refresh}) => {
   const [serviceInfo, setServiceInfo] = useState(service);
   const [modalVisible, setModalVisible ] = useState(false);
-  console.log(serviceInfo);
+  const [modalContent , setModalContent] = useState(null);
+  
   // modal
   const handleHideModal = () => {
     setModalVisible(false);
@@ -72,14 +75,21 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   // assign service
   const toAssign = async () => {
     const shopEmployees = await getEmployees(service.shop_id);
-    var assigned = []
-    var unassigned = []
+    var a = []
+    var u = []
     for (i in shopEmployees){
-      if(shopEmployees[i].email in service.employee_email){
-        assigned.push(shopEmployees[i])
-      }else{unassigned.push(shopEmployees[i])}
+      if(service.employee_email.includes(shopEmployees[i].email)){
+        a.push(shopEmployees[i])
+      }else{u.push(shopEmployees[i])}
     }//end for
     // show modal
+    await setModalContent(
+            <EmployeeSelection
+              assigned={a}
+              unassigned={u}
+            />
+          );
+    setModalVisible(true);
   }
 
   return(
@@ -144,6 +154,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.controlButtons}
+          onPress={toAssign}
         >
           <Text>
             {"Assign Service"}
@@ -165,6 +176,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
         visible={modalVisible}
         onRequestClose={handleHideModal}
       >
+        {modalContent}
       </Modal>
     </View>
   )

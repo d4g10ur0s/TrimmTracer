@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCallback , useMemo } from 'react';
 
 import type {PropsWithChildren} from 'react';
@@ -29,7 +29,7 @@ interface EmployeeSelectionProps {
   unassigned : [];
 }
 
-const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assigned,assign , unassing}) =>{
+const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assigned,assign , unassign}) =>{
   const [a , setA] = assigned;
   const handleA = () => {
       if(a){unassign(employee.email);}
@@ -65,87 +65,79 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assig
 }
 
 const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({assigned,unassigned}) => {
-  const [aEmployee, setAEmployee] = useState(null);
-  const [uEmployee, setUEmployee] = useState(null);
-  // delete service
-  const serviceDeletion = () => {
-    deleteService(service.shop_id, service.id);
-    refresh();
+
+  const [assignedContainers , setAssignContainers] = useState(null)
+  const [unassignedContainers , setUnassignedContainers] = useState(null)
+
+  const renderAssigned = async () => {
+    var containers = []
+    for(a in assigned){
+      containers.push(
+        <MiniEmployeeContainer
+          key={a}
+          employee={assigned[a]}
+          assigned={true}
+        />
+      )
+    }
+    return containers
   }
-  // assign service
-  const toAssign = async () => {
-    const shopEmployees = await getEmployees(service.shop_id);
-    var assigned = []
-    var unassigned = []
-    for (i in shopEmployees){
-      if(shopEmployees[i].email in service.employee_email){
-        assigned.push(shopEmployees[i])
-      }else{unassigned.push(shopEmployees[i])}
-    }//end for
-    // show modal
+
+  const renderUnassigned = async () => {
+    var containers = []
+    console.log(unassigned)
+    for(u in unassigned){
+      containers.push(
+        <MiniEmployeeContainer
+          key={assignedContainers.length + u}
+          employee={unassigned[u]}
+          assigned={false}
+        />
+      )
+    }
+    await setUnassignedContainers(containers);
   }
+
+  useEffect(() => {
+    setAssignContainers(renderAssigned())
+    renderUnassigned()
+  }, []);
 
   return(
-
+    <View>
+      <ScrollView
+        style={styles.employeeSelection}
+      >
+        <Text
+          style={styles.selectionHeader}
+        >
+          {"Select an Employee"}
+        </Text>
+        {assignedContainers}
+        {unassignedContainers}
+      </ScrollView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  outsideContainer : {
+  employeeSelection : {
+    height : '65%',
+    width : '85%',
+    backgroundColor : "#FFFFFFAD",
+    alignSelf : 'center',
+    marginTop : 50,
     borderRadius : 8,
-    backgroundColor:'#AFAFAFAD',
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderStyle: 'dashed',
-    width: '95%',
-    marginVertical : 3,
+    borderWidth : 2,
   },
-  serviceHeader : {
+  selectionHeader : {
+    alignSelf : 'center',
+    color: 'black',
     fontSize : 20,
     fontWeight : 'bold',
-    alignSelf: 'center',
   },
-  infoView : {
-    flexDirection : 'row',
-    justifyContent: 'space-between',
-  },
-  infoText : {
-    fontSize : 12,
-    fontWeight : 'bold',
-    marginHorizontal : 4,
-    padding : 3,
-  },
-  buttonScrollView : {
-    backgroundColor : '#FFFFFFAD',
-    margin : 5,
-    borderRadius : 8,
-  },
-  controlButtons : {
-    backgroundColor : '#574C9EAA',
-    borderRadius : 8,
-    marginVertical : 5,
-    marginHorizontal : 10,
-    padding : 5,
-  },
-  deleteButton : {
-    backgroundColor : '#E9769AAA',
-    borderRadius : 8,
-    marginVertical : 5,
-    marginHorizontal : 10,
-    padding : 5,
-  },
-  disabledDeleteButton : {
-    backgroundColor : '#E9769A77',
-    borderRadius : 8,
-    marginVertical : 5,
-    marginHorizontal : 10,
-    padding : 5,
-  },
-  useText : {
-    alignSelf : 'center',
-    marginVertical : 4,
-    fontSize : 15,
-    fontWeight : 'bold',
+  miniContainer : {
+    backgroundColor : "#FFFFFFAD",
   },
 });
 
