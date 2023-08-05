@@ -65,10 +65,10 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assig
 }
 
 const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({assigned,unassigned}) => {
-
+  // assign
+  const [a, setA] = useState(assigned)
   const [assignedContainers , setAssignContainers] = useState([])
-  const [unassignedContainers , setUnassignedContainers] = useState([])
-
+  // render containers
   const renderAssigned = async () => {
     var containers = []
     for(a in assigned){
@@ -82,7 +82,22 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({assigned,unassigne
     }
     await setAssignContainers(containers);
   }
-
+  // assign service
+  const assignService = async (emp_email) => {
+    var b = a;
+    b.push(emp_email);
+    await setA(emp_email);
+  }
+  // unassign service
+  const unassignService = async (emp_email) => {
+    let index = a.indexOf(emp_email);
+    var b = a;
+    b.splice(index,1)
+    await setA(b);
+  }
+  // unassign
+  const [unassignedContainers , setUnassignedContainers] = useState([])
+  // render containers
   const renderUnassigned = async () => {
     var containers = []
     for(u in unassigned){
@@ -91,12 +106,14 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({assigned,unassigne
           key={assignedContainers.length + u}
           employee={unassigned[u]}
           assigned={false}
+          assign={assignService}
+          unassign={unassignService}
         />
       )
     }
     await setUnassignedContainers(containers);
   }
-
+  // render at start
   useEffect(()=>{
     renderAssigned();
     renderUnassigned();
