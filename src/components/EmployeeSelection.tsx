@@ -30,7 +30,7 @@ interface EmployeeSelectionProps {
 }
 
 const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assigned,assign , unassign}) =>{
-  const [a , setA] = assigned;
+  const [a , setA] = useState(assigned);
   const handleA = () => {
       if(a){unassign(employee.email);}
       else{assign(employee.email)}
@@ -44,17 +44,17 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assig
       <View
         style={styles.horizontalView}
       >
-        <Text style={styles.miniHeader} >{"Credentials"}</Text>
-        <Text>{employee.name + ' ' + employee.sirname}</Text>
+        <Text style={styles.miniHeader} >{"Name"}</Text>
+        <Text style={styles.infoText}>{employee.name + ' ' + employee.sirname}</Text>
       </View>
       <View
         style={styles.horizontalView}
       >
         <Text style={styles.miniHeader} >{"E-mail"}</Text>
-        <Text>{employee.email}</Text>
+        <Text style={styles.infoText}>{employee.email}</Text>
       </View>
       <TouchableOpacity
-        onPress={hadleA}
+        onPress={handleA}
         style={(a) ? (styles.unassignButton) : (styles.assignButton)}
       >
         <Text>{(a) ? ('Unassign') : ('Assign') }</Text>
@@ -66,8 +66,8 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assig
 
 const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({assigned,unassigned}) => {
 
-  const [assignedContainers , setAssignContainers] = useState(null)
-  const [unassignedContainers , setUnassignedContainers] = useState(null)
+  const [assignedContainers , setAssignContainers] = useState([])
+  const [unassignedContainers , setUnassignedContainers] = useState([])
 
   const renderAssigned = async () => {
     var containers = []
@@ -80,12 +80,11 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({assigned,unassigne
         />
       )
     }
-    return containers
+    await setAssignContainers(containers);
   }
 
   const renderUnassigned = async () => {
     var containers = []
-    console.log(unassigned)
     for(u in unassigned){
       containers.push(
         <MiniEmployeeContainer
@@ -98,35 +97,49 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({assigned,unassigne
     await setUnassignedContainers(containers);
   }
 
-  useEffect(() => {
-    setAssignContainers(renderAssigned())
-    renderUnassigned()
+  useEffect(()=>{
+    renderAssigned();
+    renderUnassigned();
   }, []);
 
   return(
-    <View>
-      <ScrollView
-        style={styles.employeeSelection}
+    <View
+      style={styles.employeeSelection}
+    >
+      <Text
+      style={styles.selectionHeader}
       >
-        <Text
-          style={styles.selectionHeader}
-        >
-          {"Select an Employee"}
-        </Text>
-        {assignedContainers}
+        {"Select Employees"}
+      </Text>
+      <ScrollView>
         {unassignedContainers}
+        {assignedContainers}
       </ScrollView>
+      <View
+        style={styles.submitView}
+      >
+        <TouchableOpacity
+          style={styles.cancelButton}
+        >
+          <Text>{"Cancel"}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.submitButton}
+        >
+          <Text>{"Submit"}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   employeeSelection : {
-    height : '65%',
+    height : '45%',
     width : '85%',
     backgroundColor : "#FFFFFFAD",
     alignSelf : 'center',
-    marginTop : 50,
+    marginTop : '25%',
     borderRadius : 8,
     borderWidth : 2,
   },
@@ -137,7 +150,57 @@ const styles = StyleSheet.create({
     fontWeight : 'bold',
   },
   miniContainer : {
-    backgroundColor : "#FFFFFFAD",
+    margin : 2,
+    borderRadius : 8,
+    borderStyle : 'dashed',
+    borderWidth : 1,
+    borderColor : 'gray',
+    backgroundColor : '#999999AD',
+  },
+  horizontalView : {
+    padding : 2,
+    margin : 2,
+    flexDirection : 'row',
+    justifyContent : 'space-between',
+  },
+  miniHeader : {
+    fontSize : 15,
+    fontWeight : 'bold',
+  },
+  infoText : {
+    fontSize : 15,
+    fontWeight : '500',
+  },
+  unassignButton : {
+    alignSelf : 'center',
+    backgroundColor : '#E9769AAA',
+    borderRadius : 8,
+    marginVertical : 5,
+    marginHorizontal : 10,
+    padding : 3,
+  },
+  assignButton : {
+    alignSelf : 'center',
+    backgroundColor : '#574C9EAA',
+    borderRadius : 8,
+    marginVertical : 5,
+    marginHorizontal : 10,
+    padding : 3,
+  },
+  submitView : {
+    margin : 5,
+    flexDirection : 'row',
+    justifyContent : 'space-between',
+  },
+  cancelButton : {
+    backgroundColor : '#E9769AAA',
+    borderRadius : 8,
+    padding : 3,
+  },
+  submitButton : {
+    backgroundColor : '#574C9EAA',
+    borderRadius : 8,
+    padding : 3,
   },
 });
 
