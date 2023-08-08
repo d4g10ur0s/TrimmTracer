@@ -24,7 +24,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { deleteService } from '../utils/ServiceHandling';
+import { deleteService, assignService } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
 
 import EmployeeSelection from '../components/EmployeeSelection';
@@ -53,7 +53,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   const [serviceInfo, setServiceInfo] = useState(service);
   const [modalVisible, setModalVisible ] = useState(false);
   const [modalContent , setModalContent] = useState(null);
-  
+
   // modal
   const handleHideModal = () => {
     setModalVisible(false);
@@ -73,6 +73,13 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
     refresh();
   }
   // assign service
+  const assign = async (emp_emails) => {
+    console.log(emp_emails);
+    await assignService(service.shop_id, service.id , [emp_emails] ,service.name , service.dur, service.average_dur , service.client_cost , service.employee_cost ,service.description )
+    await setModalVisible(false);
+    refresh();
+  }
+  // to assign service - employee selection
   const toAssign = async () => {
     const shopEmployees = await getEmployees(service.shop_id);
     var a = []
@@ -83,10 +90,14 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
       }else{u.push(shopEmployees[i])}
     }//end for
     // show modal
+    var emails = service.employee_email;
     await setModalContent(
             <EmployeeSelection
+              hide={handleHideModal}
               assigned={a}
               unassigned={u}
+              emails={emails}
+              assign={assign}
             />
           );
     setModalVisible(true);

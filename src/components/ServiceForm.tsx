@@ -15,22 +15,12 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
   const [description, setDescription] = useState<string>('A new simple Service . \nCost is logically calculated.\n');
   const [toSubmit, setToSubmit ] = useState(false);
   // store service
-  const handleService = () => {// den exw valei to alert
-    // name constraint
-    if (typeof name === 'string' && name.length > 3 && containsLetters) {
-      setToSubmit(true);
-    }else{setToSubmit(false);}
-    // duration constraint
-    if (toSubmit && (/^\d+$/.test(hours) && /^\d+$/.test(minutes) && parseInt(minutes)>0 && /^\d+$/.test(seconds))){
-      setToSubmit(true);
-    }
-    else{setToSubmit(false);}
-    // cost constraints
-    if(toSubmit && (/^\d+(\.\d{1,2})?$/.test(clientCost) && parseFloat(clientCost) && /^\d+(\.\d{1,2})?$/.test(employeeCost) && parseFloat(employeeCost) )){
-      setToSubmit(true);
-    }else{setToSubmit(false);}
-    // constraints are satisfied
-    if(toSubmit){
+  const handleService = async () => {// den exw valei to alert
+    console.log(/^\d+(\.\d{0,1,2})?$/.test(clientCost))
+    if (typeof name == 'string' && name.length > 3 && /[a-zA-Z ]/.test(name) &&// name constraint
+    /^\d+$/.test(hours) && /^\d+$/.test(minutes) && parseInt(minutes)>0 && /^\d+$/.test(seconds) &&// duration constraint
+    /^\d+(\.\d{0,1,2})?$/.test(clientCost) && parseFloat(clientCost)>0
+    && /^\d+(\.\d{0,1,2})?$/.test(employeeCost) && parseFloat(employeeCost)>0 ){// cost constraints
       onSubmit(name ,hours ,minutes ,seconds,employeeCost,clientCost,description);
     }
   };

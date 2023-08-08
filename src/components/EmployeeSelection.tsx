@@ -31,9 +31,12 @@ interface EmployeeSelectionProps {
 
 const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assigned,assign , unassign}) =>{
   const [a , setA] = useState(assigned);
-  const handleA = () => {
-      if(a){unassign(employee.email);}
-      else{assign(employee.email)}
+  const handleA = async () => {
+      if(a){
+        await unassign(employee.email);
+      }else{
+        await assign(employee.email);
+      }
       setA((prevState) => !prevState);
   }
 
@@ -64,36 +67,41 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assig
 
 }
 
-const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({assigned,unassigned}) => {
+const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({emails,hide,assigned,unassigned,assign}) => {
   // assign
-  const [a, setA] = useState(assigned)
+  const [a, setA] = useState(emails)
   const [assignedContainers , setAssignContainers] = useState([])
   // render containers
   const renderAssigned = async () => {
     var containers = []
-    for(a in assigned){
+    var b = []
+    for(as in assigned){
       containers.push(
         <MiniEmployeeContainer
-          key={a}
-          employee={assigned[a]}
+          key={as}
+          employee={assigned[as]}
           assigned={true}
+          assign={assignService}
+          unassign={unassignService}
         />
-      )
+      );
     }
     await setAssignContainers(containers);
   }
   // assign service
   const assignService = async (emp_email) => {
     var b = a;
-    b.push(emp_email);
-    await setA(emp_email);
+    b.push(emp_email)
+    setA(b);
   }
   // unassign service
   const unassignService = async (emp_email) => {
-    let index = a.indexOf(emp_email);
-    var b = a;
-    b.splice(index,1)
-    await setA(b);
+    var b=a;
+    let index = b.indexOf(emp_email);
+    if (index !== -1) {
+      b.splice(index, 1);
+    }
+    setA(b);
   }
   // unassign
   const [unassignedContainers , setUnassignedContainers] = useState([])
@@ -113,6 +121,8 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({assigned,unassigne
     }
     await setUnassignedContainers(containers);
   }
+  // submit
+  const submit = () => {assign(a);}
   // render at start
   useEffect(()=>{
     renderAssigned();
@@ -137,11 +147,13 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({assigned,unassigne
       >
         <TouchableOpacity
           style={styles.cancelButton}
+          onPress={hide}
         >
           <Text>{"Cancel"}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.submitButton}
+          onPress={submit}
         >
           <Text>{"Submit"}</Text>
         </TouchableOpacity>
@@ -210,6 +222,7 @@ const styles = StyleSheet.create({
     justifyContent : 'space-between',
   },
   cancelButton : {
+    fontSize : 8,
     backgroundColor : '#E9769AAA',
     borderRadius : 8,
     padding : 3,

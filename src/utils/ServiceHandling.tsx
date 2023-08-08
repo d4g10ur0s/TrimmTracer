@@ -53,6 +53,39 @@ export const addService = async (shop_id , employee_email ,name , dur , client_c
     throw error;
   }
 }
+//assign service
+export const assignService = async (shop_id ,id , employee_email ,name , dur, average_dur , client_cost , employee_cost ,description ) => {
+  console.log(shop_id , employee_email ,name , dur, average_dur , client_cost , employee_cost ,description )
+  try {
+    const response = await fetch(`${BASE_URL}/api/shop/assignService`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        shop_id ,
+        id,
+        employee_email ,
+        name ,
+        dur ,
+        average_dur,
+        client_cost ,
+        employee_cost ,
+        description,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Invalid credentials');
+    }
+    const data = await response.json();
+    console.log(data)
+    return data;
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+}
 // delete service
 export const deleteService = async (shop_id ,service_id) => {
   try {
