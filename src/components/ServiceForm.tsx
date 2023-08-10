@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 
 interface ServiceFormProps {
@@ -98,7 +98,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
   );
 };
 
-export const ServiceModificationForm: React.FC<ServiceFormProps> = ({ onSubmit, service }) => {
+export const ServiceModificationForm: React.FC = ({ onSubmit, service }) => {
   const [name, setName] = useState<string>(service.name);
   const [hours, setHours] = useState<string>('0');//edw 8elei edit
   const [minutes, setMinutes] = useState<string>('45');
@@ -109,16 +109,15 @@ export const ServiceModificationForm: React.FC<ServiceFormProps> = ({ onSubmit, 
   const [toSubmit, setToSubmit ] = useState(false);
   // store service
   const handleService = async () => {// den exw valei to alert
-    console.log(/^\d+(\.\d{0,1,2})?$/.test(clientCost))
     if (typeof name == 'string' && name.length > 3 && /[a-zA-Z ]/.test(name) &&// name constraint
     /^\d+$/.test(hours) && /^\d+$/.test(minutes) && parseInt(minutes)>0 && /^\d+$/.test(seconds) &&// duration constraint
-    /^\d+(\.\d{0,1,2})?$/.test(clientCost) && parseFloat(clientCost)>0
-    && /^\d+(\.\d{0,1,2})?$/.test(employeeCost) && parseFloat(employeeCost)>0 ){// cost constraints
+    /^\d+(\.\d{1,2})?$/.test(clientCost) && parseFloat(clientCost)>0
+    && /^\d+(\.\d{1,2})?$/.test(employeeCost) && parseFloat(employeeCost)>0 ){// cost constraints
       service.name = name ;
       service.client_cost = clientCost;
       service.employee_cost = employeeCost;
       service.description = description;
-      service.duration=hours+'h'+minutes+'m'+seconds+'s';
+      service.dur=hours+'h'+minutes+'m'+seconds+'s';
       onSubmit(service);
     }
   };
@@ -137,7 +136,7 @@ export const ServiceModificationForm: React.FC<ServiceFormProps> = ({ onSubmit, 
   }, [])
 
   return (
-    <View style={styles.container}>
+    <View style={styles.modificationContainer}>
       <Text
         style={styles.formHeader}
       >
@@ -287,5 +286,17 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     textAlignVertical: 'top',
     height: 100,
-  }
+  },
+  modificationContainer : {
+    backgroundColor : "#6465A1AA",
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '90%',
+    paddingTop : 10,
+    paddingBottom : 10,
+    marginTop : 10,
+    marginBottom: 20,
+    borderRadius : 8,
+    alignSelf : 'center',
+  },
 });

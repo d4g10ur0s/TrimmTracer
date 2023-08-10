@@ -28,6 +28,7 @@ import { deleteService, assignService } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
 
 import EmployeeSelection from '../components/EmployeeSelection';
+import {ServiceModificationForm} from '../components/ServiceForm';
 
 interface ServiceContainerProps {
   service : {};
@@ -104,7 +105,9 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
     setModalVisible(true);
   }
 
-  const serviceModification = async (service) => {
+  const modify = async () => {await setMService((prevState) => !prevState)}
+
+  const serviceModification = async (serv) => {
     if(mService){//save editted service
       await assignService(service.shop_id,
                           service.id ,
@@ -174,6 +177,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.controlButtons}
+          onPress={modify}
         >
           <Text>
             {"Modify Service"}
