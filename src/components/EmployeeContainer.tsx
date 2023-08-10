@@ -25,6 +25,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import { deleteEmployee } from '../utils/EmployeeHandling';
+import {EmployeeModificationForm} from '../components/RegistrationForm'
 
 interface EmployeeContainerProps {
   employee : {};
@@ -32,6 +33,12 @@ interface EmployeeContainerProps {
 
 const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete,refresh}) => {
   const [employeeInfo, setEmployeeInfo] = useState(employee);
+  const [m , setM] = useState(false);
+
+  const alterM = async () => {setM((prevState)=>!prevState);}
+
+  const employeeModification = async () => {modifyEmployee();}
+
   const employeeDeletion = () => {
     deleteEmployee(employee.email);
     refresh();
@@ -95,6 +102,7 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.controlButtons}
+          onPress={alterM}
         >
           <Text>
             {"Modify Employee"}
@@ -131,6 +139,7 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
           </Text>
         </TouchableOpacity>
       </ScrollView>
+      {(m) ? (<EmployeeModificationForm employee={employee}/>) : (null)}
     </View>
   )
 }

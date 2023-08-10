@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
-import RegistrationForm from '../components/RegistrationForm';
+import {RegistrationForm} from '../components/RegistrationForm';
 import LogInForm from '../components/LogInForm';
 import { login } from '../utils/EnterApp';
 

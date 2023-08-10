@@ -6,7 +6,7 @@ import { getEmployees,addEmployee } from '../utils/EmployeeHandling';
 import RegistrationForm from '../components/RegistrationForm';
 import { getServices,addService } from '../utils/ServiceHandling';
 import ServiceContainer from '../components/ServiceContainer';
-import {ServiceForm} from '../components/ServiceForm';
+import { ServiceForm } from '../components/ServiceForm';
 
 interface ShopContainerProps {
   employeeType : number;
