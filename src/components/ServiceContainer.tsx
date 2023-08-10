@@ -53,6 +53,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   const [serviceInfo, setServiceInfo] = useState(service);
   const [modalVisible, setModalVisible ] = useState(false);
   const [modalContent , setModalContent] = useState(null);
+  const [mService , setMService] = useState(false);
 
   // modal
   const handleHideModal = () => {
@@ -101,6 +102,21 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
             />
           );
     setModalVisible(true);
+  }
+
+  const serviceModification = async (service) => {
+    if(mService){//save editted service
+      await assignService(service.shop_id,
+                          service.id ,
+                          [service.employee_email] ,
+                          service.name ,
+                          service.dur,
+                          service.average_dur ,
+                          service.client_cost ,
+                          service.employee_cost ,
+                          service.description );
+    }
+    await setMService((prevState) => !prevState)
   }
 
   return(
@@ -189,6 +205,11 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
       >
         {modalContent}
       </Modal>
+      {
+        (mService) ?
+        (<ServiceModificationForm onSubmit={serviceModification} service={service} />) :
+        (null)
+      }
     </View>
   )
 }

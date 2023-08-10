@@ -5,7 +5,7 @@ interface ServiceFormProps {
   onSubmit: (username: string, password: string) => void;
 }
 
-const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
+export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
   const [name, setName] = useState<string>('Neo Service');
   const [hours, setHours] = useState<string>('0');
   const [minutes, setMinutes] = useState<string>('45');
@@ -24,6 +24,117 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
       onSubmit(name ,hours ,minutes ,seconds,employeeCost,clientCost,description);
     }
   };
+
+  return (
+    <View style={styles.container}>
+      <Text
+        style={styles.formHeader}
+      >
+        Add Service
+      </Text>
+      <TextInput
+        style={styles.nameInput}
+        placeholder={'Service Name'}
+        value={name}
+        onChangeText={setName}
+      />
+      <View style={styles.durationInput}>
+        <Text style={styles.label}>Duration</Text>
+        <TextInput
+          style={styles.timeInput}
+          keyboardType="numeric"
+          value={hours}
+          onChangeText={setHours}
+        />
+        <Text style={styles.timeUnit}>h</Text>
+        <TextInput
+          style={styles.timeInput}
+          keyboardType="numeric"
+          value={minutes}
+          onChangeText={setMinutes}
+        />
+        <Text style={styles.timeUnit}>m</Text>
+        <TextInput
+          style={styles.timeInput}
+          keyboardType="numeric"
+          value={seconds}
+          onChangeText={setSeconds}
+        />
+        <Text style={styles.timeUnit}>s</Text>
+      </View>
+      <View style={styles.durationInput}>
+        <Text style={styles.label}>Cost</Text>
+        <TextInput
+          style={styles.costInput}
+          keyboardType="numeric"
+          value={clientCost}
+          onChangeText={setClientCost}
+        />
+        <Text style={styles.timeUnit}>Client</Text>
+        <TextInput
+          style={styles.costInput}
+          keyboardType="numeric"
+          value={employeeCost}
+          onChangeText={setEmployeeCost}
+        />
+        <Text style={styles.timeUnit}>Employee</Text>
+      </View>
+      <Text style={styles.label}>Description</Text>
+      <TextInput
+        style={styles.descriptionInput}
+        multiline
+        numberOfLines={8}
+        value={description}
+        onChangeText={setDescription}
+        placeholder="Enter your description here"
+      />
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={handleService}
+      >
+        <Text style={{alignSelf : "center",}}> {"Submit"} </Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export const ServiceModificationForm: React.FC<ServiceFormProps> = ({ onSubmit, service }) => {
+  const [name, setName] = useState<string>(service.name);
+  const [hours, setHours] = useState<string>('0');//edw 8elei edit
+  const [minutes, setMinutes] = useState<string>('45');
+  const [seconds, setSeconds] = useState<string>('0');
+  const [clientCost, setClientCost] = useState<string>(service.client_cost);
+  const [employeeCost, setEmployeeCost] = useState<string>(service.employee_cost);
+  const [description, setDescription] = useState<string>(service.description);
+  const [toSubmit, setToSubmit ] = useState(false);
+  // store service
+  const handleService = async () => {// den exw valei to alert
+    console.log(/^\d+(\.\d{0,1,2})?$/.test(clientCost))
+    if (typeof name == 'string' && name.length > 3 && /[a-zA-Z ]/.test(name) &&// name constraint
+    /^\d+$/.test(hours) && /^\d+$/.test(minutes) && parseInt(minutes)>0 && /^\d+$/.test(seconds) &&// duration constraint
+    /^\d+(\.\d{0,1,2})?$/.test(clientCost) && parseFloat(clientCost)>0
+    && /^\d+(\.\d{0,1,2})?$/.test(employeeCost) && parseFloat(employeeCost)>0 ){// cost constraints
+      service.name = name ;
+      service.client_cost = clientCost;
+      service.employee_cost = employeeCost;
+      service.description = description;
+      service.duration=hours+'h'+minutes+'m'+seconds+'s';
+      onSubmit(service);
+    }
+  };
+
+  const durationSetUP = async () => {
+    const sec = Math.floor(service.duration / 1000);
+    await setSeconds(sec)
+    const min = Math.floor((seconds % 3600) / 60);
+    await setMinutes(min)
+    const hou = Math.floor(seconds / 3600);
+    await setHours(hou)
+  }
+
+  useEffect(()=>{
+    durationSetUP();
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -178,5 +289,3 @@ const styles = StyleSheet.create({
     height: 100,
   }
 });
-
-export default ServiceForm;
