@@ -9,6 +9,7 @@ interface RegistrationFormProps {
 }
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeForm,addEmployee,onSubmit2 }) => {
+  console.log("edw eisai")
   const [name, setName] = useState<string>('Nikos');
   const [sirname, setSirname] = useState<string>('Kalantas');
   const [nickname, setNickname] = useState<string>('kalantas');
@@ -84,7 +85,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, ch
   }
 
   return (
-    <View style={[styles.container, ( (addEmployee) ? ({}) : ({marginTop : 85,}) )]}>
+    <View style={[styles.container, ( (addEmployee) ? ({marginTop:0}) : ({marginTop : 85,}) )]}>
       <Text
         style={styles.formHeader}
       >
@@ -241,7 +242,7 @@ export const EmployeeModificationForm: React.FC = ({ onSubmit, employee }) => {
   // Register in Application
   const handleRegister = () => {
     // if no errors then register new employee
-    if( !nameError && !sirnameError && !emailError && !phoneError ){    
+    if( !nameError && !sirnameError && !emailError && !phoneError ){
       onSubmit(name,sirname,nickname,email,phone,typeOfEmployee);
     }
   };

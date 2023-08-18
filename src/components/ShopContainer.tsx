@@ -3,7 +3,7 @@ import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity, Scro
 import ShopMenu from '../components/ShopMenu';
 import EmployeeContainer from '../components/EmployeeContainer';
 import { getEmployees,addEmployee } from '../utils/EmployeeHandling';
-import RegistrationForm from '../components/RegistrationForm';
+import { RegistrationForm } from '../components/RegistrationForm';
 import { getServices,addService } from '../utils/ServiceHandling';
 import ServiceContainer from '../components/ServiceContainer';
 import { ServiceForm } from '../components/ServiceForm';

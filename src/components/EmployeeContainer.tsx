@@ -24,7 +24,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { deleteEmployee } from '../utils/EmployeeHandling';
+import { deleteEmployee,modifyEmployee } from '../utils/EmployeeHandling';
 import {EmployeeModificationForm} from '../components/RegistrationForm'
 
 interface EmployeeContainerProps {
@@ -37,7 +37,11 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
 
   const alterM = async () => {setM((prevState)=>!prevState);}
 
-  const employeeModification = async () => {setM((prevState)=>!prevState);await modifyEmployee();}
+  const employeeModification = async (name,sirname,nickname,email,phone,typeOfEmployee) => {
+    modifyEmployee(employee.email,name,sirname,nickname,email,phone,typeOfEmployee);
+    setM((prevState)=>!prevState);
+    refresh();
+  }
 
   const employeeDeletion = () => {
     deleteEmployee(employee.email);
