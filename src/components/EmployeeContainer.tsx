@@ -37,7 +37,7 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
 
   const alterM = async () => {setM((prevState)=>!prevState);}
 
-  const employeeModification = async () => {modifyEmployee();}
+  const employeeModification = async () => {setM((prevState)=>!prevState);await modifyEmployee();}
 
   const employeeDeletion = () => {
     deleteEmployee(employee.email);
@@ -139,7 +139,7 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
           </Text>
         </TouchableOpacity>
       </ScrollView>
-      {(m) ? (<EmployeeModificationForm employee={employee}/>) : (null)}
+      {(m) ? (<EmployeeModificationForm employee={employee} onSubmit={employeeModification}/>) : (null)}
     </View>
   )
 }

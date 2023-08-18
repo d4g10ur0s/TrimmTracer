@@ -24,3 +24,12 @@ exports.deleteShopEmployee = async (req, res) => {
   res.json({employees});
 
 };
+
+exports.updateShopEmployee = async (req, res) => {
+  const { email, employee } = req.body;
+  console.log(req.body);
+  const shopEmployees = await client.execute(
+    'UPDATE trimtracer.user SET email=?,phone=?,name=?,nickname=?,sirname=?,typeofemployee=? WHERE email = ?',
+    [employee.email,employee.phone,employee.name,employee.nickname,employee.sirname,employee.typeofemployee,email]
+  );
+};

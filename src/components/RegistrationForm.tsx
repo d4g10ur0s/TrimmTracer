@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text,Picker, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 
 interface RegistrationFormProps {
@@ -199,14 +199,12 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, ch
 };
 
 export const EmployeeModificationForm: React.FC = ({ onSubmit, employee }) => {
-  const [name, setName] = useState<string>('Nikos');
-  const [sirname, setSirname] = useState<string>('Kalantas');
-  const [nickname, setNickname] = useState<string>('kalantas');
-  const [email, setEmail] = useState<string>('nikal@hotmail.com');
+  const [name, setName] = useState<string>(employee.name);
+  const [sirname, setSirname] = useState<string>(employee.sirname);
+  const [nickname, setNickname] = useState<string>(employee.nickname);
+  const [email, setEmail] = useState<string>(employee.email);
   const [phone, setPhone] = useState<string>('6985698574');
-  const [password, setPassword] = useState<string>('');
-  const [password1, setPassword1] = useState<string>('');
-  const [typeOfEmployee , setTypeOfEmployee] = useState('3');
+  const [typeOfEmployee , setTypeOfEmployee] = useState(employee.typeOfEmployee);
   //errors
   const [nameError, setNameError] = useState(null);
   const [sirnameError, setSirnameError] = useState(null);
@@ -243,20 +241,13 @@ export const EmployeeModificationForm: React.FC = ({ onSubmit, employee }) => {
   // Register in Application
   const handleRegister = () => {
     // if no errors then register new employee
-    if( !nameError && !sirnameError && !emailError && !phoneError ){
-      // create dummy password
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let code = '';
-      for (let i = 0; i < 8; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        code += characters.charAt(randomIndex);
-      }
-      onSubmit2(name,sirname,nickname,email,phone,typeOfEmployee,code);
+    if( !nameError && !sirnameError && !emailError && !phoneError ){    
+      onSubmit(name,sirname,nickname,email,phone,typeOfEmployee);
     }
   };
 
   // employee types
-  const [selected , setSelected] = useState([false, false, true]);
+  const [selected , setSelected] = useState([false, false, false]);
   const button1 = () => {
     setSelected([true ,false ,false]);
     setTypeOfEmployee('1');
@@ -269,6 +260,12 @@ export const EmployeeModificationForm: React.FC = ({ onSubmit, employee }) => {
     setSelected([false ,false ,true]);
     setTypeOfEmployee('3');
   }
+  useEffect(()=>{
+    //set type of employee at start
+    if(employee.typeofemployee=='1'){button1()}
+    else if(employee.typeofemployee=='2'){button2()}
+    else{button3()}
+  }, []);
 
   return (
     <View style={styles.modificationContainer}>
@@ -292,7 +289,7 @@ export const EmployeeModificationForm: React.FC = ({ onSubmit, employee }) => {
       <TextInput
         style={styles.input}
         placeholder="Nickname"
-        value={sirname}
+        value={nickname}
         onChangeText={setNickname}
       />
       <TextInput
