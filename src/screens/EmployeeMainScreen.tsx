@@ -15,7 +15,7 @@ const EmployeeMainScreen: React.FC = () => {
   const navigation = useNavigation(); // Initialize navigation
 
   const toggleCalendar = () => {
-    setContent(<Calendar />);
+    setContent(<Calendar employee={employee}/>);
   }
 
   const toggleToShop = () => {

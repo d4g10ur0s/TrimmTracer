@@ -1,12 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import DayContainer from '../components/DayContainer';
 
-interface CalendarProps {
-  onDateSelect: (date: Date) => void;
-}
+const DayButton : React.FC = ({date,selectDate,dayCounter})=>{
+  const [ldate ,setDate] = useState(date);
+  const dateSelected = () => {selectDate(date)}
+  return(
+    <View>
+      <TouchableOpacity
+      style={styles.dateCell}
+      onPress={() => dateSelected(ldate)}
+      >
+      <Text
+        style={{'color' : 'black'}}
+      >
+        {dayCounter}
+      </Text>
+      </TouchableOpacity>
+    </View>
+    );
+};
 
-const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
+const RCalendar: React.FC = ({ onDateSelect }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  const dateSelected=(date)=>{onDateSelect(date);}
 
   const prevMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
@@ -53,17 +71,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
         } else if (dayCounter <= daysInMonth) {
           const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCounter);
           week.push(
-            <TouchableOpacity
-              key={j}
-              style={styles.dateCell}
-              onPress={() => onDateSelect(date)}
-            >
-              <Text
-                style={{'color' : 'black'}}
-              >
-                {dayCounter}
-              </Text>
-            </TouchableOpacity>
+            <DayButton date={date} selectDate={dateSelected} dayCounter={dayCounter}/>
           );
           dayCounter++;
         } else {
@@ -97,6 +105,24 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
     </View>
   );
 };
+
+const Calendar: React.FC = ({ employee }) => {
+
+  const toggleToDay = (day) => {
+    setContent(<DayContainer day={day} employee={employee} />)
+  }
+
+  const toggleCalendar = () => {
+    setContent(<RCalendar onDateSelect={toggleToDay}/>);
+  }
+
+  const [content,setContent]=useState(<RCalendar onDateSelect={toggleToDay} />)
+
+  return(
+    <View>{content}</View>
+  )
+
+}
 
 const styles = StyleSheet.create({
   container: {
