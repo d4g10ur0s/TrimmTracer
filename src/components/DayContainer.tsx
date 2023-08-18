@@ -40,8 +40,8 @@ const ServiceInfoContainer: React.FC = ({service}) => {
     <View
       style={styles.serviceInfo}
     >
-      <Text>{'Service Name'}</Text>
-      <Text>{'Service Duration'}</Text>
+    <Text style={{color : 'black',marginLeft: 5,}}>{'Service Name'}</Text>
+      <Text style={{color : 'black',marginRight: 5,}}>{'Service Duration'}</Text>
     </View>
   );
 
@@ -56,9 +56,9 @@ const AppointmentContainer: React.FC = ({}) =>{
       <View
         style={styles.appointmentTime}
       >
-        <Text>{'Start : 13:00'}</Text>
-        <Text>{'End : 13:25'}</Text>
-        <Text>{'Duration : 00:25:00'}</Text>
+        <Text style={{color : 'black',marginRight: 5,}}>{'Start : 13:00'}</Text>
+        <Text style={{color : 'black',}}>{'End : 13:25'}</Text>
+        <Text style={{color : 'black',marginLeft: 5,}}>{'Duration : 00:25:00'}</Text>
       </View>
       <View
         style={styles.serviceInfoView}
@@ -67,59 +67,42 @@ const AppointmentContainer: React.FC = ({}) =>{
         <ServiceInfoContainer />
         <ServiceInfoContainer />
       </View>
-      <Text style={styles.personInfo}>{'Client Info'}</Text>
       <View
-        style={styles.clientInfo}
+        style={styles.personInfoView}
       >
-        <Text>{'Client Full Name'}</Text>
-        <Text>{'Client Phone Num.'}</Text>
-        <Text>{'Client Email'}</Text>
-      </View>
-      <Text style={styles.personInfo}>{'Employee Info'}</Text>
-      <View
-        style={styles.employeeInfo}
-      >
-        <Text>{'Employee Full Name'}</Text>
-        <Text>{'Employee Phone Num.'}</Text>
-        <Text>{'Employee Email'}</Text>
+        <View
+          style={styles.clientInfo}
+        >
+          <Text style={styles.personInfo}>{'Client Info'}</Text>
+          <Text style={{color : 'black',}}>{'Client Full Name'}</Text>
+          <Text style={{color : 'black',}}>{'Client Phone Num.'}</Text>
+          <Text style={{color : 'black',}}>{'Client Email'}</Text>
+        </View>
+        <View
+          style={styles.employeeInfo}
+        >
+          <Text style={styles.personInfo}>{'Employee Info'}</Text>
+          <Text style={{color : 'black',}}>{'Employee Full Name'}</Text>
+          <Text style={{color : 'black',}}>{'Employee Phone Num.'}</Text>
+          <Text style={{color : 'black',}}>{'Employee Email'}</Text>
+        </View>
       </View>
       <ScrollView
         horizontal={true}
         style={styles.buttonScrollView}
       >
         <TouchableOpacity
-          style={styles.controlButtons}
+          style={styles.deleteButton}
         >
           <Text>
-            {"Employee Profile"}
+            {"Modify Appointment"}
             </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.controlButtons}
-        >
-          <Text>
-            {"Modify Employee"}
-            </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.controlButtons}
-        >
-          <Text>
-            {"New Appointment"}
-            </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.controlButtons}
-        >
-          <Text>
-            {"Assign Service"}
-          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
         >
           <Text>
-            {"Unassign Service"}
+            {"Delete Appointment"}
             </Text>
         </TouchableOpacity>
       </ScrollView>
@@ -135,11 +118,20 @@ const DayContainer: React.FC<DayContainerProps> = ({day , employee}) => {
     <View
       style={styles.outsideContainer}
     >
-      <Text
-        style={styles.dayHeader}
+      <View
+        style={styles.container}
       >
-        {day.toLocaleString()}
-      </Text>
+        <Text
+          style={styles.dayHeader}
+        >
+          {day.toDateString()}
+        </Text>
+        <TouchableOpacity
+          style={styles.controlButtons}
+        >
+          <Text>{'New Appointment'}</Text>
+        </TouchableOpacity>
+      </View>
       <ScrollView>
         <AppointmentContainer />
         <AppointmentContainer />
@@ -153,15 +145,23 @@ const styles = StyleSheet.create({
     alignSelf : 'center',
     width: '95%',
   },
+  container : {
+    backgroundColor : '#FFFFFFAD',
+    justifyContent : 'center',
+    alignItems : 'center',
+    borderRadius : 8,
+    marginVertical : 10,
+  },
   dayHeader : {
     marginVertical : 5,
     fontSize : 20,
     fontWeight : 'bold',
     alignSelf: 'center',
+    color : 'black',
   },
   appointmentContainer : {
     borderRadius : 8,
-    backgroundColor:'#AFAFAFAD',
+    backgroundColor : '#FFFFFFAD',
     borderWidth: 1,
     borderColor: 'gray',
     borderStyle: 'dashed',
@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
     marginVertical : 3,
     fontWeight : 'bold',
     fontSize : 16,
+    color : 'black',
   },
   serviceInfo : {
     width : '100%',
@@ -189,19 +190,17 @@ const styles = StyleSheet.create({
     justifyContent : 'space-between',
     flexDirection : 'row',
   },
-  clientInfo : {
-    width : '100%',
-    paddingHorizontal : 0,
-    marginVertical : 2,
-    justifyContent : 'space-between',
+  personInfoView : {
     flexDirection : 'row',
+    justifyContent : 'space-between',
+  },
+  clientInfo : {
+    marginVertical : 3,
+    marginLeft : 5,
   },
   employeeInfo : {
-    width : '100%',
-    paddingHorizontal : 0,
-    marginVertical : 2,
-    justifyContent : 'space-between',
-    flexDirection : 'row',
+    marginRight: 5,
+    marginVertical : 3,
   },
   buttonScrollView : {
     backgroundColor : '#FFFFFFAD',
