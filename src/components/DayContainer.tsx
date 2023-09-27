@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCallback , useMemo } from 'react';
 
 import type {PropsWithChildren} from 'react';
@@ -26,6 +26,7 @@ import {
 
 import { deleteService, assignService } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
+import { getShopAppointments } from '../utils/AppointmentHandling';
 
 import EmployeeSelection from '../components/EmployeeSelection';
 import {ServiceModificationForm} from '../components/ServiceForm';
@@ -113,6 +114,26 @@ const AppointmentContainer: React.FC = ({}) =>{
 
 
 const DayContainer: React.FC<DayContainerProps> = ({day , employee}) => {
+
+  const [appointments,setAppointments] = useState(null);
+
+  const renderAppointments = async () => {
+    // first timestamp of the day
+    var when_0 = day;
+    when_0.setHours(0,0,0,0);
+    // last timestamp of the day
+    var when_1 = day;
+    when_1.setHours(23, 59, 59, 999);
+    // get appointments
+    appointements = await getShopAppointments(employee.shop_id,
+                                              employee.email,
+                                              when_0,when_1)
+    // render every appointment in a list
+  }
+
+  useEffect(() => {
+    renderAppointments();
+  }, []);
 
   return(
     <View
