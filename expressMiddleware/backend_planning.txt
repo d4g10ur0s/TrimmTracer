@@ -16,7 +16,7 @@ Q02 :
 
 Q03 :
     Get Appointments for a Day
-    i) select COUNT(*) from appointment where shop_id = ? and (when<=? and when>=?);
-   ii) select COUNT(*) from appointment where shop_id=? and employee_id=? and (when<=? and when>=?);
+    i) select * from appointment where shop_id = ? and (when<=? and when>=?);
+   ii) select * from appointment where shop_id=? and employee_email=? and (when<=? and when>=?);
 
 Q04 :
