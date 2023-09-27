@@ -1,0 +1,22 @@
+Q00 :
+    Sign In
+    i) select * from user where email=?;
+   ii) insert into user(email,employee,shop_id,phone,name,nickname,password,sirname,typeofemployee)
+       values (?,?,?,?,?,?,?,?);
+  iii) select * from user where email=?;
+
+Q01 :
+    Log In
+    i) select * from user where email=?;
+
+Q02 :
+    Get Number of Appointments Between Timestamps
+    i) select COUNT(*) from appointment where shop_id = ? and (when<=? and when>=?);
+   ii) select COUNT(*) from appointment where shop_id=? and employee_id=? and (when<=? and when>=?);
+
+Q03 :
+    Get Appointments for a Day
+    i) select COUNT(*) from appointment where shop_id = ? and (when<=? and when>=?);
+   ii) select COUNT(*) from appointment where shop_id=? and employee_id=? and (when<=? and when>=?);
+
+Q04 :
