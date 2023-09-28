@@ -38,11 +38,15 @@ interface DayContainerProps {
 const ServiceInfoContainer: React.FC = ({service}) => {
 
   return(
-    <View
-      style={styles.serviceInfo}
-    >
-    <Text style={{color : 'black',marginLeft: 5,}}>{'Service Name'}</Text>
-      <Text style={{color : 'black',marginRight: 5,}}>{'Service Duration'}</Text>
+    <View style={styles.serviceInfo}>
+      <View style={{alignItems : 'center'}}>
+        <Text style={{fontWeight:'700',color : 'black',marginLeft: 5,}}>{"Service Name"}</Text>
+        <Text style={{color : 'black',marginLeft: 5,}}>{service.name}</Text>
+      </View>
+      <View  style={{alignItems : 'center'}}>
+        <Text style={{fontWeight:'700',color : 'black',marginLeft: 5,}}>{"Service Duration"}</Text>
+        <Text style={{color : 'black',marginRight: 5,}}>{service.duration + " minutes"}</Text>
+      </View>
     </View>
   );
 
@@ -50,6 +54,15 @@ const ServiceInfoContainer: React.FC = ({service}) => {
 
 const AppointmentContainer: React.FC = ({appointment}) =>{
 
+  const renderServices = () => {
+    var serviceContainers = [];
+    for(i in appointment.service_names){
+      serviceContainers.push(<ServiceInfoContainer
+                              service={appointment.service_names[i]}
+                            />)
+    }
+    return serviceContainers;
+  }
 
   const getHourMinuteStringFromDate = (dateString) => {
     var date = new Date(dateString)
@@ -82,8 +95,7 @@ const AppointmentContainer: React.FC = ({appointment}) =>{
         style={styles.serviceInfoView}
       >
         <Text style={styles.personInfo}>{'Appointment Services'}</Text>
-        <ServiceInfoContainer />
-        <ServiceInfoContainer />
+        {renderServices()}
       </View>
       <View
         style={styles.personInfoView}
@@ -92,17 +104,17 @@ const AppointmentContainer: React.FC = ({appointment}) =>{
           style={styles.clientInfo}
         >
           <Text style={styles.personInfo}>{'Client Info'}</Text>
-          <Text style={{color : 'black',}}>{'Client Full Name'}</Text>
-          <Text style={{color : 'black',}}>{'Client Phone Num.'}</Text>
-          <Text style={{color : 'black',}}>{'Client Email'}</Text>
+          <Text style={{color : 'black',}}>{appointment.client_fullname}</Text>
+          <Text style={{color : 'black',}}>{appointment.client_phone}</Text>
+          <Text style={{color : 'black',}}>{appointment.client_email}</Text>
         </View>
         <View
           style={styles.employeeInfo}
         >
           <Text style={styles.personInfo}>{'Employee Info'}</Text>
-          <Text style={{color : 'black',}}>{'Employee Full Name'}</Text>
-          <Text style={{color : 'black',}}>{'Employee Phone Num.'}</Text>
-          <Text style={{color : 'black',}}>{'Employee Email'}</Text>
+          <Text style={{color : 'black',}}>{appointment.employee_fullname}</Text>
+          <Text style={{color : 'black',}}>{appointment.employee_phone}</Text>
+          <Text style={{color : 'black',}}>{appointment.employee_email}</Text>
         </View>
       </View>
       <ScrollView
@@ -236,7 +248,11 @@ const styles = StyleSheet.create({
   },
   serviceInfo : {
     width : '100%',
-    paddingHorizontal : 0,
+    borderStyle : 'dashed',
+    borderRadius : 8,
+    borderWidth : 1,
+    paddingHorizontal : 5,
+    paddingVertical : 2,
     marginVertical : 2,
     justifyContent : 'space-between',
     flexDirection : 'row',
@@ -246,10 +262,16 @@ const styles = StyleSheet.create({
     justifyContent : 'space-between',
   },
   clientInfo : {
+    alignItems : 'center',
+    justifyContent : 'center',
+    textAlign : 'center',
     marginVertical : 3,
     marginLeft : 5,
   },
   employeeInfo : {
+    alignItems : 'center',
+    justifyContent : 'center',
+    textAlign : 'center',
     marginRight: 5,
     marginVertical : 3,
   },
