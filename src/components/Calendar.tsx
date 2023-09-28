@@ -51,14 +51,14 @@ const RCalendar: React.FC = ({ onDateSelect }) => {
     const dayHeader = [];
     const dayNames = ["Sun","Mon", "Tue", "Thi", "Wed", "Fri", "Sat"];
     for(let i=0; i<7; i++){
-      dayHeader.push(<View style={styles.dayHeaderCell}>
+      dayHeader.push(<View style={styles.dayHeaderCell} key={i}>
                       <Text style={{color : 'black',}}>{dayNames[i]}</Text>
                      </View>
                     );
     }
 
     calendarArray.push(
-      <View style={styles.weekRow}>
+      <View style={styles.weekRow} key={0}>
         {dayHeader}
       </View>
     );
@@ -71,7 +71,7 @@ const RCalendar: React.FC = ({ onDateSelect }) => {
         } else if (dayCounter <= daysInMonth) {
           const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCounter);
           week.push(
-            <DayButton date={date} selectDate={dateSelected} dayCounter={dayCounter}/>
+            <DayButton key={j} date={date} selectDate={dateSelected} dayCounter={dayCounter}/>
           );
           dayCounter++;
         } else {
@@ -79,7 +79,7 @@ const RCalendar: React.FC = ({ onDateSelect }) => {
         }
       }
       calendarArray.push(
-        <View key={i} style={styles.weekRow}>
+        <View key={i+1} style={styles.weekRow}>
           {week}
         </View>
       );
@@ -107,9 +107,9 @@ const RCalendar: React.FC = ({ onDateSelect }) => {
 };
 
 const Calendar: React.FC = ({ employee }) => {
-
+  const [user,setUser] = useState(employee)
   const toggleToDay = (day) => {
-    setContent(<DayContainer day={day} employee={employee} />)
+    setContent(<DayContainer day={day} employee={user} />)
   }
 
   const toggleCalendar = () => {

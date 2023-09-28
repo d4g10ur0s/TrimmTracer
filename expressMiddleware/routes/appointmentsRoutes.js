@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const serviceShopController = require('../controllers/appointmentShopController');
+const appointmentShopController = require('../controllers/appointmentShopController');
 
 router.post('/getShopAppointments', appointmentShopController.getShopAppointments);
-router.post('/getEmployeeAppointments', appointmentShopController.getEmployeeAppointments);
+//router.post('/getEmployeeAppointments', appointmentShopController.getEmployeeAppointments);
 
 module.exports = router;

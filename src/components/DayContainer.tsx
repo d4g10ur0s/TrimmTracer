@@ -48,7 +48,24 @@ const ServiceInfoContainer: React.FC = ({service}) => {
 
 }
 
-const AppointmentContainer: React.FC = ({}) =>{
+const AppointmentContainer: React.FC = ({appointment}) =>{
+
+
+  const getHourMinuteStringFromDate = (dateString) => {
+    var date = new Date(dateString)
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
+  const getDuration = (date_1 , date_0) => {
+    const timeDifference = Math.abs(new Date(date_1) - new Date(date_0)) / 1000; // Difference in seconds
+    const hours = Math.floor(timeDifference / 3600);
+    const minutes = Math.floor((timeDifference % 3600) / 60);
+    const seconds = Math.floor(timeDifference % 60);
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
 
   return(
     <View
@@ -57,9 +74,9 @@ const AppointmentContainer: React.FC = ({}) =>{
       <View
         style={styles.appointmentTime}
       >
-        <Text style={{color : 'black',marginRight: 5,}}>{'Start : 13:00'}</Text>
-        <Text style={{color : 'black',}}>{'End : 13:25'}</Text>
-        <Text style={{color : 'black',marginLeft: 5,}}>{'Duration : 00:25:00'}</Text>
+        <Text style={{color : 'black',marginRight: 5,}}>{'Start : '+getHourMinuteStringFromDate(appointment.check_in)}</Text>
+        <Text style={{color : 'black',}}>{'End : '+getHourMinuteStringFromDate(appointment.check_out)}</Text>
+        <Text style={{color : 'black',marginLeft: 5,}}>{'Duration : ' + getDuration(appointment.check_out,appointment.check_in)}</Text>
       </View>
       <View
         style={styles.serviceInfoView}
@@ -114,26 +131,40 @@ const AppointmentContainer: React.FC = ({}) =>{
 
 
 const DayContainer: React.FC<DayContainerProps> = ({day , employee}) => {
-
+  const [user,setUser] = useState(employee);
   const [appointments,setAppointments] = useState(null);
-
+  // render appointments
   const renderAppointments = async () => {
+    var listOfAppointments = await getAppointments();
+    var content = [];
+    for (i in listOfAppointments.appointments){
+      console.log(listOfAppointments.appointments[i])
+      content.push(<AppointmentContainer
+                    key={i}
+                    appointment={listOfAppointments.appointments[i]}
+                   />);
+    }
+    await setAppointments(content);
+  }
+  // get appointments from database
+  const getAppointments = async () => {
+    console.log(user)
     // first timestamp of the day
-    var when_0 = day;
+    var when_0 = new Date(day);
     when_0.setHours(0,0,0,0);
     // last timestamp of the day
-    var when_1 = day;
+    var when_1 = new Date(day);
     when_1.setHours(23, 59, 59, 999);
     // get appointments
-    appointements = await getShopAppointments(employee.shop_id,
-                                              employee.email,
-                                              when_0,when_1)
-    // render every appointment in a list
+    var appointments = await getShopAppointments(user.shop_id,
+                                              user.email,
+                                              when_0,when_1);
+    return appointments;
   }
 
-  useEffect(() => {
+  useEffect(()=>{
     renderAppointments();
-  }, []);
+  },[user])
 
   return(
     <View
@@ -154,8 +185,7 @@ const DayContainer: React.FC<DayContainerProps> = ({day , employee}) => {
         </TouchableOpacity>
       </View>
       <ScrollView>
-        <AppointmentContainer />
-        <AppointmentContainer />
+        {appointments}
       </ScrollView>
     </View>
   )

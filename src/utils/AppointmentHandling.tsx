@@ -1,6 +1,6 @@
 const BASE_URL = 'http://192.168.1.226:3000'; // Replace this with your actual backend API URL
 
-export const getAppointments = async (shop_id,employee_email,when_0,when_1) => {
+export const getShopAppointments = async (shop_id,employee_email,when_0,when_1) => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/getShopAppointments`, {
       method: 'POST',
@@ -20,8 +20,7 @@ export const getAppointments = async (shop_id,employee_email,when_0,when_1) => {
     }
 
     const data = await response.json();
-    console.log(data)
-    return data.appointments;
+    return data;
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;
