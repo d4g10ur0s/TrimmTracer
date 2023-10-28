@@ -162,7 +162,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
       <Text
         style={styles.useText}
       >
-        {'Number of Employees : ' + service.employee_email.length}
+        {'Number of Employees : ' + service.numberofemployees}
       </Text>
       <ScrollView
         horizontal={true}

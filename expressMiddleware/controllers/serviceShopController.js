@@ -20,7 +20,7 @@ exports.getShopServices = async (req, res) => {
   const { shop_id } = req.body;
   console.log(req.body);
   const shopServices = await client.execute(
-    'SELECT * FROM trimtracer.service WHERE shop_id = ?',// 8a allaksei se or phone
+    'SELECT * FROM trimmtracer.service WHERE shop_id = ?',
     [shop_id]
   );
   const services = shopServices.rows
@@ -32,7 +32,7 @@ exports.deleteShopService = async (req, res) => {
   const { shop_id , service_id } = req.body;
   console.log(req.body);
   const shopEmployees = await client.execute(
-    'DELETE FROM trimtracer.service WHERE shop_id = ? and id = ?',
+    'DELETE FROM trimmtracer.service WHERE shop_id = ? and id = ?',
     [shop_id , service_id]
   );
   const employees = shopEmployees.rows
@@ -45,7 +45,7 @@ exports.addShopService = async (req, res) => {
   try {
     // Check if the service already exists in the database
     const serviceExists = await client.execute(
-      'SELECT * FROM trimtracer.service WHERE shop_id = ? and name = ? ALLOW FILTERING',
+      'SELECT * FROM trimmtracer.service WHERE shop_id = ? and name = ?',
       [shop_id, name]
     );
     if (serviceExists.rows.length > 0) {
@@ -54,10 +54,13 @@ exports.addShopService = async (req, res) => {
     // Insert the new service into the database
     const id = uuid.v4();
     const duration = cassandra.types.Duration.fromString(dur);
-    console.log(duration);
     await client.execute(
-      'INSERT INTO trimtracer.service (id, shop_id , employee_email ,name , dur , average_dur, client_cost , employee_cost ,description) VALUES (?,?,?,?,?,?,?,?,?)',
-      [id, shop_id , employee_email ,name , duration , duration, client_cost , employee_cost ,description], { prepare: true }
+      'INSERT INTO trimmtracer.service (shop_id ,name , dur , average_dur, client_cost , employee_cost ,description,numberofemployees) VALUES (?,?,?,?,?,?,?,?)',
+      [shop_id,name , duration , duration, client_cost , employee_cost ,description,1], { prepare: true }
+    );
+    client.execute(
+      'INSERT INTO trimmtracer.shopService (shop_id ,employee_email,service_name) VALUES (?,?,?)',
+      [shop_id,employee_email,name], { prepare: true }
     );
 
     res.status(201).json({ message: 'Service stored successfully' });
@@ -73,7 +76,7 @@ exports.assignService = async (req, res) => {
     // Check if the service already exists in the database
     console.log("delete")
     await client.execute(
-      'DELETE FROM trimtracer.service WHERE shop_id = ? and id = ?',
+      'DELETE FROM trimmtracer.service WHERE shop_id = ? and id = ?',
       [shop_id, id]
     );
     // Insert the new service into the database
@@ -82,7 +85,7 @@ exports.assignService = async (req, res) => {
     var newAvgDur = formatDuration(average_dur);
     console.log(employee_email)
     client.execute(
-      'INSERT INTO trimtracer.service (id, shop_id , employee_email ,name , dur , average_dur, client_cost , employee_cost ,description) VALUES (?,?,?,?,?,?,?,?,?)',
+      'INSERT INTO trimmtracer.service (id, shop_id , employee_email ,name , dur , average_dur, client_cost , employee_cost ,description) VALUES (?,?,?,?,?,?,?,?,?)',
       [newId, shop_id , employee_email[0] ,name , newDur , newAvgDur, client_cost , employee_cost ,description], { prepare: true }
     );
 

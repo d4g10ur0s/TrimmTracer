@@ -82,7 +82,7 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id,empl
   const addNewService = async (name ,hours ,minutes ,seconds,employeeCost,clientCost,description) => {
     const dur = hours+'h'+minutes+'m'+seconds+'s';
     console.log("+mvainei")
-    await addService(shop_id , [employee_email] ,name , dur , clientCost , employeeCost ,description )
+    await addService(shop_id , employee_email ,name , dur , clientCost , employeeCost ,description )
     setEnableForm((prevState) => !prevState)
     renderShopServices();
   }
