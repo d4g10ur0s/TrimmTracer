@@ -44,7 +44,7 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
   }
 
   const employeeDeletion = () => {
-    deleteEmployee(employee.email);
+    deleteEmployee(employee.email,employee.shop_id);
     refresh();
   }
 

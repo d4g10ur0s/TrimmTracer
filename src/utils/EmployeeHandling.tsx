@@ -56,7 +56,7 @@ export const addEmployee = async (name : string , sirname : string , nickname : 
 };
 
 // delete employee
-export const deleteEmployee = async (email : string) => {
+export const deleteEmployee = async (email,shop_id) => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/deleteEmployee`, {
       method: 'POST',
@@ -64,6 +64,7 @@ export const deleteEmployee = async (email : string) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        shop_id,
         email,
       }),
     });

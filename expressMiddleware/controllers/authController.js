@@ -7,16 +7,21 @@ exports.registerEmployee = async (req, res) => {
   try {
     // Check if the username already exists in the database
     const userExists = await client.execute(
-      'SELECT * FROM trimtracer.user WHERE email = ?',
-      [email]
+      'SELECT * FROM trimmtracer.user WHERE employee=? and email = ?',
+      [true,email]
     );
     if (userExists.rows.length > 0) {
       return res.status(400).json({ error: 'Username already exists' });
     }
     // Insert the new user into the database
     await client.execute(
-      'INSERT INTO trimtracer.user (email,phone,password,employee,shop_id,name,nickname,sirname,typeofemployee) VALUES (?,?,?,?,?,?,?,?,?)',
-      [email,phone,password,true,shop_id,name,nickname,sirname,typeofemployee], { prepare: true }
+      'INSERT INTO trimmtracer.user (email,phone,password,employee,shop_id,name,sirname,typeofemployee) VALUES (?,?,?,?,?,?,?,?)',
+      [email,phone,password,true,shop_id,name,sirname,typeofemployee], { prepare: true }
+    );
+    console.log(shop_id)
+    await client.execute(
+      'INSERT INTO trimmtracer.employee (email,phone,shop_id,name,sirname,typeofemployee) VALUES (?,?,?,?,?,?)',
+      [email,phone,shop_id,name,sirname,typeofemployee], { prepare: true }
     );
     console.log(shop_id)
 
@@ -31,8 +36,8 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
   console.log(req.body);
   const userExists = await client.execute(
-    'SELECT * FROM trimtracer.user WHERE email = ?',// 8a allaksei se or phone
-    [email]
+    'SELECT * FROM trimmtracer.user WHERE employee=? and email = ?',// 8a allaksei se or phone
+    [true,email]
   );
   if (userExists.rows.length > 0) {
     if(userExists.rows[0].password === password){
