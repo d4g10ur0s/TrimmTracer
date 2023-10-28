@@ -24,7 +24,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { deleteService, assignService } from '../utils/ServiceHandling';
+import { deleteService, assignService,getServiceEmployees } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
 
 import EmployeeSelection from '../components/EmployeeSelection';
@@ -71,8 +71,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   }
   // delete service
   const serviceDeletion = () => {
-    console.log(service)
-    deleteService(service.shop_id, service.name);
+    deleteService(service.shop_id, service.id);
     refresh();
   }
   // assign service
@@ -84,7 +83,9 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   }
   // to assign service - employee selection
   const toAssign = async () => {
-    const shopEmployees = await getEmployees(service.shop_id);
+    console.log("aaa")
+    const shopEmployees = getEmployees(service.shop_id);
+    const serviceEmployees = await getServiceEmployees(service.shop_id,service.name)
     var a = []
     var u = []
     for (i in shopEmployees){

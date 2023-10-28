@@ -15,7 +15,7 @@ function formatDuration(dur){
   newDur = new cassandra.types.Duration(0, hours, minutes, seconds, 0);
   return newDur;
 }
-
+// get shop services
 exports.getShopServices = async (req, res) => {
   const { shop_id } = req.body;
   console.log(req.body);
@@ -27,16 +27,18 @@ exports.getShopServices = async (req, res) => {
   res.json({services});
 
 };
-// delete service
-exports.deleteShopService = async (req, res) => {
-  const { shop_id , service_id } = req.body;
+// get service-employee relationship
+exports.getServiceEmployees = async (req, res) => {
+  const { shop_id,service_name } = req.body;
+  console.log("aaa")
   console.log(req.body);
-  const shopServices = await client.execute(
-    'DELETE FROM trimmtracer.service WHERE shop_id = ? and id = ?',
-    [shop_id , service_id]
+
+  const employeeEmails = await client.execute(
+    'SELECT employee_email FROM trimmtracer.shopService WHERE shop_id=? and service_name=?',
+    [shop_id,service_name]
   );
-  const services = shopServices.rows
-  res.json({services});
+  const emails = employee_emails.rows.map(row => row.employee_email);
+  res.json({emails});
 };
 // add service
 exports.addShopService = async (req, res) => {
@@ -121,8 +123,8 @@ exports.deleteShopService = async (req, res) => {
     [shop_id,name]
   );
   client.execute(
-    'DELETE FROM trimmtracer.employeeService WHERE shop_id=? and employee_email IN ?',// 8a allaksei se or phone
-    [shop_id,emails]
+    'DELETE FROM trimmtracer.employeeService WHERE shop_id=? and employee_email IN ? and service_name=?',
+    [shop_id,emails,name]
   );
 
   res.json({message: 'Data deleted successfully'});

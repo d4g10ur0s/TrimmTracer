@@ -23,6 +23,33 @@ export const getServices = async (shop_id: string): Promise<any> => {
     throw error;
   }
 }
+// get service-employee relationship
+// get shop's services
+export const getServiceEmployees = async (shop_id,service_name): Promise<any> => {
+  console.log("aaa")
+  try {
+    const response = await fetch(`${BASE_URL}/api/shop/getServiceEmployees`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        shop_id,
+        service_name,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Invalid credentials');
+    }
+
+    const data = await response.json();
+    return data.emails
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+}
 // add a new shop service
 export const addService = async (shop_id , employee_email ,name , dur , client_cost , employee_cost ,description ) => {
   try {
@@ -87,7 +114,7 @@ export const assignService = async (shop_id ,id , employee_email ,name , dur, av
   }
 }
 // delete service
-export const deleteService = async (shop_id ,name) => {
+export const deleteService = async (shop_id ,service_id) => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/deleteService`, {
       method: 'POST',
@@ -96,7 +123,7 @@ export const deleteService = async (shop_id ,name) => {
       },
       body: JSON.stringify({
         shop_id ,
-        name,
+        service_id,
       }),
     });
 
