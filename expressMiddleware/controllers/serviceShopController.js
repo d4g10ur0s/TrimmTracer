@@ -37,7 +37,7 @@ exports.getServiceEmployees = async (req, res) => {
     'SELECT employee_email FROM trimmtracer.shopService WHERE shop_id=? and service_name=?',
     [shop_id,service_name]
   );
-  const emails = employee_emails.rows.map(row => row.employee_email);
+  const emails = employeeEmails.rows.map(row => row.employee_email);
   res.json({emails});
 };
 // add service
@@ -79,24 +79,30 @@ exports.addShopService = async (req, res) => {
 };
 // assign service
 exports.assignService = async (req, res) => {
-  const { shop_id , id , employee_email ,name , dur , average_dur, client_cost , employee_cost ,description } = req.body;
+  const { shop_id , employee_email ,name} = req.body;
+  var counter=0;
   try {
-    // Check if the service already exists in the database
-    console.log("delete")
+    for(i in employee_email){
+      console.log(employee_email)
+      counter+=1;
+      client.execute(
+        'INSERT INTO trimmtracer.shopService (shop_id , employee_email ,service_name) VALUES (?,?,?)',
+        [shop_id , employee_email[i] ,name], { prepare: true }
+      );
+      client.execute(
+        'INSERT INTO trimmtracer.employeeService (shop_id , employee_email ,service_name) VALUES (?,?,?)',
+        [shop_id , employee_email[i] ,name], { prepare: true }
+      );
+    }//endFor
+    // u have to update
+    const service = await client.execute(
+      'select * from trimmtracer.service where shop_id = ? and name=?',
+      [shop_id ,name], { prepare: true }
+    );
     await client.execute(
-      'DELETE FROM trimmtracer.service WHERE shop_id = ? and id = ?',
-      [shop_id, id]
+      'INSERT INTO trimmtracer.service (shop_id ,name , dur , average_dur, client_cost , employee_cost ,description,numberofemployees) VALUES (?,?,?,?,?,?,?,?)',
+      [service.shop_id,service.name , service.dur , service.average_dur, service.client_cost , service.employee_cost ,service.description,service.numberofemployees+counter], { prepare: true }
     );
-    // Insert the new service into the database
-    const newId = uuid.v4();
-    var newDur = formatDuration(dur);
-    var newAvgDur = formatDuration(average_dur);
-    console.log(employee_email)
-    client.execute(
-      'INSERT INTO trimmtracer.service (id, shop_id , employee_email ,name , dur , average_dur, client_cost , employee_cost ,description) VALUES (?,?,?,?,?,?,?,?,?)',
-      [newId, shop_id , employee_email[0] ,name , newDur , newAvgDur, client_cost , employee_cost ,description], { prepare: true }
-    );
-
     res.status(201).json({ message: 'Service stored successfully' });
   } catch (err) {
     console.error('Error during storing:', err);

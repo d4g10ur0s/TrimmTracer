@@ -77,19 +77,18 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   // assign service
   const assign = async (emp_emails) => {
     console.log(emp_emails);
-    await assignService(service.shop_id, service.id , [emp_emails] ,service.name , service.dur, service.average_dur , service.client_cost , service.employee_cost ,service.description )
+    await assignService(service.shop_id, [emp_emails] ,service.name)
     await setModalVisible(false);
     refresh();
   }
   // to assign service - employee selection
   const toAssign = async () => {
-    console.log("aaa")
-    const shopEmployees = getEmployees(service.shop_id);
+    const shopEmployees = await getEmployees(service.shop_id);
     const serviceEmployees = await getServiceEmployees(service.shop_id,service.name)
     var a = []
     var u = []
     for (i in shopEmployees){
-      if(service.employee_email.includes(shopEmployees[i].email)){
+      if(serviceEmployees.includes(shopEmployees[i].email)){
         a.push(shopEmployees[i])
       }else{u.push(shopEmployees[i])}
     }//end for
@@ -112,14 +111,8 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   const serviceModification = async (serv) => {
     if(mService){//save editted service
       await assignService(service.shop_id,
-                          service.id ,
                           [service.employee_email] ,
-                          service.name ,
-                          service.dur,
-                          service.average_dur ,
-                          service.client_cost ,
-                          service.employee_cost ,
-                          service.description );
+                          service.name);
     }
     await setMService((prevState) => !prevState)
   }

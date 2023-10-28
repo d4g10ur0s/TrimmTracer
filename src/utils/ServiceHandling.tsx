@@ -26,7 +26,6 @@ export const getServices = async (shop_id: string): Promise<any> => {
 // get service-employee relationship
 // get shop's services
 export const getServiceEmployees = async (shop_id,service_name): Promise<any> => {
-  console.log("aaa")
   try {
     const response = await fetch(`${BASE_URL}/api/shop/getServiceEmployees`, {
       method: 'POST',
@@ -81,8 +80,7 @@ export const addService = async (shop_id , employee_email ,name , dur , client_c
   }
 }
 //assign service
-export const assignService = async (shop_id ,id , employee_email ,name , dur, average_dur , client_cost , employee_cost ,description ) => {
-  console.log(shop_id , employee_email ,name , dur, average_dur , client_cost , employee_cost ,description )
+export const assignService = async (shop_id , employee_email ,name) => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/assignService`, {
       method: 'POST',
@@ -91,14 +89,8 @@ export const assignService = async (shop_id ,id , employee_email ,name , dur, av
       },
       body: JSON.stringify({
         shop_id ,
-        id,
         employee_email ,
         name ,
-        dur ,
-        average_dur,
-        client_cost ,
-        employee_cost ,
-        description,
       }),
     });
 
