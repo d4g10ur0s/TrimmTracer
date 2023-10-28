@@ -71,7 +71,8 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   }
   // delete service
   const serviceDeletion = () => {
-    deleteService(service.shop_id, service.id);
+    console.log(service)
+    deleteService(service.shop_id, service.name);
     refresh();
   }
   // assign service

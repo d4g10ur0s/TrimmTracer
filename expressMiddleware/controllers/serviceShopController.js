@@ -31,12 +31,12 @@ exports.getShopServices = async (req, res) => {
 exports.deleteShopService = async (req, res) => {
   const { shop_id , service_id } = req.body;
   console.log(req.body);
-  const shopEmployees = await client.execute(
+  const shopServices = await client.execute(
     'DELETE FROM trimmtracer.service WHERE shop_id = ? and id = ?',
     [shop_id , service_id]
   );
-  const employees = shopEmployees.rows
-  res.json({employees});
+  const services = shopServices.rows
+  res.json({services});
 };
 // add service
 exports.addShopService = async (req, res) => {
@@ -54,12 +54,18 @@ exports.addShopService = async (req, res) => {
     // Insert the new service into the database
     const id = uuid.v4();
     const duration = cassandra.types.Duration.fromString(dur);
+    // insert service
     await client.execute(
       'INSERT INTO trimmtracer.service (shop_id ,name , dur , average_dur, client_cost , employee_cost ,description,numberofemployees) VALUES (?,?,?,?,?,?,?,?)',
       [shop_id,name , duration , duration, client_cost , employee_cost ,description,1], { prepare: true }
     );
+    // insert to relationship tables
     client.execute(
       'INSERT INTO trimmtracer.shopService (shop_id ,employee_email,service_name) VALUES (?,?,?)',
+      [shop_id,employee_email,name], { prepare: true }
+    );
+    client.execute(
+      'INSERT INTO trimmtracer.employeeService (shop_id ,employee_email,service_name) VALUES (?,?,?)',
       [shop_id,employee_email,name], { prepare: true }
     );
 
@@ -94,4 +100,30 @@ exports.assignService = async (req, res) => {
     console.error('Error during storing:', err);
     res.status(500).json({ error: 'Error during storing' });
   }
+};
+// delete service
+exports.deleteShopService = async (req, res) => {
+  const { shop_id,name } = req.body;
+  console.log(req.body);
+  const shopServices = await client.execute(
+    'DELETE FROM trimmtracer.service WHERE shop_id=? and name=?',
+    [shop_id,name]
+  );
+  // get emails
+  const employee_emails = await client.execute(
+    'SELECT employee_email FROM trimmtracer.shopService WHERE shop_id=? and service_name=?',
+    [shop_id, name]
+  );
+  const emails = employee_emails.rows.map(row => row.employee_email);
+  // delete relationship rows from tables shopService and employeeService
+  client.execute(
+    'DELETE FROM trimmtracer.shopService WHERE shop_id=? and service_name=?',// 8a allaksei se or phone
+    [shop_id,name]
+  );
+  client.execute(
+    'DELETE FROM trimmtracer.employeeService WHERE shop_id=? and employee_email IN ?',// 8a allaksei se or phone
+    [shop_id,emails]
+  );
+
+  res.json({message: 'Data deleted successfully'});
 };
