@@ -24,8 +24,10 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { deleteEmployee,modifyEmployee } from '../utils/EmployeeHandling';
+import { deleteEmployee,modifyEmployee,getEmployeeServices } from '../utils/EmployeeHandling';
 import {EmployeeModificationForm} from '../components/RegistrationForm'
+import { getServices,deleteService, assignService,getServiceEmployees } from '../utils/ServiceHandling';
+
 
 interface EmployeeContainerProps {
   employee : {};
@@ -35,6 +37,16 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
   const [employeeInfo, setEmployeeInfo] = useState(employee);
   const [m , setM] = useState(false);
 
+  const [modalVisible, setModalVisible ] = useState(false);
+  const [modalContent , setModalContent] = useState(null);
+  // modal
+  const handleHideModal = () => {
+    setModalVisible(false);
+  };
+  const handleShowModal = () => {
+    setModalVisible(true);
+  };
+
   const alterM = async () => {setM((prevState)=>!prevState);}
 
   const employeeModification = async (name,sirname,nickname,email,phone,typeOfEmployee) => {
@@ -42,10 +54,36 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
     setM((prevState)=>!prevState);
     refresh();
   }
-
+  // delete employee
   const employeeDeletion = () => {
     deleteEmployee(employee.email,employee.shop_id);
     refresh();
+  }
+  // assign-unassign services
+  const toAssignServices = async () => {
+    // get everything about shop services
+    const shopServices=await getServices();
+    // get shop employee's emails for the employees related to service
+    const employeeServices = await getEmployeeServices(employee.shop_id,employeeInfo.email)
+    // make a fast ordering about employees related to service and those that do not
+    var a = []
+    var u = []
+    for (i in shopServices){
+      if(employeeServices.includes(shopServices[i].name)){
+        a.push(shopServices[i])
+      }else{u.push(shopServices[i])}
+    }//end for
+    // show modal
+    await setModalContent(
+            <ServiceSelection
+              hide={handleHideModal}
+              assigned={a}
+              unassigned={u}
+              emails={serviceEmployees}
+              assign={assign}
+            />
+          );
+    setModalVisible(true);
   }
 
   return(

@@ -86,7 +86,7 @@ exports.assignService = async (req, res) => {
   try {
     for(let i=0; i<counter; i++){
       // assign by emails
-      if(i<assign_email.length){
+      if(i<assign_email.length){//prepei na ginoun bulk
         client.execute(
           'INSERT INTO trimmtracer.shopService (shop_id , employee_email ,service_name) VALUES (?,?,?)',
           [shop_id , assign_email[i] ,name], { prepare: true }
@@ -97,7 +97,7 @@ exports.assignService = async (req, res) => {
         );
       }
       // unassign by emails
-      if(i<unassign_email.length){
+      if(i<unassign_email.length){// mporei na ginei me ena statement , xwris loops ?
         client.execute(
           'DELETE FROM trimmtracer.shopService where shop_id=? and service_name=? and employee_email=?',
           [shop_id ,name, unassign_email[i]], { prepare: true }
@@ -115,7 +115,10 @@ exports.assignService = async (req, res) => {
     );
     await client.execute(
       'INSERT INTO trimmtracer.service (shop_id ,name , dur , average_dur, client_cost , employee_cost ,description,numberofemployees) VALUES (?,?,?,?,?,?,?,?)',
-      [service.rows[0].shop_id,service.rows[0].name , service.rows[0].dur , service.rows[0].average_dur, service.rows[0].client_cost , service.rows[0].employee_cost ,service.rows[0].description,service.rows[0].numberofemployees+(assign_email.length-unassign_email.length)], { prepare: true }
+      [service.rows[0].shop_id,
+      service.rows[0].name , service.rows[0].dur , service.rows[0].average_dur,
+      service.rows[0].client_cost , service.rows[0].employee_cost ,service.rows[0].description,
+      assign_email.length], { prepare: true }
     );
     res.status(201).json({ message: 'Service stored successfully' });
   } catch (err) {

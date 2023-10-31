@@ -24,7 +24,6 @@ export const getServices = async (shop_id: string): Promise<any> => {
   }
 }
 // get service-employee relationship
-// get shop's services
 export const getServiceEmployees = async (shop_id,service_name): Promise<any> => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/getServiceEmployees`, {

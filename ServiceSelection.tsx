@@ -24,18 +24,19 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-interface EmployeeSelectionProps {
+interface ServiceSelectionProps {
   assigned : [];
   unassigned : [];
 }
 
-const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assigned,assign , unassign}) =>{
+const MiniServiceContainer: React.FC<MiniServiceContainer> = ({service, assigned,assign , unassign}) =>{
   const [a , setA] = useState(assigned);
+
   const handleA = async () => {
       if(a){
-        await unassign(employee.email);
+        await unassign(service.name);
       }else{
-        await assign(employee.email);
+        await assign(service.name);
       }
       setA((prevState) => !prevState);
   }
@@ -48,13 +49,13 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assig
         style={styles.horizontalView}
       >
         <Text style={styles.miniHeader} >{"Name"}</Text>
-        <Text style={styles.infoText}>{employee.name + ' ' + employee.sirname}</Text>
+        <Text style={styles.infoText}>{service.name}</Text>
       </View>
       <View
         style={styles.horizontalView}
       >
-        <Text style={styles.miniHeader} >{"E-mail"}</Text>
-        <Text style={styles.infoText}>{employee.email}</Text>
+        <Text style={styles.miniHeader}>{"Duration"}</Text>
+        <Text style={styles.infoText}>{service.dur}</Text>
       </View>
       <TouchableOpacity
         onPress={handleA}
@@ -67,9 +68,9 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assig
 
 }
 
-const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({emails,hide,assigned,unassigned,assign}) => {
+const ServiceSelection: React.FC<ServiceSelectionProps> = ({names,hide,assigned,unassigned,assign}) => {
   // assign
-  const [a, setA] = useState(emails)
+  const [a, setA] = useState(names)
   const [u, setU] = useState([])
   const [assignedContainers , setAssignContainers] = useState([])
   // render containers
@@ -78,9 +79,9 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({emails,hide,assign
     var b = []
     for(as in assigned){
       containers.push(
-        <MiniEmployeeContainer
+        <MiniServiceContainer
           key={as}
-          employee={assigned[as]}
+          service={assigned[as]}
           assigned={true}
           assign={assignService}
           unassign={unassignService}
@@ -90,26 +91,26 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({emails,hide,assign
     await setAssignContainers(containers);
   }
   // assign service
-  const assignService = async (emp_email) => {
+  const assignService = async (service_name) => {
     var b = a;
-    b.push(emp_email)
+    b.push(service_name)
     setA(b);
 
     b=u;
-    let index = b.indexOf(emp_email);
+    let index = b.indexOf(service_name);
     if (index !== -1) {
       b.splice(index, 1);
     }
     setU(b);
   }
   // unassign service
-  const unassignService = async (emp_email) => {
+  const unassignService = async (service_name) => {
     var b = u;
-    b.push(emp_email)
+    b.push(service_name)
     setU(b);
 
     var b=a;
-    let index = b.indexOf(emp_email);
+    let index = b.indexOf(service_name);
     if (index !== -1) {
       b.splice(index, 1);
     }
@@ -122,9 +123,9 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({emails,hide,assign
     var containers = []
     for(un in unassigned){
       containers.push(
-        <MiniEmployeeContainer
+        <MiniServiceContainer
           key={assignedContainers.length + un}
-          employee={unassigned[un]}
+          service={unassigned[un]}
           assigned={false}
           assign={assignService}
           unassign={unassignService}
@@ -143,12 +144,12 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({emails,hide,assign
 
   return(
     <View
-      style={styles.employeeSelection}
+      style={styles.serviceSelection}
     >
       <Text
       style={styles.selectionHeader}
       >
-        {"Select Employees"}
+        {"Select Services"}
       </Text>
       <ScrollView>
         {unassignedContainers}
@@ -175,7 +176,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({emails,hide,assign
 }
 
 const styles = StyleSheet.create({
-  employeeSelection : {
+  serviceSelection : {
     height : '45%',
     width : '85%',
     backgroundColor : "#FFFFFFAD",
@@ -246,4 +247,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EmployeeSelection;
+export default ServiceSelection;

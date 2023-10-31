@@ -27,7 +27,7 @@ import {
 import { deleteService, assignService,getServiceEmployees } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
 
-import EmployeeSelection from '../components/EmployeeSelection';
+import ServiceSelection from '../components/ServiceSelection';
 import {ServiceModificationForm} from '../components/ServiceForm';
 
 interface ServiceContainerProps {
@@ -97,7 +97,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
     }//end for
     // show modal
     await setModalContent(
-            <EmployeeSelection
+            <ServiceSelection
               hide={handleHideModal}
               assigned={a}
               unassigned={u}

@@ -23,6 +23,31 @@ export const getEmployees = async (shop_id: string): Promise<any> => {
     throw error;
   }
 };
+// get employee-service relationship
+export const getEmployeeServices = async (shop_id,employee_email): Promise<any> => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/shop/getEmployeeServices`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        shop_id,
+        employee_email,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Invalid credentials');
+    }
+
+    const data = await response.json();
+    return data.names
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+}
 // add employee
 export const addEmployee = async (name : string , sirname : string , nickname : string, email: string, phone : string, typeofemployee : number ,password: string,shop_id): Promise<any> => {
   try {
