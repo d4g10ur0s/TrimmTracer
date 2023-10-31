@@ -24,10 +24,10 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { deleteService, assignService,getServiceEmployees } from '../utils/ServiceHandling';
+import { deleteService,assignService,getServiceEmployees } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
 
-import ServiceSelection from '../components/ServiceSelection';
+import {EmployeeSelection} from '../components/EmployeeSelection';
 import {ServiceModificationForm} from '../components/ServiceForm';
 
 interface ServiceContainerProps {
@@ -76,7 +76,6 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   }
   // assign service
   const assign = async (assign_emails,unassign_emails) => {
-    console.log(assign_emails);
     await assignService(service.shop_id,assign_emails,unassign_emails,service.name)
     await setModalVisible(false);
     refresh();

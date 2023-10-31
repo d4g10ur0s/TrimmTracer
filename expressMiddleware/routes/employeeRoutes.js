@@ -3,6 +3,7 @@ const router = express.Router();
 const employeeShopController = require('../controllers/employeeShopController');
 
 router.post('/getShopEmployees', employeeShopController.getShopEmployees);
+router.post('/getEmployeeServices', employeeShopController.getEmployeeServices);
 router.post('/deleteEmployee', employeeShopController.deleteShopEmployee);
 router.post('/updateEmployee', employeeShopController.updateShopEmployee);
 

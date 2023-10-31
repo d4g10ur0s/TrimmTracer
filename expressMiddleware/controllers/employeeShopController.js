@@ -12,7 +12,19 @@ exports.getShopEmployees = async (req, res) => {
   res.json({employees});
 
 };
+// get service-employee relationship
+exports.getEmployeeServices = async (req, res) => {
+  const { shop_id,employee_email } = req.body;
+  console.log(req.body);
 
+  const serviceNames = await client.execute(
+    'SELECT employee_email FROM trimmtracer.employeeService WHERE shop_id=? and employee_email=?',
+    [shop_id,employee_email]
+  );
+  const names = serviceNames.rows.map(row => row.service_name);
+  res.json({names});
+};
+// delete an employee
 exports.deleteShopEmployee = async (req, res) => {
   const { shop_id,email } = req.body;
   console.log(req.body);
@@ -37,7 +49,6 @@ exports.updateShopEmployee = async (req, res) => {
     [email]
   );
   var tempEmployee=tEmployee.rows[0]
-  console.log(tempEmployee)
   // Delete user
   await client.execute(
     'DELETE FROM trimmtracer.user WHERE email = ?',// 8a allaksei se or phone

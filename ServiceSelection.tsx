@@ -29,8 +29,6 @@ interface ServiceSelectionProps {
   unassigned : [];
 }
 
-const currency = 'eur';
-
 const MiniServiceContainer: React.FC<MiniServiceContainer> = ({service, assigned,assign , unassign}) =>{
   const [a , setA] = useState(assigned);
 
@@ -56,14 +54,8 @@ const MiniServiceContainer: React.FC<MiniServiceContainer> = ({service, assigned
       <View
         style={styles.horizontalView}
       >
-        <Text style={styles.miniHeader}>{"Client Cost"}</Text>
-        <Text style={styles.infoText}>{service.client_cost + ' ' + currency}</Text>
-      </View>
-      <View
-        style={styles.horizontalView}
-      >
-        <Text style={styles.miniHeader}>{"Employee Cost"}</Text>
-        <Text style={styles.infoText}>{service.employee_cost+ ' ' +currency}</Text>
+        <Text style={styles.miniHeader}>{"Duration"}</Text>
+        <Text style={styles.infoText}>{service.dur}</Text>
       </View>
       <TouchableOpacity
         onPress={handleA}
