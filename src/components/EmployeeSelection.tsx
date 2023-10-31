@@ -70,6 +70,7 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, assig
 const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({emails,hide,assigned,unassigned,assign}) => {
   // assign
   const [a, setA] = useState(emails)
+  const [u, setU] = useState([])
   const [assignedContainers , setAssignContainers] = useState([])
   // render containers
   const renderAssigned = async () => {
@@ -93,9 +94,20 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({emails,hide,assign
     var b = a;
     b.push(emp_email)
     setA(b);
+
+    b=u;
+    let index = b.indexOf(emp_email);
+    if (index !== -1) {
+      b.splice(index, 1);
+    }
+    setU(b);
   }
   // unassign service
   const unassignService = async (emp_email) => {
+    var b = u;
+    b.push(emp_email)
+    setU(b);
+
     var b=a;
     let index = b.indexOf(emp_email);
     if (index !== -1) {
@@ -122,7 +134,7 @@ const EmployeeSelection: React.FC<EmployeeSelectionProps> = ({emails,hide,assign
     await setUnassignedContainers(containers);
   }
   // submit
-  const submit = () => {assign(a);}
+  const submit = () => {assign(a,u);}
   // render at start
   useEffect(()=>{
     renderAssigned();

@@ -79,20 +79,34 @@ exports.addShopService = async (req, res) => {
 };
 // assign service
 exports.assignService = async (req, res) => {
-  const { shop_id , employee_email ,name} = req.body;
+  const { shop_id , assign_email, unassign_email ,name} = req.body;
   var counter=0;
+  if(assign_email.length>unassign_email.length){counter=assign_email.length}
+  else{counter=unassign_email.length}
   try {
-    for(i in employee_email){
-      console.log(employee_email)
-      counter+=1;
-      client.execute(
-        'INSERT INTO trimmtracer.shopService (shop_id , employee_email ,service_name) VALUES (?,?,?)',
-        [shop_id , employee_email[i] ,name], { prepare: true }
-      );
-      client.execute(
-        'INSERT INTO trimmtracer.employeeService (shop_id , employee_email ,service_name) VALUES (?,?,?)',
-        [shop_id , employee_email[i] ,name], { prepare: true }
-      );
+    for(let i=0; i<counter; i++){
+      // assign by emails
+      if(i<assign_email.length){
+        client.execute(
+          'INSERT INTO trimmtracer.shopService (shop_id , employee_email ,service_name) VALUES (?,?,?)',
+          [shop_id , assign_email[i] ,name], { prepare: true }
+        );
+        client.execute(
+          'INSERT INTO trimmtracer.employeeService (shop_id , employee_email ,service_name) VALUES (?,?,?)',
+          [shop_id , assign_email[i] ,name], { prepare: true }
+        );
+      }
+      // unassign by emails
+      if(i<unassign_email.length){
+        client.execute(
+          'DELETE FROM trimmtracer.shopService where shop_id=? and service_name=? and employee_email=?',
+          [shop_id ,name, unassign_email[i]], { prepare: true }
+        );
+        client.execute(
+          'DELETE FROM trimmtracer.employeeService where shop_id=? and employee_email=? and service_name=?',
+          [shop_id , unassign_email[i] ,name], { prepare: true }
+        );
+      }
     }//endFor
     // u have to update
     const service = await client.execute(
@@ -101,7 +115,7 @@ exports.assignService = async (req, res) => {
     );
     await client.execute(
       'INSERT INTO trimmtracer.service (shop_id ,name , dur , average_dur, client_cost , employee_cost ,description,numberofemployees) VALUES (?,?,?,?,?,?,?,?)',
-      [service.shop_id,service.name , service.dur , service.average_dur, service.client_cost , service.employee_cost ,service.description,service.numberofemployees+counter], { prepare: true }
+      [service.rows[0].shop_id,service.rows[0].name , service.rows[0].dur , service.rows[0].average_dur, service.rows[0].client_cost , service.rows[0].employee_cost ,service.rows[0].description,service.rows[0].numberofemployees+(assign_email.length-unassign_email.length)], { prepare: true }
     );
     res.status(201).json({ message: 'Service stored successfully' });
   } catch (err) {

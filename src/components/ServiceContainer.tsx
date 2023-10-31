@@ -75,16 +75,19 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
     refresh();
   }
   // assign service
-  const assign = async (emp_emails) => {
-    console.log(emp_emails);
-    await assignService(service.shop_id, [emp_emails] ,service.name)
+  const assign = async (assign_emails,unassign_emails) => {
+    console.log(assign_emails);
+    await assignService(service.shop_id,assign_emails,unassign_emails,service.name)
     await setModalVisible(false);
     refresh();
   }
-  // to assign service - employee selection
+  // to assign-unassign service - employee selection
   const toAssign = async () => {
+    // get everything about shop employees
     const shopEmployees = await getEmployees(service.shop_id);
+    // get shop employee's emails for the employees related to service
     const serviceEmployees = await getServiceEmployees(service.shop_id,service.name)
+    // make a fast ordering about employees related to service and those that do not
     var a = []
     var u = []
     for (i in shopEmployees){
@@ -93,13 +96,12 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
       }else{u.push(shopEmployees[i])}
     }//end for
     // show modal
-    var emails = service.employee_email;
     await setModalContent(
             <EmployeeSelection
               hide={handleHideModal}
               assigned={a}
               unassigned={u}
-              emails={emails}
+              emails={serviceEmployees}
               assign={assign}
             />
           );
