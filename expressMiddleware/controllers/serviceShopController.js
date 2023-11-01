@@ -78,7 +78,7 @@ exports.addShopService = async (req, res) => {
   }
 };
 // assign service
-exports.assignService = async (req, res) => {
+exports.assignEmployees = async (req, res) => {
   const { shop_id , assign_email, unassign_email ,name} = req.body;
   var counter=0;
   if(assign_email.length>unassign_email.length){counter=assign_email.length}

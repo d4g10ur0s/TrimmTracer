@@ -48,6 +48,32 @@ export const getEmployeeServices = async (shop_id,employee_email): Promise<any> 
     throw error;
   }
 }
+//assign service
+export const assignService = async (shop_id , assign_name,unassign_name ,email) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/shop/assignServices`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        shop_id ,
+        assign_name,
+        unassign_name,
+        email ,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Invalid credentials');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+}
 // add employee
 export const addEmployee = async (name : string , sirname : string , nickname : string, email: string, phone : string, typeofemployee : number ,password: string,shop_id): Promise<any> => {
   try {

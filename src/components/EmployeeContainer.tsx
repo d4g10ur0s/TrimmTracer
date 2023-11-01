@@ -24,9 +24,9 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { deleteEmployee,modifyEmployee,getEmployeeServices } from '../utils/EmployeeHandling';
+import { deleteEmployee,modifyEmployee,getEmployeeServices,assignService } from '../utils/EmployeeHandling';
 import {EmployeeModificationForm} from '../components/RegistrationForm'
-import { getServices,deleteService,assignService,getServiceEmployees } from '../utils/ServiceHandling';
+import { getServices,deleteService,getServiceEmployees } from '../utils/ServiceHandling';
 import ServiceSelection from '../components/ServiceSelection';
 
 
@@ -49,6 +49,13 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
   };
   // assign service
   const assign = async (assign_names,unassign_names) => {
+    var names = [];
+    const employeeServices = await getEmployeeServices(employee.shop_id,employeeInfo.email);
+    for(i in assign_names){
+      if(!employeeServices.includes(assign_names[i])){names.push(assign_names[i])}
+    }
+    console.log(names)
+    await assignService(employee.shop_id,names,unassign_names,employee.email)
     await setModalVisible(false);
     refresh();
   }
@@ -69,28 +76,26 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
     // get everything about shop services
     const shopServices=await getServices(employee.shop_id);
     // get shop employee's emails for the employees related to service
-    const employeeServices = await getEmployeeServices(employee.shop_id,employeeInfo.email)
-    console.log(employeeServices)
+    const employeeServices = await getEmployeeServices(employee.shop_id,employeeInfo.email);
     // make a fast ordering about employees related to service and those that do not
     var a = []
     var u = []
+    var n = []
     for (i in shopServices){
       if(employeeServices.includes(shopServices[i].name)){
         a.push(shopServices[i])
       }else{u.push(shopServices[i])}
     }//end for
-    //console.log(a)
-    //console.log(u)
     // show modal
     await setModalContent(
-            <ServiceSelection
-              hide={handleHideModal}
-              assigned={a}
-              unassigned={u}
-              emails={employeeServices}
-              assign={assign}
-            />
-          );
+      <ServiceSelection
+        hide={handleHideModal}
+        assigned={a}
+        unassigned={u}
+        emails={employeeServices}
+        assign={assign}
+      />
+    );
     setModalVisible(true);
   }
 
@@ -172,13 +177,6 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
           <Text>
             {"Assign Service"}
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.deleteButton}
-        >
-          <Text>
-            {"Unassign Service"}
-            </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={(canDelete) ? styles.disabledDeleteButton : styles.deleteButton}

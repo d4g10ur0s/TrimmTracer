@@ -81,7 +81,7 @@ export const addService = async (shop_id , employee_email ,name , dur , client_c
 //assign service
 export const assignService = async (shop_id , assign_email,unassign_email ,name) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/shop/assignService`, {
+    const response = await fetch(`${BASE_URL}/api/shop/assignEmployees`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -13,7 +13,6 @@ const ShopMenu: React.FC<ShopMenuProps> = ({addForm,isType3,alter}) => {
   const [es , setES] = useState(true);
   const alterButton = () => {
     setES((prevState) => !prevState);
-    console.log(es)
     alter();
   }
 

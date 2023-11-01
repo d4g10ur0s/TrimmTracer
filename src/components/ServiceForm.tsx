@@ -16,7 +16,6 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
   const [toSubmit, setToSubmit ] = useState(false);
   // store service
   const handleService = async () => {// den exw valei to alert
-    console.log(/^\d+(\.\d{0,1,2})?$/.test(clientCost))
     if (typeof name == 'string' && name.length > 3 && /[a-zA-Z ]/.test(name) &&// name constraint
     /^\d+$/.test(hours) && /^\d+$/.test(minutes) && parseInt(minutes)>0 && /^\d+$/.test(seconds) &&// duration constraint
     /^\d+(\.\d{0,1,2})?$/.test(clientCost) && parseFloat(clientCost)>0

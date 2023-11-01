@@ -9,7 +9,6 @@ interface RegistrationFormProps {
 }
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeForm,addEmployee,onSubmit2 }) => {
-  console.log("edw eisai")
   const [name, setName] = useState<string>('Nikos');
   const [sirname, setSirname] = useState<string>('Kalantas');
   const [nickname, setNickname] = useState<string>('kalantas');
