@@ -5,6 +5,7 @@ import { useRoute, useNavigation } from '@react-navigation/native'; // Import us
 
 import Calendar from '../components/Calendar';
 import ShopContainer from '../components/ShopContainer';
+import ShopClientsContainer from '../components/ShopClientsContainer';
 import EmployeeAppMenu from '../components/EmployeeAppMenu';
 import { login } from '../utils/EnterApp';
 
@@ -26,9 +27,16 @@ const EmployeeMainScreen: React.FC = () => {
                 />);
   }
 
+  const toggleClients = () => {
+    setContent(<ShopClientsContainer
+                 employee={employee}
+              />);
+  }
+
   const toggleOptions = () => {
     setContent(null);
   }
+
 
   return (
     <ScrollView>
@@ -43,6 +51,7 @@ const EmployeeMainScreen: React.FC = () => {
         <EmployeeAppMenu
           toCalendar={toggleCalendar}
           toShop={toggleToShop}
+          toClients={toggleClients}
           toOptions={toggleOptions}
         />
         {(content==1) ? (<Calendar />) : (content)}

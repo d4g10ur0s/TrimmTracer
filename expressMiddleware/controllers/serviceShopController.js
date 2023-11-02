@@ -81,12 +81,13 @@ exports.addShopService = async (req, res) => {
 exports.updateShopService = async (req, res) => {
   const { service,nameChanged,old_name } = req.body;
   console.log(req.body)
+  console.log(service);
   try {
-    const duration = cassandra.types.Duration.fromString(dur);
+    const duration = cassandra.types.Duration.fromString(service.dur);
     // insert service
     await client.execute(
       'INSERT INTO trimmtracer.service (shop_id ,name , dur , average_dur, client_cost , employee_cost ,description,numberofemployees) VALUES (?,?,?,?,?,?,?,?)',
-      [service.shop_id,service.name , service.duration , service.duration, service.client_cost , service.employee_cost ,service.description,1], { prepare: true }
+      [service.shop_id,service.name , duration , duration, service.client_cost , service.employee_cost ,service.description,service.numberofemployees], { prepare: true }
     );
     // insert to relationship tables if name changed
     if(nameChanged){

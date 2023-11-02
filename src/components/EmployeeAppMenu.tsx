@@ -7,10 +7,11 @@ interface EmployeeAppMenuProps {
   toOptions: () => void;
 }
 
-const EmployeeAppMenu: React.FC<EmployeeAppMenuProps> = ({toCalendar , toShop , toOptions}) => {
+const EmployeeAppMenu: React.FC<EmployeeAppMenuProps> = ({toCalendar , toShop , toClients , toOptions}) => {
 
   const calendar = () => {toCalendar();}
   const shop = () => {toShop();}
+  const clients = () => {toClients();}
   const options = () => {toOptions();}
 
   return (
@@ -31,6 +32,14 @@ const EmployeeAppMenu: React.FC<EmployeeAppMenuProps> = ({toCalendar , toShop , 
       >
         <Text>
           {"My Shop"}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.controlButton}
+        onPress={clients}
+      >
+        <Text>
+          {"My Clients"}
         </Text>
       </TouchableOpacity>
       <TouchableOpacity

@@ -112,6 +112,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   const serviceModification = async (serv) => {
     if(mService){//save editted service
       var nameChanged = false;
+      serv.numberOfEmployees=serviceInfo.numberOfEmployees;
       if(serv.name!=service.name){nameChanged=true}
       setServiceInfo(serv)
       await updateService(serv,nameChanged,service.name);
