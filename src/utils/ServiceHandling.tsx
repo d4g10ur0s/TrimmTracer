@@ -106,7 +106,7 @@ export const assignService = async (shop_id , assign_email,unassign_email ,name)
   }
 }
 // delete service
-export const deleteService = async (shop_id ,service_id) => {
+export const deleteService = async (shop_id ,name) => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/deleteService`, {
       method: 'POST',
@@ -115,7 +115,7 @@ export const deleteService = async (shop_id ,service_id) => {
       },
       body: JSON.stringify({
         shop_id ,
-        service_id,
+        name,
       }),
     });
 

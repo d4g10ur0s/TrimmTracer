@@ -31,9 +31,9 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id,empl
   const addForm = () => {// add form
     setEnableForm((prevState) => !prevState)
   }
-  const reload = () => {// refresh after deletion
-    if(es){renderShopEmployees();}
-    else{renderShopServices();}
+  const reload = async () => {// refresh after deletion
+    if(es){await renderShopEmployees();}
+    else{await renderShopServices();}
   }
   useEffect(() => {
     if(!enableForm){setEnableForm((prevState) => !prevState);}
@@ -62,8 +62,8 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id,empl
     setServiceContainers(null);
   }
   // add new employee , store and refresh
-  const addNewEmployee = async (name,sirname,nickname,email,phone,typeofemployee,code) => {
-    await addEmployee(name,sirname,nickname,email,phone,typeofemployee,code,shop_id)
+  const addNewEmployee = async (name,sirname,email,phone,typeofemployee,code) => {
+    await addEmployee(name,sirname,email,phone,typeofemployee,code,shop_id)
     setEnableForm((prevState) => !prevState)
     renderShopEmployees();
   }

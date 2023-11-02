@@ -75,7 +75,7 @@ export const assignService = async (shop_id , assign_name,unassign_name ,email) 
   }
 }
 // add employee
-export const addEmployee = async (name : string , sirname : string , nickname : string, email: string, phone : string, typeofemployee : number ,password: string,shop_id): Promise<any> => {
+export const addEmployee = async (name, sirname, email, phone, typeofemployee,password,shop_id): Promise<any> => {
   try {
     const response = await fetch(`${BASE_URL}/api/auth/registerEmployee`, {
       method: 'POST',
@@ -85,7 +85,6 @@ export const addEmployee = async (name : string , sirname : string , nickname : 
       body: JSON.stringify({
         name,
         sirname,
-        nickname,
         email,
         phone,
         typeofemployee,
@@ -133,7 +132,7 @@ export const deleteEmployee = async (email,shop_id) => {
 }
 
 // delete employee
-export const modifyEmployee = async (semail,name,sirname,nickname,email,phone,typeOfEmployee) => {
+export const modifyEmployee = async (semail,name,sirname,email,phone,typeOfEmployee) => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/updateEmployee`, {
       method: 'POST',
@@ -145,7 +144,6 @@ export const modifyEmployee = async (semail,name,sirname,nickname,email,phone,ty
         employee :{
           name : name,
           sirname : sirname ,
-          nickname : nickname,
           email : email,
           phone : phone,
           typeofemployee : typeOfEmployee,

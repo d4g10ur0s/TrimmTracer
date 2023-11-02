@@ -101,23 +101,17 @@ exports.deleteShopEmployee = async (req, res) => {
   res.json({employees});
 
 };
-
+// update employee
 exports.updateShopEmployee = async (req, res) => {
   const { email, employee } = req.body;
   console.log(req.body);
-  const tEmployee = await client.execute(
-    'select * from trimmtracer.user WHERE email = ?',
-    [email]
-  );
-  var tempEmployee=tEmployee.rows[0]
-  // Delete user
-  await client.execute(
-    'DELETE FROM trimmtracer.user WHERE email = ?',// 8a allaksei se or phone
-    [email]
+  const passw = await client.execute(
+    'select password from trimmtracer.user WHERE employee=? and email = ?',
+    [true,email]
   );
   // Insert the new user into the database
   await client.execute(
-    'INSERT INTO trimmtracer.user (email,phone,password,employee,shop_id,name,nickname,sirname,typeofemployee) VALUES (?,?,?,?,?,?,?,?,?)',
-    [employee.email,employee.phone,tempEmployee.password,true,tempEmployee.shop_id,employee.name,employee.nickname,employee.sirname,employee.typeofemployee], { prepare: true }
+    'INSERT INTO trimmtracer.user (email,phone,password,employee,shop_id,name,sirname,typeofemployee) VALUES (?,?,?,?,?,?,?,?)',
+    [employee.email,employee.phone,passw.rows[0].password,true,employee.shop_id,employee.name,employee.sirname,employee.typeofemployee], { prepare: true }
   );
 };

@@ -36,7 +36,7 @@ interface EmployeeContainerProps {
 
 const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete,refresh}) => {
   const [employeeInfo, setEmployeeInfo] = useState(employee);
-  const [m , setM] = useState(false);
+  const [m , setM] = useState(null);
 
   const [modalVisible, setModalVisible ] = useState(false);
   const [modalContent , setModalContent] = useState(null);
@@ -54,22 +54,26 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
     for(i in assign_names){
       if(!employeeServices.includes(assign_names[i])){names.push(assign_names[i])}
     }
-    console.log(names)
     await assignService(employee.shop_id,names,unassign_names,employee.email)
     await setModalVisible(false);
     refresh();
   }
   // employee modification
-  const alterM = async () => {setM((prevState)=>!prevState);}
-  const employeeModification = async (name,sirname,nickname,email,phone,typeOfEmployee) => {
-    modifyEmployee(employee.email,name,sirname,nickname,email,phone,typeOfEmployee);
-    setM((prevState)=>!prevState);
-    refresh();
+  const alterM = async () => {
+    if(m==null){
+      setM(<EmployeeModificationForm employee={employee} onSubmit={employeeModification}/>)
+    }else{setM(null)}
+  };
+  // modify employee
+  const employeeModification = async (name,sirname,email,phone,typeOfEmployee) => {
+    modifyEmployee(employee.email,name,sirname,email,phone,typeOfEmployee);
+    setM(null);
+    await refresh();
   }
   // delete employee
-  const employeeDeletion = () => {
+  const employeeDeletion = async () => {
     deleteEmployee(employee.email,employee.shop_id);
-    refresh();
+    await refresh();
   }
   // assign-unassign services
   const toAssignServices = async () => {
@@ -196,7 +200,7 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
       >
         {modalContent}
       </Modal>
-      {(m) ? (<EmployeeModificationForm employee={employee} onSubmit={employeeModification}/>) : (null)}
+      {m}
     </View>
   )
 }

@@ -11,7 +11,6 @@ interface RegistrationFormProps {
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeForm,addEmployee,onSubmit2 }) => {
   const [name, setName] = useState<string>('Nikos');
   const [sirname, setSirname] = useState<string>('Kalantas');
-  const [nickname, setNickname] = useState<string>('kalantas');
   const [email, setEmail] = useState<string>('nikal@hotmail.com');
   const [phone, setPhone] = useState<string>('6985698574');
   const [password, setPassword] = useState<string>('');
@@ -64,7 +63,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, ch
         const randomIndex = Math.floor(Math.random() * characters.length);
         code += characters.charAt(randomIndex);
       }
-      onSubmit2(name,sirname,nickname,email,phone,typeOfEmployee,code);
+      onSubmit2(name,sirname,email,phone,typeOfEmployee,code);
     }
   };
 
@@ -102,15 +101,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, ch
         value={sirname}
         onChangeText={setSirname}
       />
-      {(addEmployee)?
-        (<TextInput
-          style={styles.input}
-          placeholder="Nickname"
-          value={sirname}
-          onChangeText={setNickname}
-        />)
-        :(null)
-      }
       <TextInput
         style={styles.input}
         placeholder="E-Mail"
@@ -201,7 +191,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, ch
 export const EmployeeModificationForm: React.FC = ({ onSubmit, employee }) => {
   const [name, setName] = useState<string>(employee.name);
   const [sirname, setSirname] = useState<string>(employee.sirname);
-  const [nickname, setNickname] = useState<string>(employee.nickname);
   const [email, setEmail] = useState<string>(employee.email);
   const [phone, setPhone] = useState<string>('6985698574');
   const [typeOfEmployee , setTypeOfEmployee] = useState(employee.typeOfEmployee);
@@ -242,7 +231,7 @@ export const EmployeeModificationForm: React.FC = ({ onSubmit, employee }) => {
   const handleRegister = () => {
     // if no errors then register new employee
     if( !nameError && !sirnameError && !emailError && !phoneError ){
-      onSubmit(name,sirname,nickname,email,phone,typeOfEmployee);
+      onSubmit(name,sirname,email,phone,typeOfEmployee);
     }
   };
 
@@ -285,12 +274,6 @@ export const EmployeeModificationForm: React.FC = ({ onSubmit, employee }) => {
         placeholder="Sirname"
         value={sirname}
         onChangeText={setSirname}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Nickname"
-        value={nickname}
-        onChangeText={setNickname}
       />
       <TextInput
         style={styles.input}

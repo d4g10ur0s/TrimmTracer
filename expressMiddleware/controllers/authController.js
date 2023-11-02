@@ -2,7 +2,7 @@ const { v4: uuidv4, parse: parseUUID } = require('uuid');
 const client = require('./db')
 
 exports.registerEmployee = async (req, res) => {
-  const { name,sirname,nickname,email,phone,typeofemployee,password,shop_id } = req.body;
+  const { name,sirname,email,phone,typeofemployee,password,shop_id } = req.body;
   console.log(shop_id)
   try {
     // Check if the username already exists in the database
@@ -18,12 +18,10 @@ exports.registerEmployee = async (req, res) => {
       'INSERT INTO trimmtracer.user (email,phone,password,employee,shop_id,name,sirname,typeofemployee) VALUES (?,?,?,?,?,?,?,?)',
       [email,phone,password,true,shop_id,name,sirname,typeofemployee], { prepare: true }
     );
-    console.log(shop_id)
     await client.execute(
       'INSERT INTO trimmtracer.employee (email,phone,shop_id,name,sirname,typeofemployee) VALUES (?,?,?,?,?,?)',
       [email,phone,shop_id,name,sirname,typeofemployee], { prepare: true }
     );
-    console.log(shop_id)
 
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
