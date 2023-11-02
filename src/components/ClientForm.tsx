@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text,Picker, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 
 export const ClientForm: React.FC = ({ onSubmit }) => {
-  const [name, setName] = useState<string>('');
-  const [sirname, setSirname] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
-  const [note, setNote] = useState<string>('');
+  const [name, setName] = useState<string>('Panos');
+  const [sirname, setSirname] = useState<string>('Koutsis');
+  const [email, setEmail] = useState<string>('pkoutsan@gmail.com');
+  const [phone, setPhone] = useState<string>('6956050752');
+  const [note, setNote] = useState<string>('Varaei poly.');
   //errors
   const [nameError, setNameError] = useState(null);
   const [sirnameError, setSirnameError] = useState(null);
@@ -44,7 +44,7 @@ export const ClientForm: React.FC = ({ onSubmit }) => {
   const handleRegister = () => {
     // if no errors then register new employee
     if( !nameError && !sirnameError && !emailError && !phoneError ){
-      onSubmit(name,sirname,email,phone,note);
+      onSubmit(email,phone,name,note,sirname);
     }
   };
 

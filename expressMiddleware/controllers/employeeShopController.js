@@ -99,7 +99,6 @@ exports.deleteShopEmployee = async (req, res) => {
   );
   const employees = shopEmployees.rows
   res.json({employees});
-
 };
 // update employee
 exports.updateShopEmployee = async (req, res) => {

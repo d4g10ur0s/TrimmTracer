@@ -1,8 +1,8 @@
 const BASE_URL = 'http://192.168.1.226:3000'; // Replace this with your actual backend API URL
 
-export const getEmployees = async (shop_id: string): Promise<any> => {
+export const getClients = async (shop_id: string): Promise<any> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/shop/getShopEmployees`, {
+    const response = await fetch(`${BASE_URL}/api/shop/getShopClients`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -15,67 +15,15 @@ export const getEmployees = async (shop_id: string): Promise<any> => {
     if (!response.ok) {
       throw new Error('Invalid credentials');
     }
-
     const data = await response.json();
-    return data.employees;
+    return data.clients;
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;
   }
 };
-// get employee-service relationship
-export const getEmployeeServices = async (shop_id,employee_email): Promise<any> => {
-  try {
-    const response = await fetch(`${BASE_URL}/api/shop/getEmployeeServices`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        shop_id,
-        employee_email,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Invalid credentials');
-    }
-
-    const data = await response.json();
-    return data.names
-  } catch (error) {
-    console.error('Error logging in:', error);
-    throw error;
-  }
-}
-//assign service
-export const assignService = async (shop_id , assign_name,unassign_name ,email) => {
-  try {
-    const response = await fetch(`${BASE_URL}/api/shop/assignServices`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        shop_id ,
-        assign_name,
-        unassign_name,
-        email ,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Invalid credentials');
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error logging in:', error);
-    throw error;
-  }
-}
 // add client
-export const addClient = async (shop_id,name,sirname,email,phone,note): Promise<any> => {
+export const addClient = async (shop_id,email,phone,name,note,sirname): Promise<any> => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/addClient`, {
       method: 'POST',
@@ -84,11 +32,11 @@ export const addClient = async (shop_id,name,sirname,email,phone,note): Promise<
       },
       body: JSON.stringify({
         shop_id,
-        name,
-        sirname,
         email,
         phone,
+        name,
         note,
+        sirname,
       }),
     });
 
@@ -103,50 +51,17 @@ export const addClient = async (shop_id,name,sirname,email,phone,note): Promise<
     throw error;
   }
 };
-
 // delete employee
-export const deleteEmployee = async (email,shop_id) => {
+export const deleteShopClient = async (shop_id,clientEmail) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/shop/deleteEmployee`, {
+    const response = await fetch(`${BASE_URL}/api/shop/deleteClient`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         shop_id,
-        email,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Invalid credentials');
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error logging in:', error);
-    throw error;
-  }
-}
-
-// delete employee
-export const modifyEmployee = async (semail,name,sirname,email,phone,typeOfEmployee) => {
-  try {
-    const response = await fetch(`${BASE_URL}/api/shop/updateEmployee`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email : semail,
-        employee :{
-          name : name,
-          sirname : sirname ,
-          email : email,
-          phone : phone,
-          typeofemployee : typeOfEmployee,
-        },
+        clientEmail,
       }),
     });
 
