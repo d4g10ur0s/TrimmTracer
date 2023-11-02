@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity, ScrollView } from 'react-native';
 
 import {ClientForm} from '../components/ClientForm';
+import {addClient} from '../utils/ClientHandling'
 
 const ShopClientsContainer: React.FC = ({employee}) => {
   // current employee
@@ -12,8 +13,13 @@ const ShopClientsContainer: React.FC = ({employee}) => {
   const [clientForm , setClientForm] = useState(null);
 
   const newClient = async () => {
-    if(clientForm==null){await setClientForm(<ClientForm />)}
+    if(clientForm==null){await setClientForm(<ClientForm onSubmit={addNewClient} />)}
     else{setClientForm(null)}
+  }
+
+  const addNewClient = async (name,sirname,email,phone,note) => {
+    await addClient(employee.shop_id,name,sirname,email,phone,note);
+    setClientForm(null)
   }
 
   return (

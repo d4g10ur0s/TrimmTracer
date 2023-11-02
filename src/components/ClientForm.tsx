@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text,Picker, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 
-export const ClientForm: React.FC = ({ onSubmit, employee }) => {
+export const ClientForm: React.FC = ({ onSubmit }) => {
   const [name, setName] = useState<string>('');
   const [sirname, setSirname] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -44,7 +44,7 @@ export const ClientForm: React.FC = ({ onSubmit, employee }) => {
   const handleRegister = () => {
     // if no errors then register new employee
     if( !nameError && !sirnameError && !emailError && !phoneError ){
-      onSubmit(name,sirname,email,phone,typeOfEmployee);
+      onSubmit(name,sirname,email,phone,note);
     }
   };
 

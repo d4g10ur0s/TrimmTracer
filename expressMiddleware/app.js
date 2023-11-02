@@ -18,6 +18,9 @@ app.use('/api/shop', serviceRoutes);
 const appointmentsRoutes = require('./routes/appointmentsRoutes');
 app.use('/api/shop', appointmentsRoutes);
 
+const shopClientRoutes = require('./routes/shopClientRoutes');
+app.use('/api/shop', shopClientRoutes);
+
 const port = 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
