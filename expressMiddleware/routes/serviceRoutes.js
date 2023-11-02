@@ -7,5 +7,6 @@ router.post('/getServiceEmployees', serviceShopController.getServiceEmployees);
 router.post('/addService', serviceShopController.addShopService);
 router.post('/assignEmployees', serviceShopController.assignEmployees);
 router.post('/deleteService', serviceShopController.deleteShopService);
+router.post('/updateService', serviceShopController.updateShopService);
 
 module.exports = router;

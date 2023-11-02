@@ -105,6 +105,33 @@ export const assignService = async (shop_id , assign_email,unassign_email ,name)
     throw error;
   }
 }
+// update service
+// delete service
+export const updateService = async (service ,nameChanged,old_name) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/shop/updateService`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        service ,
+        nameChanged,
+        old_name,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Invalid credentials');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+}
 // delete service
 export const deleteService = async (shop_id ,name) => {
   try {

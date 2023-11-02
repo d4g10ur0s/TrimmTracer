@@ -77,6 +77,47 @@ exports.addShopService = async (req, res) => {
     res.status(500).json({ error: 'Error during storing' });
   }
 };
+// update service
+exports.updateShopService = async (req, res) => {
+  const { service,nameChanged,old_name } = req.body;
+  console.log(req.body)
+  try {
+    const duration = cassandra.types.Duration.fromString(dur);
+    // insert service
+    await client.execute(
+      'INSERT INTO trimmtracer.service (shop_id ,name , dur , average_dur, client_cost , employee_cost ,description,numberofemployees) VALUES (?,?,?,?,?,?,?,?)',
+      [service.shop_id,service.name , service.duration , service.duration, service.client_cost , service.employee_cost ,service.description,1], { prepare: true }
+    );
+    // insert to relationship tables if name changed
+    if(nameChanged){
+      const oldServiceRelation = await client.execute(
+        'Select * from trimmtracer.shopService where shop_id=? and name=?',
+        [service.shop_id,old_name]
+      )
+      // bulk insert everything with name changed
+      const emails = oldServiceRelation.rows.map(row => row.employee_email);
+      await client.execute(
+        'Delete from trimmtracer.employeeService where shop_id=? and employee_email IN ? and service_name=?',
+        [service.shop_id,emails,old_name], { prepare: true }
+      );
+      for(i in emails){
+        client.execute(
+          'INSERT INTO trimmtracer.shopService (shop_id ,employee_email,service_name) VALUES (?,?,?)',
+          [service.shop_id,emails[i],service.name], { prepare: true }
+        );
+        client.execute(
+          'INSERT INTO trimmtracer.employeeService (shop_id ,employee_email,service_name) VALUES (?,?,?)',
+          [service.shop_id,emails[i],service.name], { prepare: true }
+        );
+      }
+    }
+
+    res.status(201).json({ message: 'Service stored successfully' });
+  } catch (err) {
+    console.error('Error during storing:', err);
+    res.status(500).json({ error: 'Error during storing' });
+  }
+};
 // assign service
 exports.assignEmployees = async (req, res) => {
   const { shop_id , assign_email, unassign_email ,name} = req.body;

@@ -24,7 +24,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { deleteService,assignService,getServiceEmployees } from '../utils/ServiceHandling';
+import { updateService,deleteService,assignService,getServiceEmployees } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
 
 import EmployeeSelection from '../components/EmployeeSelection';
@@ -111,9 +111,10 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
 
   const serviceModification = async (serv) => {
     if(mService){//save editted service
-      await assignService(service.shop_id,
-                          [service.employee_email] ,
-                          service.name);
+      var nameChanged = false;
+      if(serv.name!=service.name){nameChanged=true}
+      setServiceInfo(serv)
+      await updateService(serv,nameChanged,service.name);
     }
     await setMService((prevState) => !prevState)
   }
@@ -158,7 +159,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
       <Text
         style={styles.useText}
       >
-        {'Number of Employees : ' + service.numberofemployees}
+        {'Number of Employees : ' + serviceInfo.numberofemployees}
       </Text>
       <ScrollView
         horizontal={true}
