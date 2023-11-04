@@ -50,7 +50,7 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
   // assign service
   const assign = async (assign_names,unassign_names) => {
     var names = [];
-    const employeeServices = await getEmployeeServices(employee.shop_id,employeeInfo.email);
+    const employeeServices = await getEmployeeServices(employee.shop_id,employeeInfo.email,false);
     for(i in assign_names){
       if(!employeeServices.includes(assign_names[i])){names.push(assign_names[i])}
     }
@@ -80,7 +80,7 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
     // get everything about shop services
     const shopServices=await getServices(employee.shop_id);
     // get shop employee's emails for the employees related to service
-    const employeeServices = await getEmployeeServices(employee.shop_id,employeeInfo.email);
+    const employeeServices = await getEmployeeServices(employee.shop_id,employeeInfo.email,false);
     // make a fast ordering about employees related to service and those that do not
     var a = []
     var u = []

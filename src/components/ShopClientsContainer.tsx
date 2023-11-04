@@ -1,13 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity, ScrollView } from 'react-native';
+import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity, ScrollView, Modal } from 'react-native';
 
 import {ClientForm} from '../components/ClientForm';
+import AppointmentEmployeeSelection from '../components/AppointmentEmployeeSelection';
 import {addClient,deleteShopClient,getClients} from '../utils/ClientHandling'
+import { getServices,getServiceEmployees } from '../utils/ServiceHandling';
+import { getEmployees } from '../utils/EmployeeHandling';
 
 const ClientContainer: React.FC = ({client,deleteClient}) => {
   // current employee
   const [currentClient ,setCurrentClient] = useState(client);
-
+  // appointment modal
+  const [modalVisible, setModalVisible ] = useState(false);
+  const [modalContent , setModalContent] = useState(null);
+  // modal handling
+  const handleHideModal = () => {
+    setModalVisible(false);
+  };
+  const handleShowModal = () => {
+    setModalVisible(true);
+  };
+  // create a new appointment
+  const createAppointment = async () => {
+    // get everything about shop employees
+    const shopEmployees = await getEmployees(client.shop_id);
+    // show modal
+    await setModalContent(
+            <AppointmentEmployeeSelection
+              hide={handleHideModal}
+              employees={shopEmployees}
+              submit={toServices}
+            />
+          );
+    setModalVisible(true);
+  }
+  // select services
+  toServices = () =>{
+    setModalVisible(false);
+  }
+  // content
   return (
     <View
       style={styles.outsideContainer}
@@ -45,6 +76,7 @@ const ClientContainer: React.FC = ({client,deleteClient}) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.controlButtons}
+          onPress={createAppointment}
         >
           <Text>
             {"New Appointment"}
@@ -59,6 +91,14 @@ const ClientContainer: React.FC = ({client,deleteClient}) => {
           </Text>
         </TouchableOpacity>
       </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={handleHideModal}
+      >
+        {modalContent}
+      </Modal>
     </View>
   );
 };
@@ -92,6 +132,7 @@ const ShopClientsContainer: React.FC = ({employee}) => {
     var containers = [];
     for(i in clients){
       containers.push(<ClientContainer
+                        key={i}
                         client={clients[i]}
                         deleteClient={deleteClient}
                       />)

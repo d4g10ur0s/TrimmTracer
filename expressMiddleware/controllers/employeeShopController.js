@@ -14,15 +14,23 @@ exports.getShopEmployees = async (req, res) => {
 };
 // get service-employee relationship
 exports.getEmployeeServices = async (req, res) => {
-  const { shop_id,employee_email } = req.body;
+  const { shop_id,employee_email,no } = req.body;
   console.log(req.body);
-
+  // get services names by employee email
   const serviceNames = await client.execute(
     'SELECT service_name FROM trimmtracer.employeeService WHERE shop_id=? and employee_email=?',
     [shop_id,employee_email]
   );
   const names = serviceNames.rows.map(row => row.service_name);
-  res.json({names});
+  // if it is for appointment u have to get full service credentials
+  if(no){
+    const fullService = await client.execute(
+      'SELECT * FROM trimmtracer.service WHERE shop_id=? and name IN ?',
+      [shop_id,names]
+    );
+    var services = fullService.rows
+    res.json({services});
+  }else{res.json({names});}
 };
 // assign service
 exports.assignServices = async (req, res) => {

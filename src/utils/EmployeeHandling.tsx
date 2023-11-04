@@ -24,7 +24,7 @@ export const getEmployees = async (shop_id: string): Promise<any> => {
   }
 };
 // get employee-service relationship
-export const getEmployeeServices = async (shop_id,employee_email): Promise<any> => {
+export const getEmployeeServices = async (shop_id,employee_email,no): Promise<any> => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/getEmployeeServices`, {
       method: 'POST',
@@ -34,6 +34,7 @@ export const getEmployeeServices = async (shop_id,employee_email): Promise<any> 
       body: JSON.stringify({
         shop_id,
         employee_email,
+        no,
       }),
     });
 
@@ -42,7 +43,8 @@ export const getEmployeeServices = async (shop_id,employee_email): Promise<any> 
     }
 
     const data = await response.json();
-    return data.names
+    if(no){return data.services}
+    else{return data.names}
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;

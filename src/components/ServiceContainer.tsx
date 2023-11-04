@@ -55,8 +55,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   const [modalVisible, setModalVisible ] = useState(false);
   const [modalContent , setModalContent] = useState(null);
   const [mService , setMService] = useState(false);
-
-  // modal
+  // modal handling
   const handleHideModal = () => {
     setModalVisible(false);
   };
