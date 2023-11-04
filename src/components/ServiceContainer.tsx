@@ -24,7 +24,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { updateService,deleteService,assignService,getServiceEmployees } from '../utils/ServiceHandling';
+import { updateService,deleteService,assignService,getServiceEmployees,nanosecondsToHoursMinutesSeconds,nanosecondsToString } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
 
 import EmployeeSelection from '../components/EmployeeSelection';
@@ -33,22 +33,6 @@ import {ServiceModificationForm} from '../components/ServiceForm';
 interface ServiceContainerProps {
   service : {};
 }
-
-const nanosecondsToHoursMinutesSeconds = (nanoseconds) => {
-  const nsPerSecond = 1e9;
-  const nsPerMinute = nsPerSecond * 60;
-  const nsPerHour = nsPerMinute * 60;
-
-  const hours = Math.floor(nanoseconds / nsPerHour);
-  const remainingAfterHours = nanoseconds % nsPerHour;
-
-  const minutes = Math.floor(remainingAfterHours / nsPerMinute);
-  const remainingAfterMinutes = remainingAfterHours % nsPerMinute;
-
-  const seconds = Math.floor(remainingAfterMinutes / nsPerSecond);
-
-  return { hours, minutes, seconds };
-};
 
 const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,refresh}) => {
   const [serviceInfo, setServiceInfo] = useState(service);
@@ -62,12 +46,6 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   const handleShowModal = () => {
     setModalVisible(true);
   };
-  // utils
-  const nanosecondsToString = (nanoseconds) => {
-    const { hours, minutes, seconds } = nanosecondsToHoursMinutesSeconds(nanoseconds)
-    if(hours==0){return minutes + " m " + seconds + " s "}
-    return hours + " h " + minutes + " m " + seconds + " s "
-  }
   // delete service
   const serviceDeletion = () => {
     deleteService(service.shop_id, service.name);

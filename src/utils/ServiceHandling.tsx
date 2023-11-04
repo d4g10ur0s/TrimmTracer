@@ -1,4 +1,27 @@
 const BASE_URL = 'http://192.168.1.226:3000'; // Replace this with your actual backend API URL
+// utils
+// convert duration info to human readable format
+export const nanosecondsToString = (nanoseconds) => {
+  const { hours, minutes, seconds } = nanosecondsToHoursMinutesSeconds(nanoseconds)
+  if(hours==0){return minutes + " m " + seconds + " s "}
+  return hours + " h " + minutes + " m " + seconds + " s "
+}
+// convert duration info to human readable format
+export const nanosecondsToHoursMinutesSeconds = (nanoseconds) => {
+  const nsPerSecond = 1e9;
+  const nsPerMinute = nsPerSecond * 60;
+  const nsPerHour = nsPerMinute * 60;
+
+  const hours = Math.floor(nanoseconds / nsPerHour);
+  const remainingAfterHours = nanoseconds % nsPerHour;
+
+  const minutes = Math.floor(remainingAfterHours / nsPerMinute);
+  const remainingAfterMinutes = remainingAfterHours % nsPerMinute;
+
+  const seconds = Math.floor(remainingAfterMinutes / nsPerSecond);
+
+  return { hours, minutes, seconds };
+};
 // get shop's services
 export const getServices = async (shop_id: string): Promise<any> => {
   try {

@@ -25,6 +25,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import {getEmployeeServices} from '../utils/EmployeeHandling';
+import { nanosecondsToString,nanosecondsToHoursMinutesSeconds } from '../utils/ServiceHandling';
 
 interface AppointmentEmployeeSelectionProps {
 
@@ -56,7 +57,7 @@ const EmployeeServicesListComponent : React.FC = ({employee , service , select})
         style={styles.horizontalView}
       >
         <Text style={styles.miniHeader} >{"Duration"}</Text>
-        <Text style={styles.infoText}>{service.dur}</Text>
+        <Text style={styles.infoText}>{nanosecondsToString(service.dur.nanoseconds)}</Text>
       </View>
       <TouchableOpacity
         onPress={serviceSelected}
@@ -72,14 +73,17 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, selec
 
   const [serviceList , setServiceList] = useState(null);
   const [selectedServices , setSelectedServices] = useState([]);
-
-  const serviceSelection = (service) => {
+  const [selected , setSelected] = useState(false)
+  // employee selected
+  const toSelect = async () => {await setSelected((prevState) => !prevState)}
+  // a service has been selected
+  const serviceSelection = async (service) => {
     var b = selectedServices;
     b.push(service);
     await setSelectedServices(b);
   }
-
-  const toSelect = async () => {
+  // render services to select
+  const renderServiceList = async () => {
     const employeeServices = await getEmployeeServices(employee.shop_id, employee.email, true);
     var sList = []
     for(i in employeeServices){
@@ -92,7 +96,14 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, selec
         />
       );
     }
+    console.log("+mvainei")
+    await setServiceList(sList);
   }
+
+  useEffect(() => {
+    if(selected==true){renderServiceList()}
+    else{setServiceList(null)}
+  }, [selected])
 
   return (
     <View
