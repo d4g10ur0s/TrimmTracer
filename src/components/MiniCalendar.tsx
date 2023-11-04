@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+
 import DayContainer from '../components/DayContainer';
+import {getAppointmentTimesForDate} from '../utils/AppointmentHandling'
 
 const DayButton : React.FC = ({date,selectDate,dayCounter})=>{
   const [ldate ,setDate] = useState(date);
@@ -8,7 +10,8 @@ const DayButton : React.FC = ({date,selectDate,dayCounter})=>{
   return(
     <View>
       <TouchableOpacity
-      style={styles.dateCell}
+      style={(date<new Date()) ? styles.disabledDateCell : styles.dateCell}
+      disabled={date<new Date()}
       onPress={() => dateSelected(ldate)}
       >
       <Text
@@ -84,7 +87,6 @@ const RCalendar: React.FC = ({ onDateSelect }) => {
         </View>
       );
     }
-
     return calendarArray;
   };
 
@@ -108,13 +110,20 @@ const RCalendar: React.FC = ({ onDateSelect }) => {
 
 const MiniCalendar: React.FC = ({ employee }) => {
   const [user,setUser] = useState(employee)
-
-  const dateSelected = (date) => {console.log(date)}
+  const [content, setContent] = useState(null)
+  // query appointmes for day having employee
+  const dateSelected = async (date) => {
+    const getAppointments = getAppointmentTimesForDate(employee.shop_id,employee.email,date)
+  }
+  // render calendar at start
+  useEffect(()=>{
+    setContent(<RCalendar onDateSelect={dateSelected} />)
+  },[])
 
   return(
     <View>
       <Text style={styles.selectHeader}>{'Select Date'}</Text>
-      <RCalendar onDateSelect={dateSelected} />
+      {content}
     </View>
   )
 
@@ -166,6 +175,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 20,
     backgroundColor: '#f0f0f0',
+  },
+  disabledDateCell : {
+    width: 40,
+    height: 40,
+    margin : 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    backgroundColor: '#0000002F',
   },
   emptyCell: {
     width: 40,

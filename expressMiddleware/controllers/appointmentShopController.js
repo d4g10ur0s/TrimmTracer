@@ -11,7 +11,7 @@ function formatDateForJavaUtilDate(date) {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
-
+// get shop appointments
 exports.getShopAppointments = async (req, res) => {
   const { shop_id,employee_email,when_0,when_1 } = req.body;
   console.log(req.body);
@@ -22,13 +22,28 @@ exports.getShopAppointments = async (req, res) => {
   const appointments = shopAppointments.rows
   res.json({appointments});
 };
-
+// get appointments by employee
 exports.getEmployeeAppointments = async (req, res) => {
   const { shop_id,employee_email,when_0,when_1 } = req.body;
   console.log(req.body);
   const shopAppointments = await client.execute(
     'select * from appointment where shop_id=? and employee_email=? and (when<=? and when>=?);',
     [shop_id,employee_email,when_0,when_1]
+  );
+  const appointments = shopAppointments.rows
+  res.json({appointments});
+};
+// get appointment times for appointment creation
+exports.getAppointmentTimesForDate = async (req, res) => {
+  const { shop_id,employee_email,date } = req.body;
+  console.log(req.body);
+  const specificDate = new Date(date);
+  const startTimestamp = specificDate.setHours(0, 0, 0, 0); // Set to start working hours of the day
+  const endTimestamp = specificDate.setHours(23, 59, 59, 999); // Set to the last working hours of the day
+
+  const shopAppointments = await client.execute(
+    'select * from appointment where shop_id=? and (when<=? and when>=?);',
+    [shop_id,employee_email,startTimestamp,endTimestamp]
   );
   const appointments = shopAppointments.rows
   res.json({appointments});
