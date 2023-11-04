@@ -39,7 +39,7 @@ const EmployeeServicesListComponent : React.FC = ({employee , service , select})
 
   return (
     <View
-      style={styles.servicesList}
+      style={styles.servicesListComponent}
     >
       <View
         style={styles.horizontalView}
@@ -97,7 +97,7 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, selec
       );
     }
     console.log("+mvainei")
-    await setServiceList(sList);
+    await setServiceList(<View style={styles.serviceList}><Text style={styles.selectServiceHeader}>{"Select Service"}</Text>{sList}</View>);
   }
 
   useEffect(() => {
@@ -197,9 +197,9 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
 
 const styles = StyleSheet.create({
   employeeSelection : {
-    height : '45%',
+    height : '65%',
     width : '85%',
-    backgroundColor : "#FFFFFFAD",
+    backgroundColor : "#2C2A33",
     alignSelf : 'center',
     marginTop : '25%',
     borderRadius : 8,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   },
   selectionHeader : {
     alignSelf : 'center',
-    color: 'black',
+    color: 'white',
     fontSize : 20,
     fontWeight : 'bold',
   },
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     borderStyle : 'dashed',
     borderWidth : 1,
     borderColor : 'gray',
-    backgroundColor : '#999999AD',
+    backgroundColor : '#495866',
   },
   horizontalView : {
     padding : 2,
@@ -228,9 +228,11 @@ const styles = StyleSheet.create({
   miniHeader : {
     fontSize : 15,
     fontWeight : 'bold',
+    color : 'white',
   },
   infoText : {
     fontSize : 15,
+    color : 'white',
     fontWeight : '500',
   },
   selectButton : {
@@ -256,6 +258,29 @@ const styles = StyleSheet.create({
     backgroundColor : '#574C9EAA',
     borderRadius : 8,
     padding : 3,
+  },
+  servicesListComponent : {
+    padding : 5,
+    marginBottom : 5,
+    borderBottomWidth : 1,
+    borderColor : 'white',
+    borderRadius : 8,
+  },
+  serviceList : {
+    marginBottom : 5,
+    padding : 8,
+    borderTopWidth : 1,
+    borderBottomWidth : 1,
+    borderRadius : 12,
+    borderColor : 'white',
+  },
+  selectServiceHeader : {
+    borderBottomWidth : 1,
+    borderColor : 'white',
+    alignSelf : 'center',
+    fontWeight : 'bold',
+    fontSize : 18,
+    color : 'white',
   },
 });
 

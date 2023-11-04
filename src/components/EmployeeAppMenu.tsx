@@ -56,7 +56,7 @@ const EmployeeAppMenu: React.FC<EmployeeAppMenuProps> = ({toCalendar , toShop , 
 
 const styles = StyleSheet.create({
   container : {
-    backgroundColor : '#FFFFFFAD',
+    backgroundColor : '#495866',
     flexDirection : 'row',
     justifyContent : 'center',
     alignItems : 'center',

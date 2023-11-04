@@ -62,9 +62,11 @@ const ShopMenu: React.FC<ShopMenuProps> = ({addForm,isType3,alter}) => {
 
 const styles = StyleSheet.create({
   containerMenu:{
+    marginBottom : 5,
+    borderRadius : 8,
     justifyContent : 'center',
     alignItems : 'center',
-    backgroundColor : '#FFFFFFAD',
+    backgroundColor : '#495866',
     flexDirection : 'row',
   },
   controlButton : {

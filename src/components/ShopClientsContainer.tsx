@@ -171,7 +171,7 @@ const ShopClientsContainer: React.FC = ({employee}) => {
 const styles = StyleSheet.create({
   outsideContainer : {
     borderRadius : 8,
-    backgroundColor:'#AFAFAFAD',
+    backgroundColor : '#495866',
     borderWidth: 1,
     borderColor: 'gray',
     borderStyle: 'dashed',
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   clientArea : {
     justifyContent : 'center',
     alignItems : 'center',
-    backgroundColor : '#FFFFFFAD',
+    backgroundColor : "#2C2A33",
     marginBottom : 10,
     paddingBottom : 10,
   },

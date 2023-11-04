@@ -208,7 +208,7 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
 const styles = StyleSheet.create({
   outsideContainer : {
     borderRadius : 8,
-    backgroundColor:'#AFAFAFAD',
+    backgroundColor : '#495866',
     borderWidth: 1,
     borderColor: 'gray',
     borderStyle: 'dashed',

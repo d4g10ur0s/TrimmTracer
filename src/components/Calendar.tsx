@@ -126,7 +126,7 @@ const Calendar: React.FC = ({ employee }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor : '#495866',
     padding: 10,
     borderRadius: 8,
     marginTop : 20,
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   monthText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color : 'black',
+    color : 'white',
   },
   arrowText: {
     fontSize: 20,

@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   employeeArea : {
     justifyContent : 'center',
     alignItems : 'center',
-    backgroundColor : '#FFFFFFAD',
+    backgroundColor : "#2C2A33",
     marginBottom : 10,
     paddingBottom : 10,
   }

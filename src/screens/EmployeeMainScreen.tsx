@@ -62,7 +62,7 @@ const EmployeeMainScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor : "#7C96C4AD",
+    backgroundColor : "#2C2A33",
   },
   welcomeHeader : {
     fontSize : 25,
