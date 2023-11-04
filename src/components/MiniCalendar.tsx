@@ -113,6 +113,7 @@ const MiniCalendar: React.FC = ({ employee }) => {
 
   return(
     <View>
+      <Text style={styles.selectHeader}>{'Select Date'}</Text>
       <RCalendar onDateSelect={dateSelected} />
     </View>
   )
@@ -126,6 +127,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop : 20,
     marginBottom : 20,
+  },
+  selectHeader : {
+    marginTop : 10,
+    fontSize : 18,
+    fontWeight : 'bold',
+    color : 'white',
+    alignSelf : 'center',
   },
   header: {
     flexDirection: 'row',
