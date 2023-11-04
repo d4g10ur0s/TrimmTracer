@@ -26,15 +26,19 @@ import {
 
 import {getEmployeeServices} from '../utils/EmployeeHandling';
 import { nanosecondsToString,nanosecondsToHoursMinutesSeconds } from '../utils/ServiceHandling';
+import MiniCalendar from '../components/MiniCalendar'
 
 interface AppointmentEmployeeSelectionProps {
 
 }
 
-const EmployeeServicesListComponent : React.FC = ({employee , service , select}) => {
+const EmployeeServicesListComponent : React.FC = ({employee , service , select,unselect}) => {
+  const [selected , setSelected] = useState(false);
 
-  const serviceSelected = () => {
-    select(service);
+  const serviceSelected = async () => {
+    await setSelected((prevState) => !prevState)
+    if(selected){select(service);}
+    else{unselect(service.name)}
   }
 
   return (
@@ -63,23 +67,29 @@ const EmployeeServicesListComponent : React.FC = ({employee , service , select})
         onPress={serviceSelected}
         style={styles.selectButton}
       >
-        <Text>{'Select'}</Text>
+        <Text>{(selected) ? ('Unselect') : ('Select')}</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
-const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, select}) =>{
+const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, createAppointment}) =>{
 
   const [serviceList , setServiceList] = useState(null);
-  const [selectedServices , setSelectedServices] = useState([]);
+  const [selectedServices , setSelectedServices] = useState({});
   const [selected , setSelected] = useState(false)
   // employee selected
   const toSelect = async () => {await setSelected((prevState) => !prevState)}
   // a service has been selected
   const serviceSelection = async (service) => {
     var b = selectedServices;
-    b.push(service);
+    b[service.name] = service;
+    await setSelectedServices(b);
+  }
+  // unselect service
+  const unselectService = async (service_name) => {
+    var b=selectedServices;
+    delete b[service_name];
     await setSelectedServices(b);
   }
   // render services to select
@@ -93,18 +103,21 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, selec
           employee={employee}
           service={employeeServices[i]}
           select={serviceSelection}
+          unselect={unselectService}
         />
       );
     }
-    console.log("+mvainei")
     await setServiceList(<View style={styles.serviceList}><Text style={styles.selectServiceHeader}>{"Select Service"}</Text>{sList}</View>);
   }
-
+  // render service list
   useEffect(() => {
     if(selected==true){renderServiceList()}
-    else{setServiceList(null)}
+    else{
+      setServiceList(null)
+      setSelectedServices({})
+    }
   }, [selected])
-
+  // content
   return (
     <View
       style={styles.miniContainer}
@@ -134,6 +147,14 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, selec
         <Text>{'Select'}</Text>
       </TouchableOpacity>
       {serviceList}
+      {(selected) ? (
+        <TouchableOpacity
+          style={styles.selectButton}
+          onPress={()=>{createAppointment(employee,selectedServices)}}
+        >
+          <Text>{'Create Appointment'}</Text>
+        </TouchableOpacity>
+      ) : (null)}
     </View>
   );
 
@@ -150,14 +171,22 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
         <MiniEmployeeContainer
           key={i}
           employee={employees[i]}
-          select={toSubmit}
+          createAppointment={toDateSelection}
         />
       );
     }
     await setContainers(containers);
   }
+  // date selection
+  const toDateSelection = async (employee, selectedServices ) => {
+    console.log(employee)
+    console.log(selectedServices)
+    await setContainers(<MiniCalendar />)
+  }
   // submit
-  const toSubmit = (employee) => {submit(employee);}
+  const toSubmit = (employee) => {
+    submit(employee);
+  }
   // render at start
   useEffect(()=>{
     renderEmployees();
