@@ -8,6 +8,92 @@ interface RegistrationFormProps {
   onSubmit2: (name : string , sirname : string , email: string, phone : string, typeOfEmployee : number ,password: string) => void;
 }
 
+const WorkingHoursFormComponent : React.FC = ({}) => {
+
+  // working hours
+  const [time, setTime] = useState('');
+  const [isTimeValid, setIsTimeValid] = useState(true);
+
+  const handleTimeChange = (text) => {
+    // Regular expression to validate the time in HH:mm format
+    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+
+    if (timeRegex.test(text)) {
+      setIsTimeValid(true);
+    } else {
+      setIsTimeValid(false);
+    }
+
+    setTime(text);
+  };
+
+  return (
+    <View>
+      <View
+        style={styles.timeView}
+      >
+      <Text>{'Start Time'}</Text>
+      <TextInput
+        style={[styles.timeInput, !isTimeValid && styles.inputError]}
+        placeholder="(HH:mm)"
+        onChangeText={handleTimeChange}
+        value={time}
+      />
+      </View>
+      <View
+        style={styles.timeView}
+      >
+      <Text>{'End Time'}</Text>
+      <TextInput
+        style={[styles.timeInput, !isTimeValid && styles.inputError]}
+        placeholder="(HH:mm)"
+        onChangeText={handleTimeChange}
+        value={time}
+      />
+      </View>
+    </View>
+  );
+}
+
+const WorkingHoursForm : React.FC = ({}) => {
+
+  const [formComponents , setFormComponents] = useState([]);
+  // render form components a.k.a. working hours inputs
+  const renderFormComponents = async (components) => {
+    if(components == null){
+      await setFormComponents([<WorkingHoursFormComponent />])
+    }else{
+      await setFormComponents(components)
+    }
+  }
+  // render at start
+  useEffect(() => {
+    renderFormComponents(null);
+  },[]);
+  // add form component
+  const addFormComponent = async () => {
+    var b = formComponents;
+    b.push(<WorkingHoursFormComponent />)
+    await setFormComponents(b)
+  }
+  // content
+  return (
+    <View>
+      <View style={styles.workingDayView}>
+        <TouchableOpacity style={styles.workingDayButton}><Text>{'Mon'}</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.workingDayButton}><Text>{'Tue'}</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.workingDayButton}><Text>{'Wed'}</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.workingDayButton}><Text>{'Thu'}</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.workingDayButton}><Text>{'Fri'}</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.workingDayButton}><Text>{'Sat'}</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.workingDayButton}><Text>{'Sun'}</Text></TouchableOpacity>
+      </View>
+      {formComponents}
+      <TouchableOpacity style={styles.addIntervalButton} onPress={addFormComponent}><Text>{'Add Interval'}</Text></TouchableOpacity>
+    </View>
+  );
+}
+
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, changeForm,addEmployee,onSubmit2 }) => {
   const [name, setName] = useState<string>('Nikos');
   const [sirname, setSirname] = useState<string>('Kalantas');
@@ -82,23 +168,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, ch
     setTypeOfEmployee('3');
   }
 
-  // working hours
-  const [time, setTime] = useState('');
-  const [isTimeValid, setIsTimeValid] = useState(true);
-
-  const handleTimeChange = (text) => {
-    // Regular expression to validate the time in HH:mm format
-    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
-
-    if (timeRegex.test(text)) {
-      setIsTimeValid(true);
-    } else {
-      setIsTimeValid(false);
-    }
-
-    setTime(text);
-  };
-
   return (
     <View style={[styles.container, ( (addEmployee) ? ({marginTop:0}) : ({marginTop : 85,}) )]}>
       <Text
@@ -149,40 +218,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, ch
         />)
       }
       {(addEmployee)?
-      (<View>
-        <View style={styles.workingDayView}>
-          <TouchableOpacity style={styles.workingDayButton}><Text>{'Mon'}</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.workingDayButton}><Text>{'Tue'}</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.workingDayButton}><Text>{'Wed'}</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.workingDayButton}><Text>{'Thu'}</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.workingDayButton}><Text>{'Fri'}</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.workingDayButton}><Text>{'Sat'}</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.workingDayButton}><Text>{'Sun'}</Text></TouchableOpacity>
-        </View>
-        <View
-          style={styles.timeView}
-        >
-        <Text>{'Start Time'}</Text>
-        <TextInput
-          style={[styles.timeInput, !isTimeValid && styles.inputError]}
-          placeholder="(HH:mm)"
-          onChangeText={handleTimeChange}
-          value={time}
-        />
-        </View>
-        <View
-          style={styles.timeView}
-        >
-        <Text>{'End Time'}</Text>
-        <TextInput
-          style={[styles.timeInput, !isTimeValid && styles.inputError]}
-          placeholder="(HH:mm)"
-          onChangeText={handleTimeChange}
-          value={time}
-        />
-        </View>
-        <TouchableOpacity style={styles.addIntervalButton}><Text>{'Add Interval'}</Text></TouchableOpacity>
-      </View>) :
+      (<WorkingHoursForm />) :
       (null)}
       {(addEmployee)?
         (<View
