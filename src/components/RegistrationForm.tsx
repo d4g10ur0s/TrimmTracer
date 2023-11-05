@@ -82,6 +82,23 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, ch
     setTypeOfEmployee('3');
   }
 
+  // working hours
+  const [time, setTime] = useState('');
+  const [isTimeValid, setIsTimeValid] = useState(true);
+
+  const handleTimeChange = (text) => {
+    // Regular expression to validate the time in HH:mm format
+    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+
+    if (timeRegex.test(text)) {
+      setIsTimeValid(true);
+    } else {
+      setIsTimeValid(false);
+    }
+
+    setTime(text);
+  };
+
   return (
     <View style={[styles.container, ( (addEmployee) ? ({marginTop:0}) : ({marginTop : 85,}) )]}>
       <Text
@@ -131,6 +148,42 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit, ch
           onChangeText={setPassword1}
         />)
       }
+      {(addEmployee)?
+      (<View>
+        <View style={styles.workingDayView}>
+          <TouchableOpacity style={styles.workingDayButton}><Text>{'Mon'}</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.workingDayButton}><Text>{'Tue'}</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.workingDayButton}><Text>{'Wed'}</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.workingDayButton}><Text>{'Thu'}</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.workingDayButton}><Text>{'Fri'}</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.workingDayButton}><Text>{'Sat'}</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.workingDayButton}><Text>{'Sun'}</Text></TouchableOpacity>
+        </View>
+        <View
+          style={styles.timeView}
+        >
+        <Text>{'Start Time'}</Text>
+        <TextInput
+          style={[styles.timeInput, !isTimeValid && styles.inputError]}
+          placeholder="(HH:mm)"
+          onChangeText={handleTimeChange}
+          value={time}
+        />
+        </View>
+        <View
+          style={styles.timeView}
+        >
+        <Text>{'End Time'}</Text>
+        <TextInput
+          style={[styles.timeInput, !isTimeValid && styles.inputError]}
+          placeholder="(HH:mm)"
+          onChangeText={handleTimeChange}
+          value={time}
+        />
+        </View>
+        <TouchableOpacity style={styles.addIntervalButton}><Text>{'Add Interval'}</Text></TouchableOpacity>
+      </View>) :
+      (null)}
       {(addEmployee)?
         (<View
         style={styles.typeOfUserView}
@@ -370,14 +423,37 @@ const styles = StyleSheet.create({
     borderRadius : 8,
     padding : 5,
   },
+  addIntervalButton : {
+    backgroundColor : "#349CCFFF",
+    borderRadius : 8,
+    padding : 5,
+    alignSelf : 'center',
+    marginVertical : 5,
+  },
   typeOfUserView : {
     flexDirection : 'row',
+  },
+  workingDayView : {
+    flexDirection : 'row',
+  },
+  timeView : {
+    marginVertical : 2,
+    marginHorizontal : 10,
+    flexDirection : 'row',
+    justifyContent : 'space-between',
   },
   typeButton : {
     backgroundColor : '#574C9EAA',
     borderRadius : 8,
     marginVertical : 8,
     marginHorizontal : 15,
+    padding : 5,
+  },
+  workingDayButton : {
+    backgroundColor : '#574C9EAA',
+    borderRadius : 8,
+    marginVertical : 8,
+    marginHorizontal : 3,
     padding : 5,
   },
   typeButtonDisabled:{
@@ -397,5 +473,15 @@ const styles = StyleSheet.create({
     margin : 5,
     borderRadius : 8,
     alignSelf : 'center',
+  },
+  timeInput: {
+    width: 100,
+    height: 35,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius : 8,
+    paddingLeft: 5,
+    paddingTop : 2,
+    paddingBottom : 2,
   },
 });
