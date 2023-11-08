@@ -27,6 +27,7 @@ import {
 import {getEmployeeServices} from '../utils/EmployeeHandling';
 import { nanosecondsToString,nanosecondsToHoursMinutesSeconds } from '../utils/ServiceHandling';
 import MiniCalendar from '../components/MiniCalendar'
+import AppointmentSubmitionForm from '../components/AppointmentSubmitionForm'
 
 interface AppointmentEmployeeSelectionProps {
 
@@ -168,6 +169,7 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, creat
 const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> = ({hide , employees, submit}) => {
   // assign
   const [containers , setContainers] = useState([])
+  const [services , setServices] = useState(null)
   // render containers
   const renderEmployees = async () => {
     var containers = []
@@ -184,9 +186,15 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   }
   // date selection
   const toDateSelection = async (employee, selectedServices ) => {
-    console.log(employee)
-    console.log(selectedServices)
+    await setServices(selectedServices)
     await setContainers(<MiniCalendar employee={employee} />)
+  }
+  // date selected
+  const dateSelected = async (employee,date,appointmentNumber) => {
+    if(appointmentNumber > 18){console.log("error")}
+    else{
+      await setContainers(<AppointmentSubmitionForm employee={employee} date={date} services={services} />)
+    }
   }
   // submit
   const toSubmit = (employee) => {
