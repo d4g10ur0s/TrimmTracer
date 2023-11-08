@@ -2,15 +2,33 @@ import React, { useState , useEffect} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 import DayContainer from '../components/DayContainer';
-import {getAppointmentTimesForDate} from '../utils/AppointmentHandling'
+import {getAppointmentTimesForDate,getEmployeeNumberAppointments} from '../utils/AppointmentHandling'
 
-const DayButton : React.FC = ({date,selectDate,dayCounter})=>{
+const DayButton : React.FC = ({shop_id,email,date,selectDate,dayCounter})=>{
   const [ldate ,setDate] = useState(date);
   const dateSelected = () => {selectDate(date)}
+  const [num, setNum] = useState(0); // Initialize num state
+  const [buttonStyle, setButtonStyle] = useState(styles.dateCell)
+
+  useEffect(()=>{
+    const fetchNum = async () => {
+     const result = await getEmployeeNumberAppointments(shop_id, email, ldate);
+     setNum(result.count);
+   };
+   fetchNum(); // Fetch num and update the state
+  },[ldate])
+
+  useEffect(() => {
+    // Select the style based on num or use a default style
+    if ( num > 2 && num < 8) {setButtonStyle(styles.dateCell_1);}
+    else if (num >= 8 && num < 12) {setButtonStyle(styles.dateCell_2);}
+    else {setButtonStyle(styles.dateCell_3);}
+  }, [num])
+
   return(
     <View>
       <TouchableOpacity
-      style={(date<new Date()) ? styles.disabledDateCell : styles.dateCell}
+      style={(date<new Date()) ? styles.disabledDateCell : buttonStyle}
       disabled={date<new Date()}
       onPress={() => dateSelected(ldate)}
       >
@@ -24,7 +42,7 @@ const DayButton : React.FC = ({date,selectDate,dayCounter})=>{
     );
 };
 
-const RCalendar: React.FC = ({ onDateSelect }) => {
+const RCalendar: React.FC = ({ shop_id, email, onDateSelect }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const dateSelected=(date)=>{onDateSelect(date);}
@@ -74,7 +92,7 @@ const RCalendar: React.FC = ({ onDateSelect }) => {
         } else if (dayCounter <= daysInMonth) {
           const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCounter);
           week.push(
-            <DayButton key={j} date={date} selectDate={dateSelected} dayCounter={dayCounter}/>
+            <DayButton key={j} shop_id={shop_id} email={email} date={date} selectDate={dateSelected} dayCounter={dayCounter}/>
           );
           dayCounter++;
         } else {
@@ -117,7 +135,7 @@ const MiniCalendar: React.FC = ({ employee }) => {
   }
   // render calendar at start
   useEffect(()=>{
-    setContent(<RCalendar onDateSelect={dateSelected} />)
+    setContent(<RCalendar shop_id={employee.shop_id} email={employee.email} onDateSelect={dateSelected} />)
   },[])
 
   return(
@@ -168,6 +186,33 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   dateCell: {
+    width: 40,
+    height: 40,
+    margin : 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+  },
+  dateCell_1: {
+    width: 40,
+    height: 40,
+    margin : 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+  },
+  dateCell_2: {
+    width: 40,
+    height: 40,
+    margin : 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+  },
+  dateCell_3: {
     width: 40,
     height: 40,
     margin : 2,

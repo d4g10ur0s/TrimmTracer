@@ -35,11 +35,12 @@ interface AppointmentEmployeeSelectionProps {
 const EmployeeServicesListComponent : React.FC = ({employee , service , select,unselect}) => {
   const [selected , setSelected] = useState(false);
 
-  const serviceSelected = async () => {
-    await setSelected((prevState) => !prevState)
+  const serviceSelected = async () => {await setSelected((prevState) => !prevState)}
+
+  useEffect(() => {
     if(selected){select(service);}
-    else{unselect(service.name)}
-  }
+    else{unselect(service.name);}
+  } , [selected])
 
   return (
     <View
@@ -80,17 +81,21 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, creat
   const [selected , setSelected] = useState(false)
   // employee selected
   const toSelect = async () => {await setSelected((prevState) => !prevState)}
+  useEffect(()=>{console.log(selectedServices)},[selectedServices])
   // a service has been selected
   const serviceSelection = async (service) => {
-    var b = selectedServices;
-    b[service.name] = service;
-    await setSelectedServices(b);
+    await setSelectedServices((prevSelectedServices) => ({
+      ...prevSelectedServices,
+      [service.name]: service,
+    }));
   }
   // unselect service
   const unselectService = async (service_name) => {
-    var b=selectedServices;
-    delete b[service_name];
-    await setSelectedServices(b);
+    await setSelectedServices((prevSelectedServices) => {
+      const updatedSelectedServices = { ...prevSelectedServices };
+      delete updatedSelectedServices[service_name];
+      return updatedSelectedServices;
+    });
   }
   // render services to select
   const renderServiceList = async () => {
@@ -181,7 +186,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   const toDateSelection = async (employee, selectedServices ) => {
     console.log(employee)
     console.log(selectedServices)
-    await setContainers(<MiniCalendar />)
+    await setContainers(<MiniCalendar employee={employee} />)
   }
   // submit
   const toSubmit = (employee) => {

@@ -22,6 +22,20 @@ exports.getShopAppointments = async (req, res) => {
   const appointments = shopAppointments.rows
   res.json({appointments});
 };
+// get number of appointments for a specific date
+exports.getEmployeeNumberAppointments = async (req, res) => {
+  const { shop_id,employee_email,date} = req.body;
+  console.log(req.body);
+  const specificDate = new Date(date);
+  const startTimestamp = specificDate.setHours(0, 0, 0, 0); // Set to start working hours of the day
+  const endTimestamp = specificDate.setHours(23, 59, 59, 999); // Set to the last working hours of the day
+  const numberOfAppointments = await client.execute(
+    'select COUNT(*) from appointment where shop_id=? and employee_email=? and when<=? and when>=? allow filtering;',
+    [shop_id,employee_email,startTimestamp,endTimestamp]
+  );
+  const appointmentLength = numberOfAppointments.rows[0]
+  res.json({appointmentLength});
+};
 // get appointments by employee
 exports.getEmployeeAppointments = async (req, res) => {
   const { shop_id,employee_email,when_0,when_1 } = req.body;

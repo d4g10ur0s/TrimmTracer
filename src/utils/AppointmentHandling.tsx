@@ -26,6 +26,33 @@ export const getShopAppointments = async (shop_id,employee_email,when_0,when_1) 
     throw error;
   }
 };
+// get number of appointments for a day of employee
+export const getEmployeeNumberAppointments = async (shop_id,employee_email,date) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/shop/getEmployeeNumberAppointments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        shop_id,
+        employee_email,
+        date,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Invalid credentials');
+    }
+
+    const data = await response.json();
+    console.log(data.appointmentLength)
+    return data.appointmentLength;
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+};
 // get only times
 export const getAppointmentTimesForDate = async (shop_id,employee_email,date) => {
   try {
