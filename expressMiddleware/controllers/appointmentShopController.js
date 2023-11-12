@@ -56,8 +56,8 @@ exports.getAppointmentTimesForDate = async (req, res) => {
   const endTimestamp = specificDate.setHours(23, 59, 59, 999); // Set to the last working hours of the day
 
   const shopAppointments = await client.execute(
-    'select * from appointment where shop_id=? and (when<=? and when>=?);',
-    [shop_id,employee_email,startTimestamp,endTimestamp]
+    'select * from appointment where shop_id=? and when<=? and when>=? and employee_email=? ALLOW FILTERING;',
+    [shop_id,startTimestamp,endTimestamp,employee_email]
   );
   const appointments = shopAppointments.rows
   res.json({appointments});

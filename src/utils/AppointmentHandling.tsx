@@ -46,7 +46,6 @@ export const getEmployeeNumberAppointments = async (shop_id,employee_email,date)
     }
 
     const data = await response.json();
-    console.log(data.appointmentLength)
     return data.appointmentLength;
   } catch (error) {
     console.error('Error logging in:', error);
@@ -56,7 +55,7 @@ export const getEmployeeNumberAppointments = async (shop_id,employee_email,date)
 // get only times
 export const getAppointmentTimesForDate = async (shop_id,employee_email,date) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/shop/getShopAppointments`, {
+    const response = await fetch(`${BASE_URL}/api/shop/getAppointmentTimesForDate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -73,7 +72,7 @@ export const getAppointmentTimesForDate = async (shop_id,employee_email,date) =>
     }
 
     const data = await response.json();
-    return data;
+    return data.appointments;
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;

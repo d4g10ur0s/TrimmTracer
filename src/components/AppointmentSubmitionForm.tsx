@@ -24,48 +24,45 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import { nanosecondsToString,nanosecondsToHoursMinutesSeconds } from '../utils/ServiceHandling';
+
 interface AppointmentSubmitionFormProps {
 
 }
 
-const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({employee , date, services}) => {
-  // assign
-  const [containers , setContainers] = useState([])
-  // render containers
-  const renderEmployees = async () => {
-    var containers = []
-    for(i in employees){
-      containers.push(
-        <MiniEmployeeContainer
-          key={i}
-          employee={employees[i]}
-          createAppointment={toDateSelection}
-        />
-      );
-    }
-    await setContainers(containers);
-  }
-  // date selection
-  const toDateSelection = async (employee, selectedServices ) => {
-    console.log(employee)
-    console.log(selectedServices)
-    await setContainers(<MiniCalendar employee={employee} />)
-  }
-  // date selected
-  const dateSelected = async (employee,date,appointmentNumber) => {
-    if(appointmentNumber > 18){console.log("error")}
-    else{
-      await setContainers(<AppointmentSubmitionForm employee={employee} date={date} />)
-    }
-  }
-  // submit
-  const toSubmit = (employee) => {
-    submit(employee);
-  }
-  // render at start
+const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({employee , date, selectedServices}) => {
+
+  const [totalCost, setTotalCost] = useState(0);
+  const [serviceNames, setServiceNames] = useState(null);
+  const [totalDuration , setTotalDuration] = useState(0);
+
   useEffect(()=>{
-    renderEmployees();
-  }, []);
+    // variables
+    var cost = 0;
+    var names=[];
+    var totalNanoseconds = 0;
+    // parcing selected services
+    for(i in selectedServices){
+      // set up cost
+      cost+=selectedServices[i].client_cost
+      // set up names
+      names.push(<View
+                  key={i}
+                  style={styles.horizontalView}
+                 >
+                   <Text>{"Service Name"}</Text>
+                   <Text>{selectedServices[i].name}</Text>
+                 </View>)
+      // set up duration
+      totalNanoseconds += parseInt(selectedServices[i].average_dur.nanoseconds);
+    }
+    // set total cost
+    setTotalCost(cost)
+    // set service names
+    setServiceNames(names)
+    // set up duration
+    setTotalDuration(nanosecondsToString(totalNanoseconds))
+  },[])
 
   return(
     <View
@@ -83,38 +80,33 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
           style={styles.horizontalView}
         >
           <Text>{"Number of Services"}</Text>
-          <Text>{selectedServices.length}</Text>
+          <Text>{Object.keys(selectedServices).length}</Text>
         </View>
         <View
           style={styles.horizontalView}
         >
           <Text>{"Total Cost"}</Text>
-          <Text>{selectedServices.length}</Text>
+          <Text>{totalCost}</Text>
         </View>
         <View
           style={styles.horizontalView}
         >
           <Text>{"Total Duration"}</Text>
-          <Text>{selectedServices.length}</Text>
+          <Text>{totalDuration}</Text>
         </View>
         <View
           style={styles.horizontalView}
         >
           <Text>{"Employee Name"}</Text>
-          <Text>{selectedServices.length}</Text>
+          <Text>{employee.name + ' ' + employee.sirname}</Text>
         </View>
         <View
           style={styles.horizontalView}
         >
           <Text>{"Employee Email"}</Text>
-          <Text>{selectedServices.length}</Text>
+          <Text>{employee.email}</Text>
         </View>
-        <View
-          style={styles.horizontalView}
-        >
-          <Text>{"Service Name"}</Text>
-          <Text>{selectedServices[0]}</Text>
-        </View>
+        {serviceNames}
       </View>
       <View
         style={styles.appointmentIntervalSelection}
@@ -122,7 +114,6 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
       </View>
       <TouchableOpacity
         style={styles.submitButton}
-        onPress={submit}
       >
         <Text>{"Submit"}</Text>
       </TouchableOpacity>
@@ -131,28 +122,19 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
 }
 
 const styles = StyleSheet.create({
-  employeeSelection : {
-    height : '65%',
-    width : '85%',
-    backgroundColor : "#2C2A33",
-    alignSelf : 'center',
-    marginTop : '25%',
+  appointmentInfoView : {
+    margin : 5,
+    padding : 10,
     borderRadius : 8,
-    borderWidth : 2,
+    borderWidth : 1,
+    borderColor : 'white',
   },
   selectionHeader : {
+    marginBottom : 10,
     alignSelf : 'center',
     color: 'white',
     fontSize : 20,
     fontWeight : 'bold',
-  },
-  miniContainer : {
-    margin : 2,
-    borderRadius : 8,
-    borderStyle : 'dashed',
-    borderWidth : 1,
-    borderColor : 'gray',
-    backgroundColor : '#495866',
   },
   horizontalView : {
     padding : 2,

@@ -6,7 +6,6 @@ import {getAppointmentTimesForDate,getEmployeeNumberAppointments} from '../utils
 
 const DayButton : React.FC = ({shop_id,email,date,selectDate,dayCounter})=>{
   const [ldate ,setDate] = useState(date);
-  const dateSelected = () => {selectDate(date)}
   const [num, setNum] = useState(0); // Initialize num state
   const [buttonStyle, setButtonStyle] = useState(styles.dateCell)
 
@@ -24,6 +23,8 @@ const DayButton : React.FC = ({shop_id,email,date,selectDate,dayCounter})=>{
     else if (num >= 8 && num < 12) {setButtonStyle(styles.dateCell_2);}
     else {setButtonStyle(styles.dateCell_3);}
   }, [num])
+  // date selected
+  const dateSelected = () => {selectDate(date,num)}
 
   return(
     <View>
@@ -44,8 +45,6 @@ const DayButton : React.FC = ({shop_id,email,date,selectDate,dayCounter})=>{
 
 const RCalendar: React.FC = ({ shop_id, email, onDateSelect }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-
-  const dateSelected=(date)=>{onDateSelect(date);}
 
   const prevMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
@@ -108,6 +107,9 @@ const RCalendar: React.FC = ({ shop_id, email, onDateSelect }) => {
     return calendarArray;
   };
 
+  // a daye has been selected
+  const dateSelected=(date,numberOfAppointments)=>{onDateSelect(date,numberOfAppointments)}
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -126,12 +128,12 @@ const RCalendar: React.FC = ({ shop_id, email, onDateSelect }) => {
   );
 };
 
-const MiniCalendar: React.FC = ({ employee }) => {
+const MiniCalendar: React.FC = ({ employee , toSubmitionForm }) => {
   const [user,setUser] = useState(employee)
   const [content, setContent] = useState(null)
   // query appointmes for day having employee
-  const dateSelected = async (date) => {
-    const getAppointments = getAppointmentTimesForDate(employee.shop_id,employee.email,date)
+  const dateSelected = async (date,appointmentNumber) => {
+    toSubmitionForm(employee,date,appointmentNumber)
   }
   // render calendar at start
   useEffect(()=>{

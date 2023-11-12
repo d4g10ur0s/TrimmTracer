@@ -5,4 +5,6 @@ const appointmentShopController = require('../controllers/appointmentShopControl
 router.post('/getShopAppointments', appointmentShopController.getShopAppointments);
 router.post('/getEmployeeNumberAppointments', appointmentShopController.getEmployeeNumberAppointments);
 //router.post('/getEmployeeAppointments', appointmentShopController.getEmployeeAppointments);
+router.post('/getAppointmentTimesForDate', appointmentShopController.getAppointmentTimesForDate);
+
 module.exports = router;

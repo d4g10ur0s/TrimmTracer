@@ -26,6 +26,8 @@ import {
 
 import {getEmployeeServices} from '../utils/EmployeeHandling';
 import { nanosecondsToString,nanosecondsToHoursMinutesSeconds } from '../utils/ServiceHandling';
+import {getAppointmentTimesForDate} from '../utils/AppointmentHandling'
+
 import MiniCalendar from '../components/MiniCalendar'
 import AppointmentSubmitionForm from '../components/AppointmentSubmitionForm'
 
@@ -82,7 +84,6 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, creat
   const [selected , setSelected] = useState(false)
   // employee selected
   const toSelect = async () => {await setSelected((prevState) => !prevState)}
-  useEffect(()=>{console.log(selectedServices)},[selectedServices])
   // a service has been selected
   const serviceSelection = async (service) => {
     await setSelectedServices((prevSelectedServices) => ({
@@ -186,24 +187,23 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   }
   // date selection
   const toDateSelection = async (employee, selectedServices ) => {
-    await setServices(selectedServices)
-    await setContainers(<MiniCalendar employee={employee} />)
+    setServices(selectedServices);
+    //console.log(selectedServices)
+    setContainers(<MiniCalendar employee={employee} toSubmitionForm={dateSelected} />)
   }
-  // date selected
+  // after a date has been selected
   const dateSelected = async (employee,date,appointmentNumber) => {
     if(appointmentNumber > 18){console.log("error")}
     else{
-      await setContainers(<AppointmentSubmitionForm employee={employee} date={date} services={services} />)
+      // query appointmes for day having employee
+      const getAppointments = await getAppointmentTimesForDate(employee.shop_id,employee.email,date)
+      setContainers(<AppointmentSubmitionForm employee={employee} date={date} selectedServices={services} />)
     }
   }
   // submit
-  const toSubmit = (employee) => {
-    submit(employee);
-  }
+  const toSubmit = (employee) => {submit(employee);}
   // render at start
-  useEffect(()=>{
-    renderEmployees();
-  }, []);
+  useEffect(()=>{renderEmployees();}, []);
 
   return(
     <View
