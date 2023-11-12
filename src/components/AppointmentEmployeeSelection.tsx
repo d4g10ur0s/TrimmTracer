@@ -188,7 +188,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   // date selection
   const toDateSelection = async (employee, selectedServices ) => {
     setServices(selectedServices);
-    //console.log(selectedServices)
+    console.log(selectedServices)
     setContainers(<MiniCalendar employee={employee} toSubmitionForm={dateSelected} />)
   }
   // after a date has been selected

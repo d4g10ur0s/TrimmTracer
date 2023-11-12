@@ -36,7 +36,32 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
   const [serviceNames, setServiceNames] = useState(null);
   const [totalDuration , setTotalDuration] = useState(0);
 
+  // get time intervals
+  const getTimeIntervals = () => {
+    console.log('submit')
+  }
+
+  const unpackWorkingHours = (workingHours) => {
+    var dict = {}
+    for(i in workingHours){
+      var dayname = workingHours[i].dayname
+      if (dict.hasOwnProperty(dayname)) {
+        dict[dayname].push({
+          start_time: workingHours[i].start_time,
+          end_time: workingHours[i].end_time
+        });
+      } else {
+        dict[dayname] = [{
+          start_time: workingHours[i].start_time,
+          end_time: workingHours[i].end_time
+        }];
+      }
+    }
+  }
+
   useEffect(()=>{
+    console.log(date.getDay())
+    console.log(employee.workinghours[date.getDay()])
     // variables
     var cost = 0;
     var names=[];
@@ -112,10 +137,14 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
         style={styles.appointmentIntervalSelection}
       >
       </View>
+      <Text>
+        {"Search for Services"}
+      </Text>
       <TouchableOpacity
         style={styles.submitButton}
+        onPress={getTimeIntervals}
       >
-        <Text>{"Submit"}</Text>
+        <Text>{"Search"}</Text>
       </TouchableOpacity>
     </View>
   )
