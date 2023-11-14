@@ -53,7 +53,7 @@ export const getEmployeeNumberAppointments = async (shop_id,employee_email,date)
   }
 };
 // get only times
-export const getAppointmentTimesForDate = async (shop_id,employee_email,date) => {
+export const getAppointmentTimesForDate = async (shop_id,employee_email,workinghours,date,duration) => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/getAppointmentTimesForDate`, {
       method: 'POST',
@@ -63,7 +63,9 @@ export const getAppointmentTimesForDate = async (shop_id,employee_email,date) =>
       body: JSON.stringify({
         shop_id,
         employee_email,
+        workinghours,
         date,
+        duration,
       }),
     });
 
@@ -72,7 +74,8 @@ export const getAppointmentTimesForDate = async (shop_id,employee_email,date) =>
     }
 
     const data = await response.json();
-    return data.appointments;
+    console.log(data)
+    return data
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;

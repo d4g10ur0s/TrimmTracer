@@ -196,7 +196,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
     if(appointmentNumber > 18){console.log("error")}
     else{
       // query appointmes for day having employee
-      const getAppointments = await getAppointmentTimesForDate(employee.shop_id,employee.email,date)
+      //const getAppointments = await getAppointmentTimesForDate(employee.shop_id,employee.email,date)
       setContainers(<AppointmentSubmitionForm employee={employee} date={date} selectedServices={services} />)
     }
   }

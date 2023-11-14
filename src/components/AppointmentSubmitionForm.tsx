@@ -25,6 +25,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import { nanosecondsToString,nanosecondsToHoursMinutesSeconds } from '../utils/ServiceHandling';
+import { getAppointmentTimesForDate } from '../utils/AppointmentHandling'
 
 interface AppointmentSubmitionFormProps {
 
@@ -37,8 +38,15 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
   const [totalDuration , setTotalDuration] = useState(0);
 
   // get time intervals
-  const getTimeIntervals = () => {
+  const getTimeIntervals = async () => {
     console.log('submit')
+    const timeIntervals = await getAppointmentTimesForDate(
+                                                           employee.shop_id,
+                                                           employee.email,
+                                                           employee.workinghours,
+                                                           date,
+                                                           totalDuration
+                                                          )
   }
 
   const unpackWorkingHours = (workingHours) => {
@@ -105,7 +113,7 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
           style={styles.horizontalView}
         >
           <Text>{"Number of Services"}</Text>
-          <Text>{Object.keys(selectedServices).length}</Text>
+          <Text>{"Object.keys(selectedServices).length"}</Text>
         </View>
         <View
           style={styles.horizontalView}
@@ -136,16 +144,16 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
       <View
         style={styles.appointmentIntervalSelection}
       >
+        <Text>
+          {"Search for Services"}
+        </Text>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={getTimeIntervals}
+        >
+          <Text>{"Search"}</Text>
+        </TouchableOpacity>
       </View>
-      <Text>
-        {"Search for Services"}
-      </Text>
-      <TouchableOpacity
-        style={styles.submitButton}
-        onPress={getTimeIntervals}
-      >
-        <Text>{"Search"}</Text>
-      </TouchableOpacity>
     </View>
   )
 }
