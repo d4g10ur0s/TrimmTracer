@@ -142,9 +142,11 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
         {serviceNames}
       </View>
       <View
-        style={styles.appointmentIntervalSelection}
+        style={styles.submitView}
       >
-        <Text>
+        <Text
+          style={styles.searchIntervalHeader}
+        >
           {"Search for Services"}
         </Text>
         <TouchableOpacity
@@ -153,6 +155,10 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
         >
           <Text>{"Search"}</Text>
         </TouchableOpacity>
+      </View>
+      <View
+        style={styles.appointmentIntervalSelection}
+      >
       </View>
     </View>
   )
@@ -198,9 +204,10 @@ const styles = StyleSheet.create({
     padding : 3,
   },
   submitView : {
+    alignItems : 'center',
+    justifyContent : 'center',
     margin : 5,
-    flexDirection : 'row',
-    justifyContent : 'space-between',
+    flexDirection : 'column',
   },
   cancelButton : {
     fontSize : 8,
@@ -211,27 +218,10 @@ const styles = StyleSheet.create({
   submitButton : {
     backgroundColor : '#574C9EAA',
     borderRadius : 8,
-    padding : 3,
-  },
-  servicesListComponent : {
     padding : 5,
-    marginBottom : 5,
-    borderBottomWidth : 1,
-    borderColor : 'white',
-    borderRadius : 8,
+    margin : 5,
   },
-  serviceList : {
-    marginBottom : 5,
-    padding : 8,
-    borderTopWidth : 1,
-    borderBottomWidth : 1,
-    borderRadius : 12,
-    borderColor : 'white',
-  },
-  selectServiceHeader : {
-    borderBottomWidth : 1,
-    borderColor : 'white',
-    alignSelf : 'center',
+  searchIntervalHeader : {
     fontWeight : 'bold',
     fontSize : 18,
     color : 'white',
