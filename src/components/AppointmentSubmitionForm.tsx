@@ -43,7 +43,7 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
     const timeIntervals = await getAppointmentTimesForDate(
                                                            employee.shop_id,
                                                            employee.email,
-                                                           employee.workinghours,
+                                                           employee.workinghours[date.getDay()],
                                                            date,
                                                            totalDuration
                                                           )

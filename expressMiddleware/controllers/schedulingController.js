@@ -17,9 +17,10 @@ exports.getAppointmentTimesForDate = async (req, res) => {
   );
   // call python script
   const pythonScript = spawn('python', ['..\\appointmentScheduling\\schedulingScriptMain.py',
-                              JSON.stringify(
-                                req.body ,shopAppointments.rows
-                              )]);
+                              JSON.stringify({
+                                requestBody : req.body ,
+                                shopAppointments : shopAppointments.rows,
+                              })]);
   //send feedback
   pythonScript.stdout.on('data', (data) => {
    console.log(`Python script output: ${data}`);
