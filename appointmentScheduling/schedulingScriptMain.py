@@ -53,7 +53,7 @@ def main():
         # Format each time object as a string
         formatted_times = [t.strftime('%H:%M') for t in intervals]
         #print(str(formatted_times))
-        print(json.dumps({'result': formatted_times}))
+        print(json.dumps({'timeIntervals': formatted_times}))
 
 if __name__ == '__main__':
     main()

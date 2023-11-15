@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  FlatList,
   Modal,
 } from 'react-native';
 
@@ -36,10 +37,10 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
   const [totalCost, setTotalCost] = useState(0);
   const [serviceNames, setServiceNames] = useState(null);
   const [totalDuration , setTotalDuration] = useState(0);
+  const [intervalsChoice , setIntervalsChoice] = useState(null);
 
   // get time intervals
   const getTimeIntervals = async () => {
-    console.log('submit')
     const timeIntervals = await getAppointmentTimesForDate(
                                                            employee.shop_id,
                                                            employee.email,
@@ -47,6 +48,24 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
                                                            date,
                                                            totalDuration
                                                           )
+    renderTimeIntervals(timeIntervals);
+  }
+
+  const renderTimeIntervals = (timeIntervals) => {
+    var intervals = []
+    for(i in timeIntervals.timeIntervals){
+      intervals.push(
+        <TouchableOpacity
+          key={i}
+          style={styles.gridItem}
+        >
+          <Text>
+            {timeIntervals.timeIntervals[i]}
+          </Text>
+        </TouchableOpacity>
+      )
+    }
+    setIntervalsChoice(intervals)
   }
 
   const unpackWorkingHours = (workingHours) => {
@@ -111,7 +130,7 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
           style={styles.horizontalView}
         >
           <Text>{"Number of Services"}</Text>
-          <Text>{"Object.keys(selectedServices).length"}</Text>
+          <Text>{Object.keys(selectedServices).length}</Text>
         </View>
         <View
           style={styles.horizontalView}
@@ -157,6 +176,7 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
       <View
         style={styles.appointmentIntervalSelection}
       >
+        {intervalsChoice}
       </View>
     </View>
   )
@@ -223,6 +243,20 @@ const styles = StyleSheet.create({
     fontWeight : 'bold',
     fontSize : 18,
     color : 'white',
+  },
+  appointmentIntervalSelection : {
+    justifyContent : 'center',
+    alignItems : 'center',
+  },
+  gridItem: {
+    flex: 1,
+    margin: 5,
+    width : '75%',
+    height: 50,
+    backgroundColor : '#574C9EAA',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
   },
 });
 

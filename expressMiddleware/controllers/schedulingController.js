@@ -23,8 +23,8 @@ exports.getAppointmentTimesForDate = async (req, res) => {
                               })]);
   //send feedback
   pythonScript.stdout.on('data', (data) => {
-   console.log(`Python script output: ${data}`);
-   res.send({ message: data });
+   console.log(`Python script output: ${JSON.parse(data)}`);
+   res.send({ message: JSON.parse(data) });
  });
  //send feedback
  pythonScript.stderr.on('data', (data) => {

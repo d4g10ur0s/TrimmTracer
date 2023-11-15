@@ -72,10 +72,8 @@ export const getAppointmentTimesForDate = async (shop_id,employee_email,workingh
     if (!response.ok) {
       throw new Error('Invalid credentials');
     }
-
     const data = await response.json();
-    console.log(data)
-    return data
+    return data.message
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;
