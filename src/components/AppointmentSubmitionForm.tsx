@@ -49,7 +49,7 @@ const AppointmentTimeButtons : React.FC = ({timeString, timeSelected}) => {
   );
 }
 
-const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({employee , date, selectedServices}) => {
+const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({employee , date, selectedServices , submitData}) => {
 
   const [totalCost, setTotalCost] = useState(0);
   const [serviceNames, setServiceNames] = useState(null);

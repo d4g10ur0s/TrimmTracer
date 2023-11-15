@@ -77,7 +77,7 @@ const EmployeeServicesListComponent : React.FC = ({employee , service , select,u
     </View>
   );
 }
-
+// the employee and his services
 const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, createAppointment}) =>{
 
   const [serviceList , setServiceList] = useState(null);
@@ -167,7 +167,7 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, creat
   );
 
 }
-
+// this is basically a modal
 const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> = ({hide , employees, submit}) => {
   // assign
   const [containers , setContainers] = useState([])
@@ -205,7 +205,29 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
     else{setContainers(<AppointmentSubmitionForm employee={employee} date={date} selectedServices={theServices} />)}
   }
   // submit
-  const toSubmit = (employee) => {submit(employee);}
+  const submitData = (date , time , total_client_cost , total_duration , total_employee_cost) => {
+    date.setTime(time)
+    // create the appointment and then send it
+    {
+      shop_id : theInfo.employee.shop_id,
+      when : date,
+      employee_email : theInfo.employee.email,
+      client_email,
+      check_in : date,
+      check_out : ,
+      client_cost : total_client_cost ,
+      client_fullname : ,
+      client_phone : ,
+      dur : total_duration ,
+      employee_cost : total_employee_cost,
+      employee_fullname : theInfo.employee.name + ' ' + theInfo.employee.sirname,
+      employee_phone : theInfo.employee.phone,
+      end_time : ,
+      note : ,
+      service_name : theInfo.service[i].name ,
+      start_time : date,
+    }
+  }
   // render at start
   useEffect(()=>{renderEmployees();}, []);
 
