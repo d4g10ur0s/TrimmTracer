@@ -171,7 +171,7 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, creat
 const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> = ({hide , employees, submit}) => {
   // assign
   const [containers , setContainers] = useState([])
-  const [theServices , setServices] = useState({})
+  const [theInfo , setInfo] = useState({})
   const [appointmentTime, setAppointmentTime] = useState('')
   // render containers
   const renderEmployees = async () => {
@@ -188,16 +188,19 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
     await setContainers(containers);
   }
   // render mini calendar
-  const renderMiniCalendar = (employee) => {setContainers(<MiniCalendar employee={employee} toSubmitionForm={dateSelected} />)}
-  // date selection
-  const toDateSelection = async (employee, selectedServices ) => {
-    console.log(selectedServices)
-    await setServices(selectedServices);
-    await renderMiniCalendar(employee);
+  const renderMiniCalendar = () => {
+    var employee=theInfo.employee;
+    setContainers(<MiniCalendar employee={employee} toSubmitionForm={dateSelected} />)
   }
+  // date selection
+  const toDateSelection = async (employee, selectedServices ) => {setInfo({employee : employee , theServices : selectedServices});}
+  useEffect(()=>{
+    renderMiniCalendar()
+  }, [theInfo])
   // after a date has been selected
   const dateSelected = (employee,date,appointmentNumber) => {
-    console.log(theServices)
+    var employee = theInfo.employee
+    var theServices = theInfo.theServices
     if(appointmentNumber > 18){console.log("error")}
     else{setContainers(<AppointmentSubmitionForm employee={employee} date={date} selectedServices={theServices} />)}
   }
@@ -240,7 +243,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
 
 const styles = StyleSheet.create({
   employeeSelection : {
-    height : '65%',
+    height : '70%',
     width : '85%',
     backgroundColor : "#2C2A33",
     alignSelf : 'center',
