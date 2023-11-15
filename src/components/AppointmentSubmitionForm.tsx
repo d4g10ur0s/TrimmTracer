@@ -32,13 +32,31 @@ interface AppointmentSubmitionFormProps {
 
 }
 
+// the appointment time buttons
+const AppointmentTimeButtons : React.FC = ({timeString, timeSelected}) => {
+
+  const selected = () => {timeSelected(timeString)}
+
+  return (
+    <TouchableOpacity
+      style={styles.gridItem}
+      onPress = {selected}
+    >
+      <Text>
+        {timeString}
+      </Text>
+    </TouchableOpacity>
+  );
+}
+
 const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({employee , date, selectedServices}) => {
 
   const [totalCost, setTotalCost] = useState(0);
   const [serviceNames, setServiceNames] = useState(null);
   const [totalDuration , setTotalDuration] = useState(0);
+  // interval choice container
   const [intervalsChoice , setIntervalsChoice] = useState(null);
-
+  const [appointmentTime , setAppointmentTime] = useState('');
   // get time intervals
   const getTimeIntervals = async () => {
     const timeIntervals = await getAppointmentTimesForDate(
@@ -50,42 +68,22 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
                                                           )
     renderTimeIntervals(timeIntervals);
   }
-
+  // render time intervals
   const renderTimeIntervals = (timeIntervals) => {
     var intervals = []
     for(i in timeIntervals.timeIntervals){
       intervals.push(
-        <TouchableOpacity
-          key={i}
-          style={styles.gridItem}
-        >
-          <Text>
-            {timeIntervals.timeIntervals[i]}
-          </Text>
-        </TouchableOpacity>
+        <AppointmentTimeButtons key={i} timeString={timeIntervals.timeIntervals[i]} timeSelected={timeSelected} />
       )
     }
     setIntervalsChoice(intervals)
   }
-
-  const unpackWorkingHours = (workingHours) => {
-    var dict = {}
-    for(i in workingHours){
-      var dayname = workingHours[i].dayname
-      if (dict.hasOwnProperty(dayname)) {
-        dict[dayname].push({
-          start_time: workingHours[i].start_time,
-          end_time: workingHours[i].end_time
-        });
-      } else {
-        dict[dayname] = [{
-          start_time: workingHours[i].start_time,
-          end_time: workingHours[i].end_time
-        }];
-      }
-    }
+  // set the time of appointment
+  const timeSelected = (aTime) => {
+    setAppointmentTime(aTime)
+    setIntervalsChoice(null)
   }
-
+  // beggining
   useEffect(()=>{
     // variables
     var cost = 0;
@@ -141,6 +139,18 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
         <View
           style={styles.horizontalView}
         >
+          <Text>{"Appointment Date"}</Text>
+          <Text>{date.toLocaleDateString()}</Text>
+        </View>
+        <View
+          style={styles.horizontalView}
+        >
+          <Text>{"Appointment Time"}</Text>
+          <Text>{appointmentTime}</Text>
+        </View>
+        <View
+          style={styles.horizontalView}
+        >
           <Text>{"Total Duration"}</Text>
           <Text>{totalDuration}</Text>
         </View>
@@ -173,11 +183,7 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
           <Text>{"Search"}</Text>
         </TouchableOpacity>
       </View>
-      <View
-        style={styles.appointmentIntervalSelection}
-      >
-        {intervalsChoice}
-      </View>
+      {intervalsChoice}
     </View>
   )
 }
@@ -245,17 +251,16 @@ const styles = StyleSheet.create({
     color : 'white',
   },
   appointmentIntervalSelection : {
-    justifyContent : 'center',
-    alignItems : 'center',
+
   },
   gridItem: {
-    flex: 1,
     margin: 5,
     width : '75%',
     height: 50,
     backgroundColor : '#574C9EAA',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf : 'center',
     borderRadius: 8,
   },
 });

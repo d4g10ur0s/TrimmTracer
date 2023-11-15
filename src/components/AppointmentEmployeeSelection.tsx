@@ -35,6 +35,7 @@ interface AppointmentEmployeeSelectionProps {
 
 }
 
+// list of services to select
 const EmployeeServicesListComponent : React.FC = ({employee , service , select,unselect}) => {
   const [selected , setSelected] = useState(false);
 
@@ -171,6 +172,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   // assign
   const [containers , setContainers] = useState([])
   const [theServices , setServices] = useState({})
+  const [appointmentTime, setAppointmentTime] = useState('')
   // render containers
   const renderEmployees = async () => {
     var containers = []
@@ -189,8 +191,9 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   const renderMiniCalendar = (employee) => {setContainers(<MiniCalendar employee={employee} toSubmitionForm={dateSelected} />)}
   // date selection
   const toDateSelection = async (employee, selectedServices ) => {
-    setServices(selectedServices);
-    renderMiniCalendar(employee);
+    console.log(selectedServices)
+    await setServices(selectedServices);
+    await renderMiniCalendar(employee);
   }
   // after a date has been selected
   const dateSelected = (employee,date,appointmentNumber) => {
@@ -202,8 +205,6 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   const toSubmit = (employee) => {submit(employee);}
   // render at start
   useEffect(()=>{renderEmployees();}, []);
-  // render compontents when ready
-  useEffect(()=>{console.log(theServices)},[theServices])
 
   return(
     <View
