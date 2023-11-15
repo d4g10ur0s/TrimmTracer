@@ -68,8 +68,6 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
   }
 
   useEffect(()=>{
-    console.log(date.getDay())
-    console.log(employee.workinghours[date.getDay()])
     // variables
     var cost = 0;
     var names=[];

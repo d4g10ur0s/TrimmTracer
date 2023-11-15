@@ -170,7 +170,7 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, creat
 const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> = ({hide , employees, submit}) => {
   // assign
   const [containers , setContainers] = useState([])
-  const [services , setServices] = useState(null)
+  const [services , setServices] = useState()
   // render containers
   const renderEmployees = async () => {
     var containers = []
@@ -187,23 +187,21 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   }
   // date selection
   const toDateSelection = async (employee, selectedServices ) => {
-    setServices(selectedServices);
+    await setServices(selectedServices);
     console.log(selectedServices)
     setContainers(<MiniCalendar employee={employee} toSubmitionForm={dateSelected} />)
   }
   // after a date has been selected
   const dateSelected = async (employee,date,appointmentNumber) => {
     if(appointmentNumber > 18){console.log("error")}
-    else{
-      // query appointmes for day having employee
-      //const getAppointments = await getAppointmentTimesForDate(employee.shop_id,employee.email,date)
-      setContainers(<AppointmentSubmitionForm employee={employee} date={date} selectedServices={services} />)
-    }
+    else{await setContainers(<AppointmentSubmitionForm employee={employee} date={date} selectedServices={services} />)}
   }
   // submit
   const toSubmit = (employee) => {submit(employee);}
   // render at start
   useEffect(()=>{renderEmployees();}, []);
+  // render compontents when ready
+  useEffect(()=>{},[services])
 
   return(
     <View

@@ -24,7 +24,7 @@ exports.getAppointmentTimesForDate = async (req, res) => {
   //send feedback
   pythonScript.stdout.on('data', (data) => {
    console.log(`Python script output: ${data}`);
-   res.send({ message: 'Appointment scheduled successfully' });
+   res.send({ message: data });
  });
  //send feedback
  pythonScript.stderr.on('data', (data) => {

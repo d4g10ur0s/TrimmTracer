@@ -38,12 +38,22 @@ def main():
     # unpack data
     requestBody = data["requestBody"]
     appointments = data["shopAppointments"]
-    # Your scheduling algorithm logic here
-    print(requestBody)
-    print(appointments)
+    #print(requestBody)
+    #print(appointments)
     # Case 1 : 0 appointments
+    # Your scheduling algorithm logic here
     if(len(appointments)==0):
-
+        mul=parse_duration(requestBody['duration'])# timedelta object
+        intervals = []# array of intervals
+        workingHours = requestBody['workinghours']# working hours
+        start_time = datetime.strptime(workingHours['start_time'], '%H:%M:%S')
+        while(start_time < datetime.strptime(workingHours['end_time'], '%H:%M:%S')):
+            intervals.append(start_time.time())
+            start_time+=mul
+        # Format each time object as a string
+        formatted_times = [t.strftime('%H:%M') for t in intervals]
+        #print(str(formatted_times))
+        print(json.dumps({'result': formatted_times}))
 
 if __name__ == '__main__':
     main()
