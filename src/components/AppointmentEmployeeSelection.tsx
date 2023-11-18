@@ -203,12 +203,20 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
     var employee = theInfo.employee
     var theServices = theInfo.theServices
     if(appointmentNumber > 18){console.log("error")}
-    else{setContainers(<AppointmentSubmitionForm employee={employee} date={date} selectedServices={theServices} />)}
+    else{setContainers(<AppointmentSubmitionForm
+                        employee={employee}
+                        date={date}
+                        selectedServices={theServices}
+                        submitData={submitData}
+                       />)}
   }
   // submit
-  const submitData = (date , time , total_client_cost , total_duration , total_employee_cost) => {
-    date.setTime(time)
+  const submitData = (date , time , total_client_cost , total_duration , total_employee_cost , note) => {
+    const [hours, minutes] = time.split(':');
+    date.setHours(parseInt(hours, 10));
+    date.setMinutes(parseInt(minutes, 10));
     // create the appointment and then send it
+    console.log(date.toLocaleString())
     var appointment = {
       shop_id : theInfo.employee.shop_id,
       when : date,
@@ -225,7 +233,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
       employee_phone : theInfo.employee.phone,
       end_time : null ,
       note : null,
-      service_name : theInfo.service[i].name ,
+      services : theInfo.theServices ,
       start_time : date,
     };
     console.log(appointment)

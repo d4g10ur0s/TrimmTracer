@@ -55,9 +55,15 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
   const [serviceNames, setServiceNames] = useState(null);
   const [totalDuration , setTotalDuration] = useState(0);
   // to submit
-  const toSubmitData = () => {
-    console.log("A")
-  }
+  const [disabled, setDisabled] = useState(true)
+  const toSubmitData = () => {submitData(
+                                date,
+                                appointmentTime,
+                                totalCost,
+                                totalDuration,
+                                totalCost,
+                                note
+                              )}
   // appointment note
   const [note, setNote] = useState('Empty Note')
   const [noteForm , setNoteForm] = useState(null)
@@ -109,7 +115,10 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
   const timeSelected = (aTime) => {
     setAppointmentTime(aTime)
     setIntervalsChoice(null)
+    setDisabled((prevState)=>(!prevState))
   }
+  // needs rerendering
+
   // beggining
   useEffect(()=>{
     // variables
@@ -204,8 +213,9 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
           style={styles.submitView}
         >
           <TouchableOpacity
-            style={styles.submitButton}
+            style={(disabled) ? (styles.disabledSubmitButton) : (styles.submitButton)}
             onPress={toSubmitData}
+            disabled={disabled}
           >
             <Text>{'Submit'}</Text>
           </TouchableOpacity>
@@ -304,6 +314,12 @@ const styles = StyleSheet.create({
   },
   submitButton : {
     backgroundColor : '#574C9EAA',
+    borderRadius : 8,
+    padding : 5,
+    margin : 5,
+  },
+  disabledSubmitButton : {
+    backgroundColor : '#574C9E77',
     borderRadius : 8,
     padding : 5,
     margin : 5,
