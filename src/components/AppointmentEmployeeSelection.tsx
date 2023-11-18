@@ -212,11 +212,12 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   }
   // submit
   const submitData = (date , time , total_client_cost , total_duration , total_employee_cost , note) => {
+    // Create a new Date by adding milliseconds to the original date
     const [hours, minutes] = time.split(':');
     date.setHours(parseInt(hours, 10));
     date.setMinutes(parseInt(minutes, 10));
+    const checkOut = new Date(date.getTime() + (total_duration / 1e6) );
     // create the appointment and then send it
-    console.log(date.toLocaleString())
     var appointment = {
       shop_id : theInfo.employee.shop_id,
       when : date,

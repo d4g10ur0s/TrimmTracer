@@ -54,13 +54,14 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
   const [totalCost, setTotalCost] = useState(0);
   const [serviceNames, setServiceNames] = useState(null);
   const [totalDuration , setTotalDuration] = useState(0);
+  const [totalNanosecondsDuration , setTotalNanosecondsDuration] = useState(0);
   // to submit
   const [disabled, setDisabled] = useState(true)
   const toSubmitData = () => {submitData(
                                 date,
                                 appointmentTime,
                                 totalCost,
-                                totalDuration,
+                                totalNanosecondsDuration,
                                 totalCost,
                                 note
                               )}
@@ -146,6 +147,7 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
     setServiceNames(names)
     // set up duration
     setTotalDuration(nanosecondsToString(totalNanoseconds))
+    setTotalNanosecondsDuration(totalNanoseconds)
   },[])
 
   return(
