@@ -54,6 +54,33 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
   const [totalCost, setTotalCost] = useState(0);
   const [serviceNames, setServiceNames] = useState(null);
   const [totalDuration , setTotalDuration] = useState(0);
+  // to submit
+  const toSubmitData = () => {
+    console.log("A")
+  }
+  // appointment note
+  const [note, setNote] = useState('Empty Note')
+  const [noteForm , setNoteForm] = useState(null)
+  // appointment note form input
+  const addNoteForm = () => {
+    if(noteForm==null){
+      setNoteForm(
+        <View
+          style={styles.appointmentNoteView}
+        >
+          <Text style={styles.searchIntervalHeader}>Note</Text>
+          <TextInput
+            style={styles.noteInput}
+            multiline
+            numberOfLines={8}
+            onChangeText={setNote}
+            placeholder="Enter your note here"
+          />
+        </View>
+      )
+    }
+    else{setNoteForm(null)}
+  }
   // interval choice container
   const [intervalsChoice , setIntervalsChoice] = useState(null);
   const [appointmentTime , setAppointmentTime] = useState('');
@@ -98,7 +125,7 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
                   key={i}
                   style={styles.horizontalView}
                  >
-                   <Text>{"Service Name"}</Text>
+                   <Text style={styles.label}>{"Service Name"}</Text>
                    <Text>{selectedServices[i].name}</Text>
                  </View>)
       // set up duration
@@ -127,46 +154,62 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
         <View
           style={styles.horizontalView}
         >
-          <Text>{"Number of Services"}</Text>
+          <Text style={styles.label}>{"Number of Services"}</Text>
           <Text>{Object.keys(selectedServices).length}</Text>
         </View>
         <View
           style={styles.horizontalView}
         >
-          <Text>{"Total Cost"}</Text>
+          <Text style={styles.label}>{"Total Cost"}</Text>
           <Text>{totalCost}</Text>
         </View>
         <View
           style={styles.horizontalView}
         >
-          <Text>{"Appointment Date"}</Text>
+          <Text style={styles.label}>{"Appointment Date"}</Text>
           <Text>{date.toLocaleDateString()}</Text>
         </View>
         <View
           style={styles.horizontalView}
         >
-          <Text>{"Appointment Time"}</Text>
+          <Text style={styles.label}>{"Appointment Time"}</Text>
           <Text>{appointmentTime}</Text>
         </View>
         <View
           style={styles.horizontalView}
         >
-          <Text>{"Total Duration"}</Text>
+          <Text style={styles.label}>{"Total Duration"}</Text>
           <Text>{totalDuration}</Text>
         </View>
         <View
           style={styles.horizontalView}
         >
-          <Text>{"Employee Name"}</Text>
+          <Text style={styles.label}>{"Employee Name"}</Text>
           <Text>{employee.name + ' ' + employee.sirname}</Text>
         </View>
         <View
           style={styles.horizontalView}
         >
-          <Text>{"Employee Email"}</Text>
+          <Text style={styles.label}>{"Employee Email"}</Text>
           <Text>{employee.email}</Text>
         </View>
         {serviceNames}
+        <View
+          style={styles.appointmentNoteView}
+        >
+          <Text style={styles.label}>{'Appointment Note'}</Text>
+          <Text>{note}</Text>
+        </View>
+        <View
+          style={styles.submitView}
+        >
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={toSubmitData}
+          >
+            <Text>{'Submit'}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <View
         style={styles.submitView}
@@ -174,7 +217,7 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
         <Text
           style={styles.searchIntervalHeader}
         >
-          {"Search for Services"}
+          {"Search for Time"}
         </Text>
         <TouchableOpacity
           style={styles.submitButton}
@@ -184,11 +227,31 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
         </TouchableOpacity>
       </View>
       {intervalsChoice}
+      <View
+      style={styles.submitView}
+      >
+        <Text
+          style={styles.searchIntervalHeader}
+        >
+          {"Appointment Note"}
+        </Text>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={addNoteForm}
+        >
+          <Text>{"Add Note"}</Text>
+        </TouchableOpacity>
+      </View>
+      {noteForm}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  label: {
+    fontWeight: 'bold',
+    marginBottom: 2,
+  },
   appointmentInfoView : {
     margin : 5,
     padding : 10,
@@ -262,6 +325,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf : 'center',
     borderRadius: 8,
+  },
+  noteInput : {
+    width : '80%',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    textAlignVertical: 'top',
+    height: 100,
+  },
+  appointmentNoteView : {
+    justifyContent : 'center',
+    alignItems : 'center',
+    padding : 5,
   },
 });
 

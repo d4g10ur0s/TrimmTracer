@@ -168,8 +168,9 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, creat
 
 }
 // this is basically a modal
-const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> = ({hide , employees, submit}) => {
+const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> = ({hide , employees, submit , client}) => {
   // assign
+  const [currentClient , setCurrentClient] = useState(client)
   const [containers , setContainers] = useState([])
   const [theInfo , setInfo] = useState({})
   const [appointmentTime, setAppointmentTime] = useState('')
@@ -208,25 +209,26 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   const submitData = (date , time , total_client_cost , total_duration , total_employee_cost) => {
     date.setTime(time)
     // create the appointment and then send it
-    {
+    var appointment = {
       shop_id : theInfo.employee.shop_id,
       when : date,
       employee_email : theInfo.employee.email,
-      client_email,
+      client_email : currentClient.email,
       check_in : date,
-      check_out : ,
+      check_out : null,
       client_cost : total_client_cost ,
-      client_fullname : ,
-      client_phone : ,
+      client_fullname : currentClient.name + ' ' + currentClient.sirname ,
+      client_phone : currentClient.phone,
       dur : total_duration ,
       employee_cost : total_employee_cost,
       employee_fullname : theInfo.employee.name + ' ' + theInfo.employee.sirname,
       employee_phone : theInfo.employee.phone,
-      end_time : ,
-      note : ,
+      end_time : null ,
+      note : null,
       service_name : theInfo.service[i].name ,
       start_time : date,
-    }
+    };
+    console.log(appointment)
   }
   // render at start
   useEffect(()=>{renderEmployees();}, []);
@@ -256,7 +258,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
           style={styles.submitButton}
           onPress={submit}
         >
-          <Text>{"Submit"}</Text>
+          <Text>{"Back"}</Text>
         </TouchableOpacity>
       </View>
     </View>

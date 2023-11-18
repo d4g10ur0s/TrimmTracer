@@ -30,6 +30,7 @@ const ClientContainer: React.FC = ({client,deleteClient}) => {
               hide={handleHideModal}
               employees={shopEmployees}
               submit={toServices}
+              client={currentClient}
             />
           );
     setModalVisible(true);
