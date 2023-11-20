@@ -57,11 +57,12 @@ const WorkingHoursFormComponent : React.FC = ({}) => {
 
 const WorkingHoursForm : React.FC = ({}) => {
 
-  const [formComponents , setFormComponents] = useState([]);
+  const [formComponents , setFormComponents] = useState({'Mon' : [],});
+  const [selectedDay , setSelectedDay] = useState('Mon')
   // render form components a.k.a. working hours inputs
   const renderFormComponents = async (components) => {
     if(components == null){
-      await setFormComponents([<WorkingHoursFormComponent />])
+      await setFormComponents({'Mon' : [],})
     }else{
       await setFormComponents(components)
     }
@@ -80,16 +81,60 @@ const WorkingHoursForm : React.FC = ({}) => {
   return (
     <View>
       <View style={styles.workingDayView}>
-        <TouchableOpacity style={styles.workingDayButton}><Text>{'Mon'}</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.workingDayButton}><Text>{'Tue'}</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.workingDayButton}><Text>{'Wed'}</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.workingDayButton}><Text>{'Thu'}</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.workingDayButton}><Text>{'Fri'}</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.workingDayButton}><Text>{'Sat'}</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.workingDayButton}><Text>{'Sun'}</Text></TouchableOpacity>
+        <TouchableOpacity
+          style={(selectedDay=='Mon') ? styles.workingDayButtonDisabled : styles.workingDayButton}
+          onPress={() => setSelectedDay('Mon')}
+          disabled={(selectedDay=='Mon')}>
+          <Text>{'Mon'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={(selectedDay=='Tue') ? styles.workingDayButtonDisabled : styles.workingDayButton}
+          onPress={() => setSelectedDay('Tue')}
+          disabled={(selectedDay=='Tue')}>
+          <Text>{'Tue'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={(selectedDay=='Wed') ? styles.workingDayButtonDisabled : styles.workingDayButton}
+          onPress={() => setSelectedDay('Wed')}
+          disabled={(selectedDay=='Wed')}>
+          <Text>{'Wed'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={(selectedDay=='Thu') ? styles.workingDayButtonDisabled : styles.workingDayButton}
+          onPress={() => setSelectedDay('Thu')}
+          disabled={(selectedDay=='Thu')}>
+          <Text>{'Thu'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={(selectedDay=='Fri') ? styles.workingDayButtonDisabled : styles.workingDayButton}
+          onPress={() => setSelectedDay('Fri')}
+          disabled={(selectedDay=='Fri')}>
+          <Text>{'Fri'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={(selectedDay=='Sat') ? styles.workingDayButtonDisabled : styles.workingDayButton}
+          onPress={() => setSelectedDay('Sat')}
+          disabled={(selectedDay=='Sat')}>
+          <Text>{'Sat'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={(selectedDay=='Sun') ? styles.workingDayButtonDisabled : styles.workingDayButton}
+          onPress={() => setSelectedDay('Sun')}
+          disabled={(selectedDay=='Sun')}>
+          <Text>{'Sun'}</Text>
+        </TouchableOpacity>
       </View>
-      {formComponents}
-      <TouchableOpacity style={styles.addIntervalButton} onPress={addFormComponent}><Text>{'Add Interval'}</Text></TouchableOpacity>
+      {formComponents['Mon']}
+      <View
+        style={styles.horizontalView}
+      >
+      <TouchableOpacity style={styles.addIntervalButton} onPress={addFormComponent}>
+        <Text>{'Add Interval'}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.deleteButton}>
+        <Text>{'Delete Interval'}</Text>
+      </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -420,7 +465,7 @@ export const EmployeeModificationForm: React.FC = ({ onSubmit, employee }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor : "#6465A1AA",
+    backgroundColor : '#495866',
     justifyContent: 'center',
     alignItems: 'center',
     width: '80%',
@@ -472,6 +517,10 @@ const styles = StyleSheet.create({
   workingDayView : {
     flexDirection : 'row',
   },
+  horizontalView : {
+    justifyContent : 'space-between',
+    flexDirection : 'row',
+  },
   timeView : {
     marginVertical : 2,
     marginHorizontal : 10,
@@ -493,10 +542,17 @@ const styles = StyleSheet.create({
     padding : 5,
   },
   typeButtonDisabled:{
-    backgroundColor : '#574C9E77',
+    backgroundColor : '#574C9E44',
     borderRadius : 8,
     marginVertical : 8,
     marginHorizontal : 15,
+    padding : 5,
+  },
+  workingDayButtonDisabled : {
+    backgroundColor : '#574C9E44',
+    borderRadius : 8,
+    marginVertical : 8,
+    marginHorizontal : 3,
     padding : 5,
   },
   modificationContainer: {
@@ -519,5 +575,12 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingTop : 2,
     paddingBottom : 2,
+  },
+  deleteButton : {
+    backgroundColor : '#E9769AAA',
+    borderRadius : 8,
+    marginVertical : 5,
+    marginHorizontal : 10,
+    padding : 5,
   },
 });
