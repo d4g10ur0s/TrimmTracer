@@ -6,13 +6,13 @@ from datetime import datetime, timedelta
 def parse_duration(duration_str):
     # Split the string into components
     components = duration_str.split()
-
     # Extract minutes and seconds
-    minutes = int(components[0]) if len(components) >= 2 else 0
-    seconds = int(components[2]) if len(components) == 4 else 0
+    hours = int(components[0]) if len(components) == 6 else 0
+    minutes = int(components[2]) if len(components) == 6 else int(components[0])
+    seconds = int(components[4]) if len(components) == 6 else int(components[2])
 
     # Create a timedelta object
-    duration = timedelta(minutes=minutes, seconds=seconds)
+    duration = timedelta(hours=hours,minutes=minutes, seconds=seconds)
 
     return duration
 

@@ -24,12 +24,15 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+// for employees
 import {getEmployeeServices} from '../utils/EmployeeHandling';
-import { nanosecondsToString,nanosecondsToHoursMinutesSeconds } from '../utils/ServiceHandling';
-import {getAppointmentTimesForDate} from '../utils/AppointmentHandling'
-
-import MiniCalendar from '../components/MiniCalendar'
+// for services
+import {nanosecondsToString,nanosecondsToHoursMinutesSeconds} from '../utils/ServiceHandling';
+// for appointments
+import {getAppointmentTimesForDate,storeAppointment} from '../utils/AppointmentHandling'
 import AppointmentSubmitionForm from '../components/AppointmentSubmitionForm'
+import MiniCalendar from '../components/MiniCalendar'
+
 
 interface AppointmentEmployeeSelectionProps {
 
@@ -173,7 +176,6 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   const [currentClient , setCurrentClient] = useState(client)
   const [containers , setContainers] = useState([])
   const [theInfo , setInfo] = useState({})
-  const [appointmentTime, setAppointmentTime] = useState('')
   // render containers
   const renderEmployees = async () => {
     var containers = []
@@ -211,33 +213,41 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
                        />)}
   }
   // submit
-  const submitData = (date , time , total_client_cost , total_duration , total_employee_cost , note) => {
-    // Create a new Date by adding milliseconds to the original date
+  const submitData = async (date , time , note) => {
+    // starting datetime
     const [hours, minutes] = time.split(':');
     date.setHours(parseInt(hours, 10));
     date.setMinutes(parseInt(minutes, 10));
-    const checkOut = new Date(date.getTime() + (total_duration / 1e6) );
-    // create the appointment and then send it
-    var appointment = {
-      shop_id : theInfo.employee.shop_id,
-      when : date,
-      employee_email : theInfo.employee.email,
-      client_email : currentClient.email,
-      check_in : date,
-      check_out : null,
-      client_cost : total_client_cost ,
-      client_fullname : currentClient.name + ' ' + currentClient.sirname ,
-      client_phone : currentClient.phone,
-      dur : total_duration ,
-      employee_cost : total_employee_cost,
-      employee_fullname : theInfo.employee.name + ' ' + theInfo.employee.sirname,
-      employee_phone : theInfo.employee.phone,
-      end_time : null ,
-      note : null,
-      services : theInfo.theServices ,
-      start_time : date,
-    };
-    console.log(appointment)
+    // appointments to be stored
+    var appointments = []
+    // create one appointment appointment for each service and then store it
+    for(i in theInfo.theServices){
+      // calculate checkOut time
+      var checkOut = new Date(date.getTime() + (theInfo.theServices[i].average_dur.nanoseconds / 1e6) );
+      var appointment = {
+        shop_id : theInfo.employee.shop_id,
+        when : date,
+        employee_email : theInfo.employee.email,
+        client_email : currentClient.email,
+        check_in : date,
+        check_out : checkOut,
+        client_cost : theInfo.theServices[i].client_cost ,
+        client_fullname : currentClient.name + ' ' + currentClient.sirname ,
+        client_phone : currentClient.phone,
+        dur : theInfo.theServices[i].average_dur ,
+        employee_cost : theInfo.theServices[i].employee_cost,
+        employee_fullname : theInfo.employee.name + ' ' + theInfo.employee.sirname,
+        employee_phone : theInfo.employee.phone,
+        end_time : checkOut ,
+        note : note,
+        service_name : theInfo.theServices[i].name ,
+        start_time : date,
+      };
+      date = checkOut// prepare date for next service
+      appointments.push(appointment)// push data to be stored
+    }
+    await storeAppointment(appointments)
+    hide()// before hiding , errors must be checked
   }
   // render at start
   useEffect(()=>{renderEmployees();}, []);

@@ -1,6 +1,8 @@
 const uuid = require('uuid');
-const client = require('./db')
+const client = require('./db');
+const cassandra = require('cassandra-driver');
 
+// date and time utils
 function formatDateForJavaUtilDate(date) {
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Month is 0-based.
@@ -11,6 +13,53 @@ function formatDateForJavaUtilDate(date) {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+function formatDuration(dur){
+  var newDur;
+  // Convert nanoseconds to milliseconds
+  const totalMilliseconds = parseInt(dur.nanoseconds) / 1000000;
+  // Calculate days, hours, minutes, and seconds
+  const totalSeconds = Math.floor(totalMilliseconds / 1000);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor(((totalSeconds % 86400) % 3600) / 60);
+  const seconds = ((totalSeconds % 86400) % 3600) % 60;
+  // Construct the Duration type
+  newDur = new cassandra.types.Duration(0, hours, minutes, seconds, 0);
+  return newDur;
+}
+// store appointments
+exports.storeAppointments = async (req, res) => {
+  const {appointments} = req.body;
+  console.log(req.body);
+  try {
+    for(i in appointments){
+      var tempDuration=formatDuration(appointments[i].dur);
+      client.execute(
+        'INSERT INTO trimmtracer.appointment (shop_id,when,employee_email,client_email,check_in,check_out,client_cost,client_fullname,client_phone,dur,employee_cost,employee_fullname,employee_phone,end_time,note,service_name,start_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        [appointments[i].shop_id,
+        appointments[i].when ,
+        appointments[i].employee_email,
+        appointments[i].client_email,
+        appointments[i].check_in,
+        appointments[i].check_out,
+        appointments[i].client_cost,
+        appointments[i].client_fullname,
+        appointments[i].client_phone,
+        tempDuration,
+        appointments[i].employee_cost,
+        appointments[i].employee_fullname,
+        appointments[i].employee_phone,
+        appointments[i].end_time,
+        appointments[i].note ,
+        appointments[i].service_name,
+        appointments[i].start_time ,], { prepare: true }
+      );
+    }// store every service for appointment
+    res.status(201).json({ message: 'Appointments stored successfully' });
+  } catch (err) {
+    console.error('Error during storing:', err);
+    res.status(500).json({ error: 'Error during storing' });
+  }
+};
 // get shop appointments
 exports.getShopAppointments = async (req, res) => {
   const { shop_id,employee_email,when_0,when_1 } = req.body;
