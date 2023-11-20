@@ -106,7 +106,7 @@ exports.getEmployeeAppointments = async (req, res) => {
   const { shop_id,employee_email,when_0,when_1 } = req.body;
   console.log(req.body);
   const shopAppointments = await client.execute(
-    'select * from appointment where shop_id=? and employee_email=? and (when<=? and when>=?);',
+    'select * from appointment where shop_id=? and when<=? and when>=? and employee_email=? ;',
     [shop_id,employee_email,when_0,when_1]
   );
   const appointments = shopAppointments.rows

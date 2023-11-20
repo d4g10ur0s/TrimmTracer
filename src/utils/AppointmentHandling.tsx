@@ -24,7 +24,7 @@ export const storeAppointment = async (appointments) => {
     throw error;
   }
 }
-// get appointments
+// get appointments for shop
 export const getShopAppointments = async (shop_id,when_0,when_1) => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/getShopAppointments`, {
@@ -34,6 +34,31 @@ export const getShopAppointments = async (shop_id,when_0,when_1) => {
       },
       body: JSON.stringify({
         shop_id,
+        when_0,
+        when_1,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error('Invalid credentials');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+};
+// get appointments for employee
+export const getEmployeeAppointments = async (shop_id,email,when_0,when_1) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/shop/getEmployeeAppointments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        shop_id,
+        email,
         when_0,
         when_1,
       }),

@@ -26,7 +26,7 @@ import {
 
 import { deleteService, assignService } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
-import { getShopAppointments } from '../utils/AppointmentHandling';
+import { getShopAppointments,getEmployeeAppointments } from '../utils/AppointmentHandling';
 
 import EmployeeSelection from '../components/EmployeeSelection';
 import {ServiceModificationForm} from '../components/ServiceForm';
@@ -175,7 +175,9 @@ const DayContainer: React.FC<DayContainerProps> = ({day , employee}) => {
     var when_1 = new Date(day);
     when_1.setHours(23, 59, 59, 999);
     // get appointments
-    var appointments = await getShopAppointments(user.shop_id,when_0,when_1);
+    var appointments;
+    if(user.typeofemployee==3){appointments=await getEmployeeAppointments(user.shop_id,user.email,when_0,when_1);}
+    else{appointments=await getShopAppointments(user.shop_id,when_0,when_1);}// get appointments for shop
     return appointments;
   }
   // render only at start
