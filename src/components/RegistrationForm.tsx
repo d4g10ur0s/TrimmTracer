@@ -76,8 +76,8 @@ const WorkingHoursForm : React.FC = ({}) => {
   const updateDepth = async (newDepth) => {await setDepth(newDepth)}
   const updateFormComponent = async () => {
     var b = formComponents;
-    if(b[selectedDay]==undefined){b[selectedDay]=[]}
-    b[selectedDay].push(<WorkingHoursFormComponent key={depth+1}/>)
+    if(b[selectedDay]==undefined){b[selectedDay]=[<WorkingHoursFormComponent key={depth+1}/>,]}
+    else{b[selectedDay].push(<WorkingHoursFormComponent key={depth+1}/>)}
     await renderFormComponents(b)
   }
   // add form component
