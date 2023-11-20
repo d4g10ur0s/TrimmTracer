@@ -40,18 +40,18 @@ const ServiceInfoContainer: React.FC = ({service}) => {
   return(
     <View style={styles.serviceInfo}>
       <View style={{alignItems : 'center'}}>
-        <Text style={{fontWeight:'700',color : 'black',marginLeft: 5,}}>{"Service Name"}</Text>
-        <Text style={{color : 'black',marginLeft: 5,}}>{service.name}</Text>
+        <Text style={{fontWeight:'700',color : 'white',marginLeft: 5,}}>{"Service Name"}</Text>
+        <Text style={{color : 'white',marginLeft: 5,}}>{service.name}</Text>
       </View>
       <View  style={{alignItems : 'center'}}>
-        <Text style={{fontWeight:'700',color : 'black',marginLeft: 5,}}>{"Service Duration"}</Text>
-        <Text style={{color : 'black',marginRight: 5,}}>{service.duration + " minutes"}</Text>
+        <Text style={{fontWeight:'700',color : 'white',marginLeft: 5,}}>{"Service Duration"}</Text>
+        <Text style={{color : 'white',marginRight: 5,}}>{service.duration + " minutes"}</Text>
       </View>
     </View>
   );
 
 }
-
+// container about appointments
 const AppointmentContainer: React.FC = ({appointment}) =>{
 
   const renderServices = () => {
@@ -87,9 +87,9 @@ const AppointmentContainer: React.FC = ({appointment}) =>{
       <View
         style={styles.appointmentTime}
       >
-        <Text style={{color : 'black',marginRight: 5,}}>{'Start : '+getHourMinuteStringFromDate(appointment.check_in)}</Text>
-        <Text style={{color : 'black',}}>{'End : '+getHourMinuteStringFromDate(appointment.check_out)}</Text>
-        <Text style={{color : 'black',marginLeft: 5,}}>{'Duration : ' + getDuration(appointment.check_out,appointment.check_in)}</Text>
+        <Text style={{color : 'white',marginRight: 5,}}>{'Start : '+getHourMinuteStringFromDate(appointment.check_in)}</Text>
+        <Text style={{color : 'white',}}>{'End : '+getHourMinuteStringFromDate(appointment.check_out)}</Text>
+        <Text style={{color : 'white',marginLeft: 5,}}>{'Duration : ' + getDuration(appointment.check_out,appointment.check_in)}</Text>
       </View>
       <View
         style={styles.serviceInfoView}
@@ -104,25 +104,35 @@ const AppointmentContainer: React.FC = ({appointment}) =>{
           style={styles.clientInfo}
         >
           <Text style={styles.personInfo}>{'Client Info'}</Text>
-          <Text style={{color : 'black',}}>{appointment.client_fullname}</Text>
-          <Text style={{color : 'black',}}>{appointment.client_phone}</Text>
-          <Text style={{color : 'black',}}>{appointment.client_email}</Text>
+          <Text style={{color : 'white',}}>{appointment.client_fullname}</Text>
+          <Text style={{color : 'white',}}>{appointment.client_phone}</Text>
+          <Text style={{color : 'white',}}>{appointment.client_email}</Text>
         </View>
         <View
           style={styles.employeeInfo}
         >
           <Text style={styles.personInfo}>{'Employee Info'}</Text>
-          <Text style={{color : 'black',}}>{appointment.employee_fullname}</Text>
-          <Text style={{color : 'black',}}>{appointment.employee_phone}</Text>
-          <Text style={{color : 'black',}}>{appointment.employee_email}</Text>
+          <Text style={{color : 'white',}}>{appointment.employee_fullname}</Text>
+          <Text style={{color : 'white',}}>{appointment.employee_phone}</Text>
+          <Text style={{color : 'white',}}>{appointment.employee_email}</Text>
         </View>
+      </View>
+      <View
+        style={styles.noteView}
+      >
+        <Text style={{color : 'white', fontSize : 18, fontWeight : 'bold'}}>
+          {'Note about Client'}
+        </Text>
+        <Text style={{color : 'white',}}>
+          {appointment.note}
+        </Text>
       </View>
       <ScrollView
         horizontal={true}
         style={styles.buttonScrollView}
       >
         <TouchableOpacity
-          style={styles.deleteButton}
+          style={styles.controlButtons}
         >
           <Text>
             {"Modify Appointment"}
@@ -140,8 +150,7 @@ const AppointmentContainer: React.FC = ({appointment}) =>{
   );
 
 };
-
-
+// a container for the day
 const DayContainer: React.FC<DayContainerProps> = ({day , employee}) => {
   const [user,setUser] = useState(employee);
   const [appointments,setAppointments] = useState(null);
@@ -150,7 +159,6 @@ const DayContainer: React.FC<DayContainerProps> = ({day , employee}) => {
     var listOfAppointments = await getAppointments();
     var content = [];
     for (i in listOfAppointments.appointments){
-      console.log(listOfAppointments.appointments[i])
       content.push(<AppointmentContainer
                     key={i}
                     appointment={listOfAppointments.appointments[i]}
@@ -160,7 +168,6 @@ const DayContainer: React.FC<DayContainerProps> = ({day , employee}) => {
   }
   // get appointments from database
   const getAppointments = async () => {
-    console.log(user)
     // first timestamp of the day
     var when_0 = new Date(day);
     when_0.setHours(0,0,0,0);
@@ -207,7 +214,7 @@ const styles = StyleSheet.create({
     width: '95%',
   },
   container : {
-    backgroundColor : '#FFFFFFAD',
+    backgroundColor : '#495866',
     justifyContent : 'center',
     alignItems : 'center',
     borderRadius : 8,
@@ -218,11 +225,11 @@ const styles = StyleSheet.create({
     fontSize : 20,
     fontWeight : 'bold',
     alignSelf: 'center',
-    color : 'black',
+    color : 'white',
   },
   appointmentContainer : {
     borderRadius : 8,
-    backgroundColor : '#FFFFFFAD',
+    backgroundColor : '#495866',
     borderWidth: 1,
     borderColor: 'gray',
     borderStyle: 'dashed',
@@ -242,7 +249,7 @@ const styles = StyleSheet.create({
     marginVertical : 3,
     fontWeight : 'bold',
     fontSize : 16,
-    color : 'black',
+    color : 'white',
   },
   serviceInfo : {
     width : '100%',
@@ -298,6 +305,11 @@ const styles = StyleSheet.create({
     marginVertical : 5,
     marginHorizontal : 10,
     padding : 5,
+  },
+  noteView : {
+    margin : 3,
+    justifyContent : 'center',
+    alignItems : 'center',
   },
 });
 
