@@ -1,16 +1,21 @@
 import React, { useState , useEffect} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-import {getAppointmentTimesForDate,getEmployeeNumberAppointments} from '../utils/AppointmentHandling'
+import {getAppointmentTimesForDate,getEmployeeNumberAppointments,getShopNumberAppointments} from '../utils/AppointmentHandling'
 
-const DayButton : React.FC = ({shop_id,email,date,selectDate,dayCounter,disable})=>{
+const DayButton : React.FC = ({shop_id,email,typeofemployee,date,selectDate,dayCounter,disable})=>{
   const [ldate ,setDate] = useState(date);
   const [num, setNum] = useState(0); // Initialize num state
   const [buttonStyle, setButtonStyle] = useState(styles.dateCell)
 
   useEffect(()=>{
     const fetchNum = async () => {
-     const result = await getEmployeeNumberAppointments(shop_id, email, ldate);
+      var result ;
+      if(typeofemployee==3){
+        result = await getEmployeeNumberAppointments(shop_id, email, ldate);
+      }else{
+        result = await getShopNumberAppointments(shop_id, ldate)
+      }
      setNum(result.count);
    };
    fetchNum(); // Fetch num and update the state

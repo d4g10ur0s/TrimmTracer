@@ -56,6 +56,7 @@ export const RCalendar: React.FC = ({ onDateSelect , employee }) => {
             <DayButton key={j}
                        shop_id={employee.shop_id}
                        email={employee.email}
+                       typeofemployee={employee.typeofemployee}
                        disable={false}
                        date={date}
                        selectDate={dateSelected}

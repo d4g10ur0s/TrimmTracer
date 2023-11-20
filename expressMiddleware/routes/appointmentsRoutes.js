@@ -7,6 +7,7 @@ const appointmentSchedulingController = require('../controllers/schedulingContro
 router.post('/storeAppointments', appointmentShopController.storeAppointments);
 // appointment getter
 router.post('/getShopAppointments', appointmentShopController.getShopAppointments);
+router.post('/getShopNumberAppointments', appointmentShopController.getShopNumberAppointments);
 router.post('/getEmployeeNumberAppointments', appointmentShopController.getEmployeeNumberAppointments);
 router.post('/getAppointmentTimesForDate', appointmentSchedulingController.getAppointmentTimesForDate);
 

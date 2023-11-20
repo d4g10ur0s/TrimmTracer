@@ -20,7 +20,11 @@ const EmployeeMainScreen: React.FC = () => {
     setContent(<DayContainer day={day} employee={employee} />)
   }
   const toggleCalendar = () => {
-    setContent(<RCalendar onDateSelect={toggleDay} employee={employee}/>);
+    console.log(employee)
+    setContent(<RCalendar
+                  onDateSelect={toggleDay}
+                  employee={employee}
+                />);
   }
   const toggleToShop = () => {
     setContent(<ShopContainer
