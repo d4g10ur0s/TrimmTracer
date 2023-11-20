@@ -1,26 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const DayButton : React.FC = ({date,selectDate,dayCounter})=>{
-  const [ldate ,setDate] = useState(date);
-  const dateSelected = () => {selectDate(date)}
-  return(
-    <View>
-      <TouchableOpacity
-      style={styles.dateCell}
-      onPress={() => dateSelected(ldate)}
-      >
-      <Text
-        style={{'color' : 'black'}}
-      >
-        {dayCounter}
-      </Text>
-      </TouchableOpacity>
-    </View>
-    );
-};
+import DayButton from '../components/DayButton'
 
-export const RCalendar: React.FC = ({ onDateSelect }) => {
+export const RCalendar: React.FC = ({ onDateSelect , employee }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const dateSelected=(date)=>{onDateSelect(date);}
@@ -70,7 +53,14 @@ export const RCalendar: React.FC = ({ onDateSelect }) => {
         } else if (dayCounter <= daysInMonth) {
           const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCounter);
           week.push(
-            <DayButton key={j} date={date} selectDate={dateSelected} dayCounter={dayCounter}/>
+            <DayButton key={j}
+                       shop_id={employee.shop_id}
+                       email={employee.email}
+                       disable={false}
+                       date={date}
+                       selectDate={dateSelected}
+                       dayCounter={dayCounter}
+                       />
           );
           dayCounter++;
         } else {
@@ -135,15 +125,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 5,
-  },
-  dateCell: {
-    width: 40,
-    height: 40,
-    margin : 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
   },
   emptyCell: {
     width: 40,

@@ -20,7 +20,7 @@ const EmployeeMainScreen: React.FC = () => {
     setContent(<DayContainer day={day} employee={employee} />)
   }
   const toggleCalendar = () => {
-    setContent(<RCalendar onDateSelect={toggleDay}/>);
+    setContent(<RCalendar onDateSelect={toggleDay} employee={employee}/>);
   }
   const toggleToShop = () => {
     setContent(<ShopContainer
@@ -54,7 +54,7 @@ const EmployeeMainScreen: React.FC = () => {
           toClients={toggleClients}
           toOptions={toggleOptions}
         />
-        {(content==1) ? (<RCalendar onDateSelect={toggleDay} />) : (content)}
+        {(content==1) ? (<RCalendar onDateSelect={toggleDay} employee={employee} />) : (content)}
       </View>
     </ScrollView>
   );
