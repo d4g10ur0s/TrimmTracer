@@ -25,7 +25,7 @@ export const storeAppointment = async (appointments) => {
   }
 }
 // get appointments
-export const getShopAppointments = async (shop_id,employee_email,when_0,when_1) => {
+export const getShopAppointments = async (shop_id,when_0,when_1) => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/getShopAppointments`, {
       method: 'POST',
@@ -34,16 +34,13 @@ export const getShopAppointments = async (shop_id,employee_email,when_0,when_1) 
       },
       body: JSON.stringify({
         shop_id,
-        employee_email,
         when_0,
         when_1,
       }),
     });
-
     if (!response.ok) {
       throw new Error('Invalid credentials');
     }
-
     const data = await response.json();
     return data;
   } catch (error) {

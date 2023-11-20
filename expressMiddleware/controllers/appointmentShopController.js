@@ -62,10 +62,10 @@ exports.storeAppointments = async (req, res) => {
 };
 // get shop appointments
 exports.getShopAppointments = async (req, res) => {
-  const { shop_id,employee_email,when_0,when_1 } = req.body;
+  const { shop_id,when_0,when_1 } = req.body;
   console.log(req.body);
   const shopAppointments = await client.execute(
-    'SELECT * FROM trimtracer.appointment WHERE shop_id=? AND when>=? AND when<=? ALLOW FILTERING',
+    'SELECT * FROM trimmtracer.appointment WHERE shop_id=? AND when>=? AND when<=? ALLOW FILTERING',
     [shop_id, new Date(when_0), new Date(when_1)]
   );
   const appointments = shopAppointments.rows

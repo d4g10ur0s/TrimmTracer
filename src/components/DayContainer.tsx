@@ -168,15 +168,13 @@ const DayContainer: React.FC<DayContainerProps> = ({day , employee}) => {
     var when_1 = new Date(day);
     when_1.setHours(23, 59, 59, 999);
     // get appointments
-    var appointments = await getShopAppointments(user.shop_id,
-                                              user.email,
-                                              when_0,when_1);
+    var appointments = await getShopAppointments(user.shop_id,when_0,when_1);
     return appointments;
   }
-
+  // render only at start
   useEffect(()=>{
     renderAppointments();
-  },[user])
+  },[])
 
   return(
     <View
