@@ -196,7 +196,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
 const styles = StyleSheet.create({
   outsideContainer : {
     borderRadius : 8,
-    backgroundColor:'#AFAFAFAD',
+    backgroundColor : '#495866',
     borderWidth: 1,
     borderColor: 'gray',
     borderStyle: 'dashed',

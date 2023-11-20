@@ -9,10 +9,18 @@ interface EmployeeAppMenuProps {
 
 const EmployeeAppMenu: React.FC<EmployeeAppMenuProps> = ({toCalendar , toShop , toClients , toOptions}) => {
 
-  const calendar = () => {toCalendar();}
-  const shop = () => {toShop();}
-  const clients = () => {toClients();}
-  const options = () => {toOptions();}
+  const calendar = () => {
+    toCalendar();
+  }
+  const shop = () => {
+    toShop();
+  }
+  const clients = () => {
+    toClients();
+  }
+  const options = () => {
+    toOptions();
+  }
 
   return (
     <View

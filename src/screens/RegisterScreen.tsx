@@ -13,13 +13,14 @@ const RegisterScreen: React.FC = () => {
     setRegForm((prevState) => !prevState);
   }
 
-  const logIn = async  (username : string , password : string) => {
+  const logIn = async  (username : string , password : string , employee: boolean) => {
     try {
-      const userData = await login(username, password);
+      const userData = await login(username, password,employee);
       // Do something with the user data (e.g., save to state or AsyncStorage)
       navigation.navigate('EmployeeMainScreen', {userData});
     } catch (error) {
-      Alert.alert('Login Failed', 'Invalid credentials. Please try again.');
+      console.log()
+      Alert.alert('Login Failed', error + ' , please try again.');
     }
   }
 

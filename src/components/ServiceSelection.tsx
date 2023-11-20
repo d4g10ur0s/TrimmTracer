@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   serviceSelection : {
     height : '45%',
     width : '85%',
-    backgroundColor : "#FFFFFFAD",
+    backgroundColor : "#2C2A33",
     alignSelf : 'center',
     marginTop : '25%',
     borderRadius : 8,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   },
   selectionHeader : {
     alignSelf : 'center',
-    color: 'black',
+    color: 'white',
     fontSize : 20,
     fontWeight : 'bold',
   },
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     borderStyle : 'dashed',
     borderWidth : 1,
     borderColor : 'gray',
-    backgroundColor : '#999999AD',
+    backgroundColor : '#495866',
   },
   horizontalView : {
     padding : 2,

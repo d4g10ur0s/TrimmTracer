@@ -195,11 +195,6 @@ const DayContainer: React.FC<DayContainerProps> = ({day , employee}) => {
         >
           {day.toDateString()}
         </Text>
-        <TouchableOpacity
-          style={styles.controlButtons}
-        >
-          <Text>{'New Appointment'}</Text>
-        </TouchableOpacity>
       </View>
       <ScrollView>
         {appointments}

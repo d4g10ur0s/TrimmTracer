@@ -31,21 +31,21 @@ exports.registerEmployee = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email,password,employee } = req.body;
   console.log(req.body);
   const userExists = await client.execute(
     'SELECT * FROM trimmtracer.user WHERE employee=? and email = ?',// 8a allaksei se or phone
-    [true,email]
+    [employee,email]
   );
+  // check if user exist
   if (userExists.rows.length > 0) {
+    // if credentials are valid
     if(userExists.rows[0].password === password){
       return res.json({ user : userExists.rows[0]});
     }
-    return res.json({ error : "Wrong Password"});
-  }
-  if (user) {
-    res.json({ message: `Welcome, ${username}!` });
+    return res.status(401).json({ error : "Wrong Password"});
   } else {
-    res.status(401).json({ error: 'Invalid credentials. Please try again.' });
+    // user doesn't exist
+    res.status(401).json({ error: 'There is no employee with these credentials ' });
   }
 };

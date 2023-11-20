@@ -3,7 +3,8 @@ import { View, TextInput, Button, StyleSheet, Alert, Text, ScrollView } from 're
 
 import { useRoute, useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 
-import Calendar from '../components/Calendar';
+import {RCalendar} from '../components/Calendar';
+import DayContainer from '../components/DayContainer';
 import ShopContainer from '../components/ShopContainer';
 import ShopClientsContainer from '../components/ShopClientsContainer';
 import EmployeeAppMenu from '../components/EmployeeAppMenu';
@@ -15,10 +16,12 @@ const EmployeeMainScreen: React.FC = () => {
   const [employee, setEmployee] = useState(route.params.userData);
   const navigation = useNavigation(); // Initialize navigation
 
-  const toggleCalendar = () => {
-    setContent(<Calendar employee={employee}/>);
+  const toggleDay = (day) => {
+    setContent(<DayContainer day={day} employee={employee} />)
   }
-
+  const toggleCalendar = () => {
+    setContent(<RCalendar onDateSelect={toggleDay}/>);
+  }
   const toggleToShop = () => {
     setContent(<ShopContainer
                   employeeType={employee.typeofemployee}
@@ -26,17 +29,14 @@ const EmployeeMainScreen: React.FC = () => {
                   employee_email={employee.email}
                 />);
   }
-
   const toggleClients = () => {
     setContent(<ShopClientsContainer
                  employee={employee}
               />);
   }
-
   const toggleOptions = () => {
     setContent(null);
   }
-
 
   return (
     <ScrollView>
@@ -54,7 +54,7 @@ const EmployeeMainScreen: React.FC = () => {
           toClients={toggleClients}
           toOptions={toggleOptions}
         />
-        {(content==1) ? (<Calendar />) : (content)}
+        {(content==1) ? (<RCalendar onDateSelect={toggleDay} />) : (content)}
       </View>
     </ScrollView>
   );

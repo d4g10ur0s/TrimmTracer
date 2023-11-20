@@ -139,7 +139,7 @@ export const ServiceModificationForm: React.FC = ({ onSubmit, service }) => {
       <Text
         style={styles.formHeader}
       >
-        Add Service
+        Modify Service
       </Text>
       <TextInput
         style={styles.nameInput}

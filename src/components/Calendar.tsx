@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import DayContainer from '../components/DayContainer';
 
 const DayButton : React.FC = ({date,selectDate,dayCounter})=>{
   const [ldate ,setDate] = useState(date);
@@ -21,7 +20,7 @@ const DayButton : React.FC = ({date,selectDate,dayCounter})=>{
     );
 };
 
-const RCalendar: React.FC = ({ onDateSelect }) => {
+export const RCalendar: React.FC = ({ onDateSelect }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const dateSelected=(date)=>{onDateSelect(date);}
@@ -106,24 +105,6 @@ const RCalendar: React.FC = ({ onDateSelect }) => {
   );
 };
 
-const Calendar: React.FC = ({ employee }) => {
-  const [user,setUser] = useState(employee)
-  const toggleToDay = (day) => {
-    setContent(<DayContainer day={day} employee={user} />)
-  }
-
-  const toggleCalendar = () => {
-    setContent(<RCalendar onDateSelect={toggleToDay}/>);
-  }
-
-  const [content,setContent]=useState(<RCalendar onDateSelect={toggleToDay} />)
-
-  return(
-    <View>{content}</View>
-  )
-
-}
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor : '#495866',
@@ -181,5 +162,3 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
-
-export default Calendar;

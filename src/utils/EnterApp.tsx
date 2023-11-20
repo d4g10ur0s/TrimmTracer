@@ -1,7 +1,7 @@
 const BASE_URL = 'http://192.168.1.226:3000'; // Replace this with your actual backend API URL
 
-export const login = async (email: string, password: string): Promise<any> => {
-  try {
+export const login = async (email: string, password: string , employee : boolean): Promise<any> => {
+  try {// log in using middleware
     const response = await fetch(`${BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: {
@@ -10,18 +10,18 @@ export const login = async (email: string, password: string): Promise<any> => {
       body: JSON.stringify({
         email,
         password,
+        employee,
       }),
     });
-
-    if (!response.ok) {
-      throw new Error('Invalid credentials');
+    // response has been received
+    if (!response.ok) {// wrong credentials
+      const data = await response.json();
+      throw new Error(data.error);
+    }else{// valid credentials
+      const data = await response.json();
+      return data.user;
     }
-
-    const data = await response.json();
-    if(data.user==undefined){throw new Error('Wrong User Information');}
-    return data.user;
   } catch (error) {
-    console.error('Error logging in:', error);
     throw error;
   }
 };

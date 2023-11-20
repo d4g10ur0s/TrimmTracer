@@ -7,8 +7,11 @@ interface LogInFormProps {
 }
 
 const LogInForm: React.FC<LogInFormProps> = ({ onSubmit, changeForm }) => {
+  const [isEmployee , setIsEmployee] = useState(true);
   const [username, setUsername] = useState<string>('aledadu@hotmail.com');
   const [password, setPassword] = useState<string>('aledadu071!');
+  // employee or client log in
+  const changeUser = () => { setIsEmployee( (prevState)=>(!prevState) ); }
   // Change to Registration Form
   const toRegister = () => {
     changeForm();
@@ -21,7 +24,7 @@ const LogInForm: React.FC<LogInFormProps> = ({ onSubmit, changeForm }) => {
       return;
     }
     // Call the onSubmit prop with the entered username and password
-    onSubmit(username, password);
+    onSubmit(username, password, isEmployee);
   };
 
   return (
@@ -47,6 +50,9 @@ const LogInForm: React.FC<LogInFormProps> = ({ onSubmit, changeForm }) => {
       <View
         style={{flexDirection : "row",padding : 10,}}
       >
+        <TouchableOpacity style={styles.logInButton} onPress={changeUser}>
+          <Text style={{alignSelf : "center",}}> {isEmployee ? ("Employee") : ("Client")} </Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.logInButton} onPress={handleLogIn}>
           <Text style={{alignSelf : "center",}}> {"Log In"} </Text>
         </TouchableOpacity>
