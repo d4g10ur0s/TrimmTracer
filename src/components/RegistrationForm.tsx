@@ -63,21 +63,22 @@ const WorkingHoursForm : React.FC = ({}) => {
   // render form components a.k.a. working hours inputs
   const renderFormComponents = async (components) => {
     if(components == null){
-      await setFormComponents({'Mon' : [],})
+      setFormComponents({'Mon' : [],})
     }else{
-      await setFormComponents(components)
+      setFormComponents(components)
     }
   }
   // render at start
   useEffect(() => {
     renderFormComponents(null);
   },[]);
+  // update depth of working hours
   const updateDepth = async (newDepth) => {await setDepth(newDepth)}
   const updateFormComponent = async () => {
     var b = formComponents;
     if(b[selectedDay]==undefined){b[selectedDay]=[]}
-    b[selectedDay].push(<WorkingHoursFormComponent />)
-    await setFormComponents(b)
+    b[selectedDay].push(<WorkingHoursFormComponent key={depth+1}/>)
+    await renderFormComponents(b)
   }
   // add form component
   const addFormComponent = () => {
@@ -91,7 +92,6 @@ const WorkingHoursForm : React.FC = ({}) => {
       setDepth(formComponents[selectedDay].length)
     }
   },[selectedDay])
-  useEffect(()=>{},[depth])
   // content
   return (
     <View>
@@ -143,7 +143,7 @@ const WorkingHoursForm : React.FC = ({}) => {
       <View
         style={styles.horizontalView}
       >
-      <TouchableOpacity style={styles.addIntervalButton} onPress={addFormComponent}>
+      <TouchableOpacity style={styles.addIntervalButton} onPress={addFormComponent} disabled={depth==4}>
         <Text>{'Add Interval'}</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.deleteButton}>
