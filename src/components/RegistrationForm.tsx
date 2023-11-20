@@ -59,6 +59,7 @@ const WorkingHoursForm : React.FC = ({}) => {
 
   const [formComponents , setFormComponents] = useState({'Mon' : [],});
   const [selectedDay , setSelectedDay] = useState('Mon')
+  const [depth , setDepth] = useState(0)
   // render form components a.k.a. working hours inputs
   const renderFormComponents = async (components) => {
     if(components == null){
@@ -71,12 +72,26 @@ const WorkingHoursForm : React.FC = ({}) => {
   useEffect(() => {
     renderFormComponents(null);
   },[]);
-  // add form component
-  const addFormComponent = async () => {
+  const updateDepth = async (newDepth) => {await setDepth(newDepth)}
+  const updateFormComponent = async () => {
     var b = formComponents;
-    b.push(<WorkingHoursFormComponent />)
+    if(b[selectedDay]==undefined){b[selectedDay]=[]}
+    b[selectedDay].push(<WorkingHoursFormComponent />)
     await setFormComponents(b)
   }
+  // add form component
+  const addFormComponent = () => {
+    updateFormComponent()
+    updateDepth(depth+1)
+  }
+  useEffect(()=>{
+    if(formComponents[selectedDay]==undefined){
+      setDepth(0)
+    }else{
+      setDepth(formComponents[selectedDay].length)
+    }
+  },[selectedDay])
+  useEffect(()=>{},[depth])
   // content
   return (
     <View>
@@ -124,7 +139,7 @@ const WorkingHoursForm : React.FC = ({}) => {
           <Text>{'Sun'}</Text>
         </TouchableOpacity>
       </View>
-      {formComponents['Mon']}
+      {formComponents[selectedDay]}
       <View
         style={styles.horizontalView}
       >
