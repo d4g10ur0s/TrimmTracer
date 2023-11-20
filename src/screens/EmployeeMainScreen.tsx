@@ -27,11 +27,7 @@ const EmployeeMainScreen: React.FC = () => {
                 />);
   }
   const toggleToShop = () => {
-    setContent(<ShopContainer
-                  employeeType={employee.typeofemployee}
-                  shop_id={employee.shop_id}
-                  employee_email={employee.email}
-                />);
+    setContent(<ShopContainer employee={employee}/>);
   }
   const toggleClients = () => {
     setContent(<ShopClientsContainer

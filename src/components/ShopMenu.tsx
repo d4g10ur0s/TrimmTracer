@@ -3,10 +3,9 @@ import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity,Scrol
 
 interface ShopMenuProps {
   addForm: () => void;
-  isType3 : boolean;
 }
 
-const ShopMenu: React.FC<ShopMenuProps> = ({addForm,isType3,alter}) => {
+const ShopMenu: React.FC<ShopMenuProps> = ({addForm,employeeType,alter}) => {
 
   const toAddForm = () => {addForm();}
 
@@ -23,18 +22,18 @@ const ShopMenu: React.FC<ShopMenuProps> = ({addForm,isType3,alter}) => {
     {
       (es) ?
       (<TouchableOpacity
-        style={(isType3) ? (styles.controlButtonDisabled) : (styles.controlButton)}
+        style={(employeeType>1) ? (styles.controlButtonDisabled) : (styles.controlButton)}
         onPress={toAddForm}
-        disabled={isType3}
+        disabled={employeeType>1}
       >
         <Text>
           {"Add Employee"}
         </Text>
       </TouchableOpacity>) :
       (<TouchableOpacity
-        style={(isType3) ? (styles.controlButtonDisabled) : (styles.controlButton)}
+        style={(employeeType>1) ? (styles.controlButtonDisabled) : (styles.controlButton)}
         onPress={toAddForm}
-        disabled={isType3}
+        disabled={employeeType>1}
       >
         <Text>
           {"Add Service"}

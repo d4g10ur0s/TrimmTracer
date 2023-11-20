@@ -9,10 +9,10 @@ import ServiceContainer from '../components/ServiceContainer';
 import { ServiceForm } from '../components/ServiceForm';
 
 interface ShopContainerProps {
-  employeeType : number;
+
 }
 
-const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id,employee_email}) => {
+const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
   // state form both employees and services
   const [es , setES] = useState(true);
   const [formComponent , setFormComponent] = useState(<RegistrationForm
@@ -53,27 +53,27 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id,empl
   // Employee Functions
   // get and render employees
   const renderShopEmployees = async () => {
-    const shopEmployees = await getEmployees(shop_id);//get employees from db
+    const shopEmployees = await getEmployees(employee.shop_id);//get employees from db
     var empContainers = []
     for(emp in shopEmployees){// render employees' containers
-      empContainers.push(<EmployeeContainer key={emp} employee={shopEmployees[emp]} canDelete={(employeeType==3)} refresh={reload}/>);
+      empContainers.push(<EmployeeContainer key={emp} employee={shopEmployees[emp]} canDelete={(employee.typeofemployee==1)} refresh={reload}/>);
     }
     await setEmployeeContainers(empContainers);
     setServiceContainers(null);
   }
   // add new employee , store and refresh
   const addNewEmployee = async (name,sirname,email,phone,typeofemployee,code) => {
-    await addEmployee(name,sirname,email,phone,typeofemployee,code,shop_id)
+    await addEmployee(name,sirname,email,phone,typeofemployee,code,employee.shop_id)
     setEnableForm((prevState) => !prevState)
     renderShopEmployees();
   }
   // Service Functions
   // get and render services
   const renderShopServices = async () => {
-    const shopServices = await getServices(shop_id);//get employees from db
+    const shopServices = await getServices(employee.shop_id);//get employees from db
     var servContainers = []
     for(serv in shopServices){// render employees' containers
-      servContainers.push(<ServiceContainer key={serv} service={shopServices[serv]} canDelete={(employeeType==3)} refresh={reload}/>);
+      servContainers.push(<ServiceContainer key={serv} service={shopServices[serv]} canDelete={(employee.typeofemployee==1)} refresh={reload}/>);
     }
     await setServiceContainers(servContainers);
     setEmployeeContainers(null);// don't waste
@@ -81,7 +81,7 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id,empl
   // add new service , store and refresh
   const addNewService = async (name ,hours ,minutes ,seconds,employeeCost,clientCost,description) => {
     const dur = hours+'h'+minutes+'m'+seconds+'s';
-    await addService(shop_id , employee_email ,name , dur , clientCost , employeeCost ,description )
+    await addService(employee.shop_id , employee.email ,name , dur , clientCost , employeeCost ,description )
     setEnableForm((prevState) => !prevState)
     renderShopServices();
   }
@@ -93,7 +93,7 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employeeType ,shop_id,empl
       <ShopMenu
         alter={alter}
         addForm={addForm}
-        isType3={(employeeType==3)}
+        employeeType={employee.typeofemployee}
       />
       <View
         style={styles.employeeArea}
