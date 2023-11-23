@@ -31,9 +31,9 @@ const ShopMenu: React.FC<ShopMenuProps> = ({addForm,employeeType,alter}) => {
         </Text>
       </TouchableOpacity>) :
       (<TouchableOpacity
-        style={(employeeType>1) ? (styles.controlButtonDisabled) : (styles.controlButton)}
+        style={(employeeType>2) ? (styles.controlButtonDisabled) : (styles.controlButton)}
         onPress={toAddForm}
-        disabled={employeeType>1}
+        disabled={employeeType>2}
       >
         <Text>
           {"Add Service"}

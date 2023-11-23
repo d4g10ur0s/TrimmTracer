@@ -73,15 +73,12 @@ export const WorkingHoursForm: React.FC = () => {
     setFormComponents((prevFormComponents) => {
       const newFormComponents = { ...prevFormComponents };
       const newIntervalKey = depth + 1;
-
       if (!newFormComponents[selectedDay]) {
         newFormComponents[selectedDay] = [];
       }
-
       newFormComponents[selectedDay].push(
         <WorkingHoursFormComponent key={newIntervalKey} />
       );
-
       updateDepth(newFormComponents[selectedDay].length);
       return newFormComponents;
     });
@@ -157,26 +154,38 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
   const [typeOfEmployee , setTypeOfEmployee] = useState('3');
   //errors
   const [nameError, setNameError] = useState(null);
+  const [nameErrorLabel , setNameErrorLabel] = useState(null);
   const [sirnameError, setSirnameError] = useState(null);
+  const [sirnameErrorLabel , setSirnameErrorLabel] = useState(null);
   const [emailError, setEmailError] = useState(null);
+  const [emailErrorLabel , setEmailErrorLabel] = useState(null);
   const [phoneError, setPhoneError] = useState(null);
+  const [phoneErrorLabel , setPhoneErrorLabel] = useState(null);
   // Change to Log In Form
   const toLogIn = () => {
     changeForm();
   }
   // name and sirname must be over 2 characters long
-  const checkName = (name) => {
+  useEffect(() => {
     const containsLetters = /[a-zA-Z]/.test(name);
     if (typeof name === 'string' && name.length > 3 && containsLetters) {
       setNameError(false);
-    }else{setNameError(true);}
-  }
-  const checkSirname = (name) => {
-    const containsLetters = /[a-zA-Z]/.test(name);
-    if (typeof name === 'string' && name.length > 3 && containsLetters) {
+      setNameErrorLabel(null)
+    }else{
+      setNameErrorLabel(<Text style={styles.errorLabel}>{'Name must be over 3 characters long .'}</Text>)
+      setNameError(true);
+    }
+  },[name])
+  useEffect(() => {
+    const containsLetters = /[a-zA-Z]/.test(sirname);
+    if (typeof sirname === 'string' && sirname.length > 3 && containsLetters) {
       setSirnameError(false);
-    }else{setSirnameError(true);}
-  }
+      setSirnameErrorLabel(null)
+    }else{
+      setSirnameError(true);
+      setSirnameErrorLabel(<Text style={styles.errorLabel}>{'Sirname must be over 3 characters long .'}</Text>)
+    }
+  },[sirname])
   // check email
   const checkEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -193,17 +202,14 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
   }
   // Register in Application
   const handleRegister = () => {
-    // if no errors then register new employee
-    if( !nameError && !sirnameError && !emailError && !phoneError ){
-      // create dummy password
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let code = '';
-      for (let i = 0; i < 8; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        code += characters.charAt(randomIndex);
-      }
-      onSubmit(name,sirname,email,phone,typeOfEmployee,code);
+    // create dummy password
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let code = '';
+    for (let i = 0; i < 8; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      code += characters.charAt(randomIndex);
     }
+    onSubmit(name,sirname,email,phone,typeOfEmployee,code);
   };
   // employee types
   const [selected , setSelected] = useState([false, false, true]);
@@ -233,6 +239,7 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
         value={name}
         onChangeText={setName}
       />
+      {nameErrorLabel}
       <TextInput
         style={styles.input}
         placeholder="Sirname"
@@ -286,7 +293,11 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
       <View
         style={{flexDirection : "row",padding : 10,}}
       >
-      <TouchableOpacity style={styles.submitButton} onPress={handleRegister}>
+        <TouchableOpacity
+          style={styles.submitButton}
+          disabled={(!nameError && !sirnameError && !emailError && !phoneError)}
+          onPress={handleRegister}
+        >
           <Text style={{alignSelf : "center",}}> {"Submit"} </Text>
         </TouchableOpacity>
       </View>
@@ -311,7 +322,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderRadius : 8,
     borderWidth: 2,
-    marginBottom: 10,
+    marginBottom: 1,
     paddingHorizontal: 10,
   },
   formHeader : {
@@ -413,5 +424,9 @@ const styles = StyleSheet.create({
     marginVertical : 5,
     marginHorizontal : 10,
     padding : 5,
+  },
+  errorLabel : {
+    color : 'red',
+    marginBottom : 5,
   },
 });
