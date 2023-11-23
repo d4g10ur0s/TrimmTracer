@@ -2,24 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text,Picker, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 
 const WorkingHoursFormComponent : React.FC = ({num , deleteInterval}) => {
-
-  // working hours
-  const [time, setTime] = useState('');
-  const [isTimeValid, setIsTimeValid] = useState(true);
-
-  const handleTimeChange = (text) => {
+  // handle start time
+  const [startTime, setStartTime] = useState('');
+  const [isStartTimeValid, setIsStartTimeValid] = useState(true);
+  const handleStartTimeChange = (text) => {
     // Regular expression to validate the time in HH:mm format
     const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
-
     if (timeRegex.test(text)) {
-      setIsTimeValid(true);
+      setIsStartTimeValid(true);
     } else {
-      setIsTimeValid(false);
+      setIsStartTimeValid(false);
     }
-
-    setTime(text);
+    setStartTime(text);
   };
-
+  // handle end time
+  const [endTime, setEndTime] = useState('');
+  const [isEndTimeValid, setIsEndTimeValid] = useState(true);
+  const handleEndTimeChange = (text) => {
+    // Regular expression to validate the time in HH:mm format
+    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+    if (timeRegex.test(text)) {
+      setIsEndTimeValid(true);
+    } else {
+      setIsEndTimeValid(false);
+    }
+    setEndTime(text);
+  };
+  // content
   return (
     <View
       style={[styles.horizontalView,styles.timeBorder]}
@@ -29,10 +38,10 @@ const WorkingHoursFormComponent : React.FC = ({num , deleteInterval}) => {
       >
       <Text style={{alignSelf : 'center',paddingTop : 0, paddingRight : 5,}}>{'Start Time'}</Text>
       <TextInput
-        style={[styles.timeInput, !isTimeValid && styles.inputError]}
+        style={[styles.timeInput, !isStartTimeValid && styles.inputError]}
         placeholder="(HH:mm)"
-        onChangeText={handleTimeChange}
-        value={time}
+        onChangeText={handleStartTimeChange}
+        value={startTime}
       />
       </View>
       <View
@@ -40,10 +49,10 @@ const WorkingHoursFormComponent : React.FC = ({num , deleteInterval}) => {
       >
       <Text style={{alignSelf : 'center',paddingTop : 0, paddingRight : 5,}}>{'End Time'}</Text>
       <TextInput
-        style={[styles.timeInput, !isTimeValid && styles.inputError]}
+        style={[styles.timeInput, !isEndTimeValid && styles.inputError]}
         placeholder="(HH:mm)"
-        onChangeText={handleTimeChange}
-        value={time}
+        onChangeText={handleEndTimeChange}
+        value={endTime}
       />
       </View>
       <TouchableOpacity style={styles.buttonContainer} onPress={() => deleteInterval(num)}>
@@ -53,26 +62,24 @@ const WorkingHoursFormComponent : React.FC = ({num , deleteInterval}) => {
   );
 }
 export const WorkingHoursForm: React.FC = () => {
+  const [dayNum , setDayNum]=useState({
+    'Mon' : 0,
+    'Tue' : 1,
+    'Wed' : 2,
+    'Thu' : 3,
+    'Fri' : 4,
+    'Sat' : 5,
+    'Sun' : 6,
+  })
   // about working hours
-  const [formComponents , setFormComponents] = useState({
-    'Mon' : [],
-    'Tue' : [],
-    'Wed' : [],
-    'Thu' : [],
-    'Fri' : [],
-    'Sat' : [],
-    'Sun' : [],
-  });
+  const [formComponents , setFormComponents] = useState({});
   const [selectedDay , setSelectedDay] = useState('Mon')
-  const [depth , setDepth] = useState(0)
+  const [depth , setDepth] = useState(1)
   // something to rerender
   const updateDepth = (newDepth) => {setDepth(newDepth)}
   useEffect(()=>{console.log(depth)},[depth])
   // when selected day is changed , set a valid depth
-  useEffect(()=>{
-    if(formComponents[selectedDay]==undefined){updateDepth(0)}
-    else{updateDepth(formComponents[selectedDay].length)}
-  },[selectedDay])
+  useEffect(()=>{try{updateDepth(formComponents[selectedDay].length)}catch{updateDepth(0)}},[selectedDay])
   // add new working time interval
   const addInterval = () => {
     setFormComponents((prevFormComponents) => {
@@ -82,20 +89,20 @@ export const WorkingHoursForm: React.FC = () => {
         newFormComponents[selectedDay] = [];
       }
       newFormComponents[selectedDay].push(
-        <WorkingHoursFormComponent key={newIntervalKey} num={newIntervalKey} deleteInterval={removeInterval}/>
+        <WorkingHoursFormComponent key={newIntervalKey+dayNum[selectedDay]} num={newIntervalKey} deleteInterval={removeInterval}/>
       );
       updateDepth(newFormComponents[selectedDay].length);
       return newFormComponents;
     });
   };
   // delete interval
-  const removeInterval = (indexToRemove) => {
+  const removeInterval = () => {
     setFormComponents((prevFormComponents) => {
       const newFormComponents = { ...prevFormComponents };
       if (newFormComponents[selectedDay]) {
         // Remove the item at the specified index
         newFormComponents[selectedDay] = newFormComponents[selectedDay].filter(
-          (_, index) => index !== indexToRemove
+          (_, index) => index !== depth-1
         );
         // Update the depth after removing the item
         updateDepth(newFormComponents[selectedDay].length);
@@ -104,6 +111,18 @@ export const WorkingHoursForm: React.FC = () => {
     });
   };
 
+  const begin = async (a) =>{await setFormComponents(a)}
+  useEffect(()=>{
+    begin({
+      'Mon' : [<WorkingHoursFormComponent key={1} num={1} deleteInterval={removeInterval}/>],
+      'Tue' : [<WorkingHoursFormComponent key={5} num={1} deleteInterval={removeInterval}/>],
+      'Wed' : [<WorkingHoursFormComponent key={9} num={1} deleteInterval={removeInterval}/>],
+      'Thu' : [<WorkingHoursFormComponent key={13} num={1} deleteInterval={removeInterval}/>],
+      'Fri' : [<WorkingHoursFormComponent key={17} num={1} deleteInterval={removeInterval}/>],
+      'Sat' : [<WorkingHoursFormComponent key={21} num={1} deleteInterval={removeInterval}/>],
+      'Sun' : [<WorkingHoursFormComponent key={25} num={1} deleteInterval={removeInterval}/>],
+    })
+  },[])
   return(
     <View>
       <View style={styles.workingDayView}>
@@ -200,19 +219,27 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
     }
   },[sirname])
   // check email
-  const checkEmail = (email) => {
+  useEffect(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(emailRegex.test(email)){
       setEmailError(false)
-    }else{setEmailError(true)}
-  }
+      setEmailErrorLabel(<Text style={styles.errorLabel}>{'Incorrect e-mail address format .'}</Text>)
+    }else{
+      setEmailError(true)
+      setEmailErrorLabel(null)
+    }
+  },[email]);
   // check phone number
-  const checkPhoneNumber = (phoneNumber) => {
+  useEffect(() => {
     const greekPhoneRegex = /^(\+30|0030)?\s*?(69\d{8}|2\d{9})$/;
-    if(greekPhoneRegex.test(phoneNumber)){
+    if(greekPhoneRegex.test(phone)){
       setPhoneError(false)
-    }else{setPhoneError(true)}
-  }
+      setPhoneErrorLabel(<Text style={styles.errorLabel}>{'Phone number must be 10 digits long .'}</Text>)
+    }else{
+      setPhoneError(true)
+      setPhoneErrorLabel(null)
+    }
+  },[phone])
   // Register in Application
   const handleRegister = () => {
     // create dummy password
@@ -259,19 +286,23 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
         value={sirname}
         onChangeText={setSirname}
       />
+      {sirnameErrorLabel}
       <TextInput
         style={styles.input}
         placeholder="E-Mail"
         value={email}
         onChangeText={setEmail}
       />
+      {emailErrorLabel}
       <TextInput
         style={styles.input}
         placeholder="Phone Number"
         value={phone}
         onChangeText={setPhone}
       />
+      {phoneErrorLabel}
       <WorkingHoursForm />
+      <Text style={styles.typeOfEmployeeHeader}>{"Choose type of Employee"}</Text>
       <View
         style={styles.typeOfUserView}
       >
@@ -324,8 +355,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '90%',
-    paddingTop : 10,
-    paddingBottom : 10,
+    paddingTop : 5,
+    paddingBottom : 5,
     marginBottom: 20,
     borderRadius : 8,
   },
@@ -335,7 +366,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderRadius : 8,
     borderWidth: 2,
-    marginBottom: 1,
+    marginVertical: 8,
     paddingHorizontal: 10,
   },
   formHeader : {
@@ -366,8 +397,14 @@ const styles = StyleSheet.create({
     alignSelf : 'center',
     marginVertical : 5,
   },
+  typeOfEmployeeHeader : {
+    fontSize : 15,
+    fontWeight : 'bold',
+  },
   typeOfUserView : {
+    width : '100%',
     flexDirection : 'row',
+    justifyContent : 'space-between',
   },
   workingDayView : {
     flexDirection : 'row',
@@ -447,7 +484,7 @@ const styles = StyleSheet.create({
   },
   errorLabel : {
     color : 'red',
-    marginBottom : 5,
+    marginBottom : 1,
   },
   buttonContainer: {
     backgroundColor: 'red',
