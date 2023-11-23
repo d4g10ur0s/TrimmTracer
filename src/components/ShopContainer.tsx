@@ -3,7 +3,7 @@ import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity, Scro
 import ShopMenu from '../components/ShopMenu';
 import EmployeeContainer from '../components/EmployeeContainer';
 import { getEmployees,addEmployee } from '../utils/EmployeeHandling';
-import { RegistrationForm } from '../components/RegistrationForm';
+import { EmployeeForm } from '../components/EmployeeForm';
 import { getServices,addService } from '../utils/ServiceHandling';
 import ServiceContainer from '../components/ServiceContainer';
 import { ServiceForm } from '../components/ServiceForm';
@@ -15,9 +15,8 @@ interface ShopContainerProps {
 const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
   // state form both employees and services
   const [es , setES] = useState(true);
-  const [formComponent , setFormComponent] = useState(<RegistrationForm
-                                                        addEmployee={true}
-                                                        onSubmit2={addNewEmployee}
+  const [formComponent , setFormComponent] = useState(<EmployeeForm
+                                                        onSubmit={addNewEmployee}
                                                       />);
   const [enableForm, setEnableForm] = useState(true);
   // states for employees
@@ -39,9 +38,8 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
     if(!enableForm){setEnableForm((prevState) => !prevState);}
     if(es){
       renderShopEmployees();
-      setFormComponent(<RegistrationForm
-                          addEmployee={true}
-                          onSubmit2={addNewEmployee}
+      setFormComponent(<EmployeeForm
+                          onSubmit={addNewEmployee}
                         />);
     }else{
       renderShopServices();
