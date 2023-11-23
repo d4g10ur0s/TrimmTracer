@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text,Picker, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 
-const WorkingHoursFormComponent : React.FC = ({}) => {
+const WorkingHoursFormComponent : React.FC = ({num , deleteInterval}) => {
 
   // working hours
   const [time, setTime] = useState('');
@@ -21,11 +21,13 @@ const WorkingHoursFormComponent : React.FC = ({}) => {
   };
 
   return (
-    <View>
+    <View
+      style={[styles.horizontalView,styles.timeBorder]}
+    >
       <View
         style={styles.timeView}
       >
-      <Text>{'Start Time'}</Text>
+      <Text style={{alignSelf : 'center',paddingTop : 0, paddingRight : 5,}}>{'Start Time'}</Text>
       <TextInput
         style={[styles.timeInput, !isTimeValid && styles.inputError]}
         placeholder="(HH:mm)"
@@ -36,7 +38,7 @@ const WorkingHoursFormComponent : React.FC = ({}) => {
       <View
         style={styles.timeView}
       >
-      <Text>{'End Time'}</Text>
+      <Text style={{alignSelf : 'center',paddingTop : 0, paddingRight : 5,}}>{'End Time'}</Text>
       <TextInput
         style={[styles.timeInput, !isTimeValid && styles.inputError]}
         placeholder="(HH:mm)"
@@ -44,6 +46,9 @@ const WorkingHoursFormComponent : React.FC = ({}) => {
         value={time}
       />
       </View>
+      <TouchableOpacity style={styles.buttonContainer} onPress={() => deleteInterval(num)}>
+      <Text style={styles.buttonText}>X</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -77,9 +82,24 @@ export const WorkingHoursForm: React.FC = () => {
         newFormComponents[selectedDay] = [];
       }
       newFormComponents[selectedDay].push(
-        <WorkingHoursFormComponent key={newIntervalKey} />
+        <WorkingHoursFormComponent key={newIntervalKey} num={newIntervalKey} deleteInterval={removeInterval}/>
       );
       updateDepth(newFormComponents[selectedDay].length);
+      return newFormComponents;
+    });
+  };
+  // delete interval
+  const removeInterval = (indexToRemove) => {
+    setFormComponents((prevFormComponents) => {
+      const newFormComponents = { ...prevFormComponents };
+      if (newFormComponents[selectedDay]) {
+        // Remove the item at the specified index
+        newFormComponents[selectedDay] = newFormComponents[selectedDay].filter(
+          (_, index) => index !== indexToRemove
+        );
+        // Update the depth after removing the item
+        updateDepth(newFormComponents[selectedDay].length);
+      }
       return newFormComponents;
     });
   };
@@ -132,16 +152,9 @@ export const WorkingHoursForm: React.FC = () => {
       </View>
       {formComponents[selectedDay] &&
         formComponents[selectedDay].map((component) => component)}
-      <View
-        style={styles.horizontalView}
-      >
       <TouchableOpacity style={styles.addIntervalButton} onPress={addInterval} disabled={depth==4}>
         <Text>{'Add Interval'}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.deleteButton}>
-        <Text>{'Delete Interval'}</Text>
-      </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -310,7 +323,7 @@ const styles = StyleSheet.create({
     backgroundColor : '#495866',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '80%',
+    width: '90%',
     paddingTop : 10,
     paddingBottom : 10,
     marginBottom: 20,
@@ -358,16 +371,24 @@ const styles = StyleSheet.create({
   },
   workingDayView : {
     flexDirection : 'row',
+    justifyContent : 'center',
   },
   horizontalView : {
     justifyContent : 'space-between',
     flexDirection : 'row',
   },
+  timeBorder : {
+    borderColor : 'black',
+    borderRadius : 8,
+    borderWidth : 1,
+    marginVertical : 1,
+  },
   timeView : {
     marginVertical : 2,
-    marginHorizontal : 10,
+    marginHorizontal : 5,
     flexDirection : 'row',
     justifyContent : 'space-between',
+    paddingHorizontal : 1,
   },
   typeButton : {
     backgroundColor : '#574C9EAA',
@@ -409,7 +430,6 @@ const styles = StyleSheet.create({
     alignSelf : 'center',
   },
   timeInput: {
-    width: 100,
     height: 35,
     borderWidth: 1,
     borderColor: 'gray',
@@ -428,5 +448,20 @@ const styles = StyleSheet.create({
   errorLabel : {
     color : 'red',
     marginBottom : 5,
+  },
+  buttonContainer: {
+    backgroundColor: 'red',
+    width : 15,
+    height : 15 ,
+    borderRadius: 50, // Make it a circle
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf : 'center',
+    marginRight : 2,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 8,
+    fontWeight: 'bold',
   },
 });
