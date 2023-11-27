@@ -227,6 +227,16 @@ export const EmployeeForm: React.FC = ({ onSubmit , employee }) => {
   const [emailErrorLabel , setEmailErrorLabel] = useState(null);
   const [phoneError, setPhoneError] = useState(null);
   const [phoneErrorLabel , setPhoneErrorLabel] = useState(null);
+  // begin modification
+  const beginModification = () => {
+    setName(employee.name);
+    setSirname(employee.sirname);
+    setEmail(employee.email);
+    setPhone(employee.phone);
+    setTypeOfEmployee(employee.typeOfEmployee);
+    setWorkingHours(employee.workingHours);
+    beginWorkingHours()
+  }
   // Change to Log In Form
   const toLogIn = () => {
     changeForm();
@@ -333,6 +343,12 @@ export const EmployeeForm: React.FC = ({ onSubmit , employee }) => {
       )
     );
   };
+
+  useEffect(() => {
+    if(!(employee==undefined)){
+
+    }
+  },[])
 
   return (
     <View style={styles.container}>
