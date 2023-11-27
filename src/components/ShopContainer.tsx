@@ -53,15 +53,16 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
   const renderShopEmployees = async () => {
     const shopEmployees = await getEmployees(employee.shop_id);//get employees from db
     var empContainers = []
+    console.log(employee.typeofemployee==1)
     for(emp in shopEmployees){// render employees' containers
-      empContainers.push(<EmployeeContainer key={emp} employee={shopEmployees[emp]} canDelete={(employee.typeofemployee==1)} refresh={reload}/>);
+      empContainers.push(<EmployeeContainer key={emp} employee={shopEmployees[emp]} canDelete={(employee.typeofemployee>1)} refresh={reload}/>);
     }
     await setEmployeeContainers(empContainers);
     setServiceContainers(null);
   }
   // add new employee , store and refresh
-  const addNewEmployee = async (name,sirname,email,phone,typeofemployee,code) => {
-    await addEmployee(name,sirname,email,phone,typeofemployee,code,employee.shop_id)
+  const addNewEmployee = async (name,sirname,email,phone,typeofemployee,code,workingHours) => {
+    await addEmployee(name,sirname,email,phone,typeofemployee,code,employee.shop_id,workingHours)
     setEnableForm((prevState) => !prevState)
     renderShopEmployees();
   }

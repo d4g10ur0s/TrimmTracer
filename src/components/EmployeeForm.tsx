@@ -1,33 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text,Picker, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 
-const WorkingHoursFormComponent : React.FC = ({num , deleteInterval}) => {
-  // handle start time
-  const [startTime, setStartTime] = useState('');
-  const [isStartTimeValid, setIsStartTimeValid] = useState(true);
-  const handleStartTimeChange = (text) => {
-    // Regular expression to validate the time in HH:mm format
-    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
-    if (timeRegex.test(text)) {
-      setIsStartTimeValid(true);
-    } else {
-      setIsStartTimeValid(false);
-    }
-    setStartTime(text);
-  };
-  // handle end time
-  const [endTime, setEndTime] = useState('');
-  const [isEndTimeValid, setIsEndTimeValid] = useState(true);
-  const handleEndTimeChange = (text) => {
-    // Regular expression to validate the time in HH:mm format
-    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
-    if (timeRegex.test(text)) {
-      setIsEndTimeValid(true);
-    } else {
-      setIsEndTimeValid(false);
-    }
-    setEndTime(text);
-  };
+const WorkingHoursFormComponent : React.FC = ({ deleteInterval , startTime , endTime}) => {
+
   // content
   return (
     <View
@@ -37,39 +12,37 @@ const WorkingHoursFormComponent : React.FC = ({num , deleteInterval}) => {
         style={styles.timeView}
       >
       <Text style={{alignSelf : 'center',paddingTop : 0, paddingRight : 5,}}>{'Start Time'}</Text>
-      <TextInput
-        style={[styles.timeInput, !isStartTimeValid && styles.inputError]}
-        placeholder="(HH:mm)"
-        onChangeText={handleStartTimeChange}
-        value={startTime}
-      />
+      <Text
+        style={{alignSelf : 'center',paddingTop : 0, paddingLeft : 5,}}
+      >
+        {startTime}
+      </Text>
       </View>
       <View
         style={styles.timeView}
       >
       <Text style={{alignSelf : 'center',paddingTop : 0, paddingRight : 5,}}>{'End Time'}</Text>
-      <TextInput
-        style={[styles.timeInput, !isEndTimeValid && styles.inputError]}
-        placeholder="(HH:mm)"
-        onChangeText={handleEndTimeChange}
-        value={endTime}
-      />
+      <Text
+        style={{alignSelf : 'center',paddingTop : 0, paddingLeft : 5,}}
+      >
+        {endTime}
+      </Text>
       </View>
-      <TouchableOpacity style={styles.buttonContainer} onPress={() => deleteInterval(num)}>
+      <TouchableOpacity style={styles.buttonContainer} onPress={() => deleteInterval()}>
       <Text style={styles.buttonText}>X</Text>
       </TouchableOpacity>
     </View>
   );
 }
-export const WorkingHoursForm: React.FC = () => {
+export const WorkingHoursForm: React.FC = ( {addWorkingHours , removeWorkingHours} ) => {
   const [dayNum , setDayNum]=useState({
     'Mon' : 0,
-    'Tue' : 1,
-    'Wed' : 2,
-    'Thu' : 3,
-    'Fri' : 4,
-    'Sat' : 5,
-    'Sun' : 6,
+    'Tue' : 4,
+    'Wed' : 8,
+    'Thu' : 12,
+    'Fri' : 16,
+    'Sat' : 20,
+    'Sun' : 24,
   })
   // about working hours
   const [formComponents , setFormComponents] = useState({});
@@ -79,7 +52,7 @@ export const WorkingHoursForm: React.FC = () => {
   const updateDepth = (newDepth) => {setDepth(newDepth)}
   useEffect(()=>{console.log(depth)},[depth])
   // when selected day is changed , set a valid depth
-  useEffect(()=>{try{updateDepth(formComponents[selectedDay].length)}catch{updateDepth(0)}},[selectedDay])
+  useEffect(()=>{try{updateDepth(formComponents[selectedDay].length)}catch{updateDepth(1)}},[selectedDay])
   // add new working time interval
   const addInterval = () => {
     setFormComponents((prevFormComponents) => {
@@ -89,11 +62,15 @@ export const WorkingHoursForm: React.FC = () => {
         newFormComponents[selectedDay] = [];
       }
       newFormComponents[selectedDay].push(
-        <WorkingHoursFormComponent key={newIntervalKey+dayNum[selectedDay]} num={newIntervalKey} deleteInterval={removeInterval}/>
+        <WorkingHoursFormComponent key={newIntervalKey+dayNum[selectedDay]+1} deleteInterval={removeInterval} startTime={startTime} endTime={endTime}/>
       );
       updateDepth(newFormComponents[selectedDay].length);
       return newFormComponents;
     });
+    // reset time input
+    addWorkingHours(selectedDay , startTime , endTime)
+    handleStartTimeChange('')
+    handleEndTimeChange('')
   };
   // delete interval
   const removeInterval = () => {
@@ -109,22 +86,51 @@ export const WorkingHoursForm: React.FC = () => {
       }
       return newFormComponents;
     });
+    removeWorkingHours(selectedDay , startTime , endTime)
+  };
+  // handle start time
+  const [startTime, setStartTime] = useState('10:00');
+  const [isStartTimeValid, setIsStartTimeValid] = useState(false);
+  const handleStartTimeChange = (text) => {
+    // Regular expression to validate the time in HH:mm format
+    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+    if (timeRegex.test(text)) {
+      setIsStartTimeValid(true);
+    } else {
+      setIsStartTimeValid(false);
+    }
+    setStartTime(text);
+  };
+  // handle end time
+  const [endTime, setEndTime] = useState('12:00');
+  const [isEndTimeValid, setIsEndTimeValid] = useState(false);
+  const handleEndTimeChange = (text) => {
+    // Regular expression to validate the time in HH:mm format
+    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+    if (timeRegex.test(text)) {
+      setIsEndTimeValid(true);
+    } else {
+      setIsEndTimeValid(false);
+    }
+    setEndTime(text);
   };
 
   const begin = async (a) =>{await setFormComponents(a)}
   useEffect(()=>{
     begin({
-      'Mon' : [<WorkingHoursFormComponent key={1} num={1} deleteInterval={removeInterval}/>],
-      'Tue' : [<WorkingHoursFormComponent key={5} num={1} deleteInterval={removeInterval}/>],
-      'Wed' : [<WorkingHoursFormComponent key={9} num={1} deleteInterval={removeInterval}/>],
-      'Thu' : [<WorkingHoursFormComponent key={13} num={1} deleteInterval={removeInterval}/>],
-      'Fri' : [<WorkingHoursFormComponent key={17} num={1} deleteInterval={removeInterval}/>],
-      'Sat' : [<WorkingHoursFormComponent key={21} num={1} deleteInterval={removeInterval}/>],
-      'Sun' : [<WorkingHoursFormComponent key={25} num={1} deleteInterval={removeInterval}/>],
+      'Mon' : [],
+      'Tue' : [],
+      'Wed' : [],
+      'Thu' : [],
+      'Fri' : [],
+      'Sat' : [],
+      'Sun' : [],
     })
   },[])
+
   return(
     <View>
+    <Text style={[styles.typeOfEmployeeHeader,{alignSelf : 'center',marginVertical : 5,}]}>{'Working Hours'}</Text>
       <View style={styles.workingDayView}>
         <TouchableOpacity
           style={(selectedDay=='Mon') ? styles.workingDayButtonDisabled : styles.workingDayButton}
@@ -171,7 +177,35 @@ export const WorkingHoursForm: React.FC = () => {
       </View>
       {formComponents[selectedDay] &&
         formComponents[selectedDay].map((component) => component)}
-      <TouchableOpacity style={styles.addIntervalButton} onPress={addInterval} disabled={depth==4}>
+        <View
+          style={[styles.horizontalView, {marginVertical : 5,}]}
+        >
+          <View
+            style={styles.timeView}
+          >
+          <Text style={{alignSelf : 'center',paddingTop : 0, paddingRight : 4,}}>{'Start Time'}</Text>
+          <TextInput
+            style={styles.timeInput}
+            placeholder="(HH:mm)"
+            onChangeText={handleStartTimeChange}
+            value={startTime}
+          />
+          </View>
+          <View
+            style={styles.timeView}
+          >
+          <Text style={{alignSelf : 'center',paddingTop : 0, paddingRight : 4,}}>{'End Time'}</Text>
+          <TextInput
+            style={styles.timeInput}
+            placeholder="(HH:mm)"
+            onChangeText={handleEndTimeChange}
+            value={endTime}
+          />
+          </View>
+        </View>
+      <TouchableOpacity style={styles.addIntervalButton} onPress={addInterval}
+                        disabled={depth==4 || (!isStartTimeValid && !isEndTimeValid)}
+      >
         <Text>{'Add Interval'}</Text>
       </TouchableOpacity>
     </View>
@@ -223,10 +257,10 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(emailRegex.test(email)){
       setEmailError(false)
-      setEmailErrorLabel(<Text style={styles.errorLabel}>{'Incorrect e-mail address format .'}</Text>)
-    }else{
-      setEmailError(true)
       setEmailErrorLabel(null)
+    }else{
+      setEmailErrorLabel(<Text style={styles.errorLabel}>{'Incorrect e-mail address format .'}</Text>)
+      setEmailError(true)
     }
   },[email]);
   // check phone number
@@ -234,10 +268,10 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
     const greekPhoneRegex = /^(\+30|0030)?\s*?(69\d{8}|2\d{9})$/;
     if(greekPhoneRegex.test(phone)){
       setPhoneError(false)
-      setPhoneErrorLabel(<Text style={styles.errorLabel}>{'Phone number must be 10 digits long .'}</Text>)
-    }else{
-      setPhoneError(true)
       setPhoneErrorLabel(null)
+    }else{
+      setPhoneErrorLabel(<Text style={styles.errorLabel}>{'Phone number must be 10 digits long .'}</Text>)
+      setPhoneError(true)
     }
   },[phone])
   // Register in Application
@@ -249,7 +283,7 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
       const randomIndex = Math.floor(Math.random() * characters.length);
       code += characters.charAt(randomIndex);
     }
-    onSubmit(name,sirname,email,phone,typeOfEmployee,code);
+    onSubmit(name,sirname,email,phone,typeOfEmployee,code,workingHours);
   };
   // employee types
   const [selected , setSelected] = useState([false, false, true]);
@@ -265,6 +299,40 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
     setSelected([false ,false ,true]);
     setTypeOfEmployee('3');
   }
+
+  const [dayNames,setDayNames] = useState({
+    Mon : 'Monday',
+    Tue : 'Tuesday',
+    Wed : 'Wednesday',
+    Thu : 'Thursday',
+    Fri : 'Friday',
+    Sat : 'Saturday',
+    Sun : 'Sunday',
+  })
+  // the working hours
+  const [workingHours , setWorkingHours] = useState([]);
+  // add working hours
+  const addWorkingHours = (selectedDay , startTime , endTime) =>{
+    setWorkingHours((prevWorkingHours) => ([
+      ...prevWorkingHours,
+      {
+        dayname: dayNames[selectedDay],
+        start_time : startTime,
+        end_time : endTime,
+      } ,
+    ]));
+  }
+  // remove working hours
+  const removeWorkingHours = (selectedDay, startTime, endTime) => {
+  setWorkingHours((prevWorkingHours) =>
+    prevWorkingHours.filter(
+      (workingHour) =>
+        workingHour.dayname !== daynameToRemove ||
+        workingHour.start_time !== start_timeToRemove ||
+        workingHour.end_time !== end_timeToRemove
+      )
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -301,7 +369,7 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
         onChangeText={setPhone}
       />
       {phoneErrorLabel}
-      <WorkingHoursForm />
+      <WorkingHoursForm addWorkingHours={addWorkingHours} removeWorkingHours={removeWorkingHours}/>
       <Text style={styles.typeOfEmployeeHeader}>{"Choose type of Employee"}</Text>
       <View
         style={styles.typeOfUserView}

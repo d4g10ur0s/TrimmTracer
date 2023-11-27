@@ -77,7 +77,7 @@ export const assignService = async (shop_id , assign_name,unassign_name ,email) 
   }
 }
 // add employee
-export const addEmployee = async (name, sirname, email, phone, typeofemployee,password,shop_id): Promise<any> => {
+export const addEmployee = async (name, sirname, email, phone, typeofemployee,password,shop_id,workingHours): Promise<any> => {
   try {
     const response = await fetch(`${BASE_URL}/api/auth/registerEmployee`, {
       method: 'POST',
@@ -92,6 +92,7 @@ export const addEmployee = async (name, sirname, email, phone, typeofemployee,pa
         typeofemployee,
         password,
         shop_id,
+        workingHours,
       }),
     });
 
