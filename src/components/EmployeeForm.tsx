@@ -256,22 +256,22 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
   useEffect(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(emailRegex.test(email)){
-      setEmailError(false)
       setEmailErrorLabel(null)
+      setEmailError(true)
     }else{
       setEmailErrorLabel(<Text style={styles.errorLabel}>{'Incorrect e-mail address format .'}</Text>)
-      setEmailError(true)
+      setEmailError(false)
     }
   },[email]);
   // check phone number
   useEffect(() => {
     const greekPhoneRegex = /^(\+30|0030)?\s*?(69\d{8}|2\d{9})$/;
     if(greekPhoneRegex.test(phone)){
-      setPhoneError(false)
       setPhoneErrorLabel(null)
-    }else{
-      setPhoneErrorLabel(<Text style={styles.errorLabel}>{'Phone number must be 10 digits long .'}</Text>)
       setPhoneError(true)
+    }else{
+      setPhoneError(false)
+      setPhoneErrorLabel(<Text style={styles.errorLabel}>{'Phone number must be 10 digits long .'}</Text>)
     }
   },[phone])
   // Register in Application
@@ -345,28 +345,28 @@ export const EmployeeForm: React.FC = ({ onSubmit }) => {
         style={styles.input}
         placeholder="Name"
         value={name}
-        onChangeText={setName}
+        onChangeText={(tname) => setName(tname.trim())}
       />
       {nameErrorLabel}
       <TextInput
         style={styles.input}
         placeholder="Sirname"
         value={sirname}
-        onChangeText={setSirname}
+        onChangeText={(tsirname) => setSirname(tsirname.trim())}
       />
       {sirnameErrorLabel}
       <TextInput
         style={styles.input}
         placeholder="E-Mail"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={(temail) => setEmail(temail.trim())}
       />
       {emailErrorLabel}
       <TextInput
         style={styles.input}
         placeholder="Phone Number"
         value={phone}
-        onChangeText={setPhone}
+        onChangeText={(tphone)=>setPhone(tphone.trim())}
       />
       {phoneErrorLabel}
       <WorkingHoursForm addWorkingHours={addWorkingHours} removeWorkingHours={removeWorkingHours}/>
