@@ -127,3 +127,21 @@ exports.getAppointmentTimesForDate = async (req, res) => {
   const appointments = shopAppointments.rows
   res.json({appointments});
 };
+// check for appointments
+exports.checkForAppointments = async (req, res) => {
+  const {shop_id,email} = req.body;
+  console.log(req.body);
+  try {
+    for(i in appointments){
+      var tempDuration=formatDuration(appointments[i].dur);
+      const numberOfAppointments = client.execute(
+        'select COUNT(*) from appointment where shop_id=? and email=? allow filtering;',,
+        [shop_id,email], { prepare: true }
+      );
+    }// store every service for appointment
+    res.json({ (numberOfAppointments.rows[0].count > 0) });
+  } catch (err) {
+    console.error('Error during storing:', err);
+    res.status(500).json({ error: 'Error during storing' });
+  }
+};

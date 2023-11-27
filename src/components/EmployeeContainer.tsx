@@ -14,6 +14,7 @@ import {
   View,
   Image,
   Modal,
+  Alert,
 } from 'react-native';
 
 import {
@@ -23,10 +24,12 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
+// Database Connection
 import { deleteEmployee,modifyEmployee,getEmployeeServices,assignService } from '../utils/EmployeeHandling';
-import {EmployeeModificationForm} from '../components/RegistrationForm'
 import { getServices,deleteService,getServiceEmployees } from '../utils/ServiceHandling';
+import { checkForAppointments } from '../utils/AppointmentHandling';
+// Components
+import {EmployeeModificationForm} from '../components/RegistrationForm'
 import ServiceSelection from '../components/ServiceSelection';
 
 
@@ -34,7 +37,7 @@ interface EmployeeContainerProps {
   employee : {};
 }
 
-const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete,refresh}) => {
+const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete,refresh,userEmail}) => {
   const [employeeInfo, setEmployeeInfo] = useState(employee);
   const [m , setM] = useState(null);
 
@@ -72,8 +75,14 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
   }
   // delete employee
   const employeeDeletion = async () => {
-    deleteEmployee(employee.email,employee.shop_id);
-    await refresh();
+    if(employee.email==userEmail){// employee is self , cannot be deleted
+      Alert.alert('You cannot delete yourself !');
+    }else if(checkForAppointments(employee.shop_id,employee.email)){
+      Alert.alert('Employee has Appointments');
+    }else{// employee can be deleted
+      deleteEmployee(employee.email,employee.shop_id);
+      await refresh();
+    }
   }
   // assign-unassign services
   const toAssignServices = async () => {

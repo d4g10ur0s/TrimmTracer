@@ -55,7 +55,12 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
     var empContainers = []
     console.log(employee.typeofemployee==1)
     for(emp in shopEmployees){// render employees' containers
-      empContainers.push(<EmployeeContainer key={emp} employee={shopEmployees[emp]} canDelete={(employee.typeofemployee>1)} refresh={reload}/>);
+      empContainers.push(<EmployeeContainer
+                            key={emp}
+                            employee={shopEmployees[emp]} 
+                            canDelete={(employee.typeofemployee>1)} refresh={reload}
+                            userEmail={employee.email}
+                          />);
     }
     await setEmployeeContainers(empContainers);
     setServiceContainers(null);
