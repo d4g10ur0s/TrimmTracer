@@ -164,11 +164,9 @@ export const checkForAppointments = async (shop_id,email) => {
         email,
       }),
     });
-
     if (!response.ok) {
       throw new Error('Invalid credentials');
     }
-
     const data = await response.json();
     console.log(data)
     return data;

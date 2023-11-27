@@ -31,6 +31,7 @@ import { checkForAppointments } from '../utils/AppointmentHandling';
 // Components
 import {EmployeeModificationForm} from '../components/RegistrationForm'
 import ServiceSelection from '../components/ServiceSelection';
+import {EmployeeForm} from '../components/EmployeeForm';
 
 
 interface EmployeeContainerProps {
@@ -64,12 +65,12 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
   // employee modification
   const alterM = async () => {
     if(m==null){
-      setM(<EmployeeModificationForm employee={employee} onSubmit={employeeModification}/>)
+      setM(<EmployeeForm onSubmit={employeeModification}/>)
     }else{setM(null)}
   };
   // modify employee
-  const employeeModification = async (name,sirname,email,phone,typeOfEmployee) => {
-    modifyEmployee(employee.email,name,sirname,email,phone,typeOfEmployee);
+  const employeeModification = async (name,sirname,email,phone,typeOfEmployee,workingHours) => {
+    modifyEmployee(name,sirname,email,phone,typeOfEmployee,workingHours);
     setM(null);
     await refresh();
   }
@@ -184,8 +185,9 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
             </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.controlButtons}
+          style={(!userEmail==employee.email && !canDelete) ? styles.controlButtonsDisabled : styles.controlButtons}
           onPress={toAssignServices}
+          disabled={(!userEmail==employee.email && !canDelete)}
         >
           <Text>
             {"Assign Service"}
@@ -259,6 +261,13 @@ const styles = StyleSheet.create({
   },
   controlButtons : {
     backgroundColor : '#574C9EAA',
+    borderRadius : 8,
+    marginVertical : 5,
+    marginHorizontal : 10,
+    padding : 5,
+  },
+  controlButtonsDisabled : {
+    backgroundColor : '#574C9E77',
     borderRadius : 8,
     marginVertical : 5,
     marginHorizontal : 10,

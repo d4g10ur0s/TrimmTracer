@@ -212,7 +212,7 @@ export const WorkingHoursForm: React.FC = ( {addWorkingHours , removeWorkingHour
   );
 }
 // form for employee registration
-export const EmployeeForm: React.FC = ({ onSubmit }) => {
+export const EmployeeForm: React.FC = ({ onSubmit , employee }) => {
   const [name, setName] = useState<string>('Nikos');
   const [sirname, setSirname] = useState<string>('Kalantas');
   const [email, setEmail] = useState<string>('nikal@hotmail.com');

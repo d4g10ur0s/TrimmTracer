@@ -135,11 +135,12 @@ exports.checkForAppointments = async (req, res) => {
     for(i in appointments){
       var tempDuration=formatDuration(appointments[i].dur);
       const numberOfAppointments = client.execute(
-        'select COUNT(*) from appointment where shop_id=? and email=? allow filtering;',,
+        'select COUNT(*) from appointment where shop_id=? and email=? allow filtering;',
         [shop_id,email], { prepare: true }
       );
     }// store every service for appointment
-    res.json({ (numberOfAppointments.rows[0].count > 0) });
+    var hasAppointments = (numberOfAppointments.rows[0].count > 0);
+    res.json({ hasAppointments });
   } catch (err) {
     console.error('Error during storing:', err);
     res.status(500).json({ error: 'Error during storing' });
