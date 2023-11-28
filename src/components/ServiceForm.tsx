@@ -10,8 +10,8 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
   const [hours, setHours] = useState<string>('0');
   const [minutes, setMinutes] = useState<string>('45');
   const [seconds, setSeconds] = useState<string>('0');
-  const [clientCost, setClientCost] = useState<string>('15 eur');
-  const [employeeCost, setEmployeeCost] = useState<string>('5 eur');
+  const [clientCost, setClientCost] = useState<string>('15');
+  const [employeeCost, setEmployeeCost] = useState<string>('5');
   const [description, setDescription] = useState<string>('A new simple Service . \nCost is logically calculated.\n');
   const [toSubmit, setToSubmit ] = useState(false);
   // store service
@@ -31,14 +31,29 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
       >
         Add Service
       </Text>
-      <TextInput
-        style={styles.nameInput}
-        placeholder={'Service Name'}
-        value={name}
-        onChangeText={setName}
-      />
-      <View style={styles.durationInput}>
-        <Text style={styles.label}>Duration</Text>
+      <View
+        style={styles.formContentsView}
+      >
+        <Text
+          style={styles.label}
+        >
+          {'Service Name'}
+        </Text>
+        <TextInput
+          style={styles.nameInput}
+          placeholder={'Service Name'}
+          value={name}
+          onChangeText={setName}
+        />
+      </View>
+      <View
+        style={styles.formContentsView}
+      >
+        <Text
+          style={styles.label}
+        >
+          {'Service Duration'}
+        </Text>
         <TextInput
           style={styles.timeInput}
           keyboardType="numeric"
@@ -61,22 +76,26 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
         />
         <Text style={styles.timeUnit}>s</Text>
       </View>
-      <View style={styles.durationInput}>
+      <View
+        style={styles.formContentsView}
+      >
         <Text style={styles.label}>Cost</Text>
+        <Text style={styles.label}>Client</Text>
         <TextInput
           style={styles.costInput}
           keyboardType="numeric"
           value={clientCost}
           onChangeText={setClientCost}
         />
-        <Text style={styles.timeUnit}>Client</Text>
+        <Text style={styles.currencyText}>eur</Text>
+        <Text style={styles.label}>Employee</Text>
         <TextInput
           style={styles.costInput}
           keyboardType="numeric"
           value={employeeCost}
           onChangeText={setEmployeeCost}
         />
-        <Text style={styles.timeUnit}>Employee</Text>
+        <Text style={styles.currencyText}>eur</Text>
       </View>
       <Text style={styles.label}>Description</Text>
       <TextInput
@@ -179,6 +198,7 @@ export const ServiceModificationForm: React.FC = ({ onSubmit, service }) => {
           value={clientCost}
           onChangeText={setClientCost}
         />
+        <Text style={styles.timeUnit}>eur</Text>
         <Text style={styles.timeUnit}>Client</Text>
         <TextInput
           style={styles.costInput}
@@ -186,6 +206,7 @@ export const ServiceModificationForm: React.FC = ({ onSubmit, service }) => {
           value={employeeCost}
           onChangeText={setEmployeeCost}
         />
+        <Text style={styles.timeUnit}>eur</Text>
         <Text style={styles.timeUnit}>Employee</Text>
       </View>
       <Text style={styles.label}>Description</Text>
@@ -209,93 +230,76 @@ export const ServiceModificationForm: React.FC = ({ onSubmit, service }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor : "#6465A1AA",
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '90%',
-    paddingTop : 10,
-    paddingBottom : 10,
-    marginTop : 10,
-    marginBottom: 20,
+    backgroundColor : '#495866',
+    width : '90%',
+    alignItems : 'center',
     borderRadius : 8,
   },
   formHeader : {
+    alignSelf : 'center',
     fontSize : 20,
     fontWeight : 'bold',
-    marginBottom:15,
-    marginTop : 10,
+    color : 'white',
+    marginVertical : 10,
   },
-  nameLabel : {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
+  formContentsView : {
+    flexDirection : "row",
+    justifyContent : 'space-between',
+    alignItems : 'center',
+    marginVertical : 5,
+    marginHorizontal : 15,
   },
   nameInput : {
-    width: '80%',
-    height: 40,
-    borderColor: 'gray',
+    flex : 1,
+    paddingLeft : 5,
+    paddingRight : -5,
+    paddingVertical : -5,
     borderRadius : 8,
-    borderWidth: 2,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    borderWidth : 1,
+    borderColor : 'gray',
+    marginHorizontal : 15,
+  },
+  timeInput : {
+    flex : 1,
+    paddingLeft : 5,
+    paddingRight : 0,
+    paddingVertical : -5,
+    borderRadius : 8,
+    borderWidth : 1,
+    borderColor : 'gray',
+    marginHorizontal : 8,
+  },
+  costInput : {
+    flex : 1,
+    paddingLeft : 5,
+    paddingVertical : -5,
+    borderRadius : 8,
+    borderWidth : 1,
+    borderColor : 'gray',
+    marginHorizontal : 5,
   },
   label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
+    marginHorizontal : 5,
+    fontWeight : 'bold',
+    color : 'white',
   },
-  durationInput: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  currencyText : {
+    marginRight : 10,
+    fontWeight : 'bold',
+    color : 'white',
+  },
+  descriptionInput : {
+    height : 75,
+    borderWidth : 1,
+    borderColor : 'gray',
+    borderRadius : 8,
     marginVertical : 5,
-  },
-  timeInput: {
-    width : '12%',
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-    paddingHorizontal: 5,
-    paddingVertical: 2,
-    marginHorizontal : 5,
-  },
-  costInput: {
-    width : '18%',
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-    paddingHorizontal: 5,
-    paddingVertical: 2,
-    marginHorizontal : 5,
-  },
-  timeUnit: {
-    fontSize: 16,
+    paddingHorizontal : 15,
   },
   submitButton : {
     backgroundColor : "#349CCFFF",
     borderRadius : 8,
     padding : 5,
-    marginVertical : 5,
-  },
-  descriptionInput : {
-    width : '80%',
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    textAlignVertical: 'top',
-    height: 100,
-  },
-  modificationContainer : {
-    backgroundColor : "#6465A1AA",
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '90%',
-    paddingTop : 10,
-    paddingBottom : 10,
-    marginTop : 10,
-    marginBottom: 20,
-    borderRadius : 8,
-    alignSelf : 'center',
+    marginVertical : 10,
   },
 });
