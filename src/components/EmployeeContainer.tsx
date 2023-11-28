@@ -65,7 +65,7 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
   // employee modification
   const alterM = async () => {
     if(m==null){
-      setM(<EmployeeForm onSubmit={employeeModification}/>)
+      setM(<EmployeeForm onSubmit={employeeModification} employee={employee}/>)
     }else{setM(null)}
   };
   // modify employee

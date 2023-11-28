@@ -34,7 +34,7 @@ const WorkingHoursFormComponent : React.FC = ({ deleteInterval , startTime , end
     </View>
   );
 }
-export const WorkingHoursForm: React.FC = ( {addWorkingHours , removeWorkingHours} ) => {
+export const WorkingHoursForm: React.FC = ( {addWorkingHours , removeWorkingHours , workingHours} ) => {
   const [dayNum , setDayNum]=useState({
     'Mon' : 0,
     'Tue' : 4,
@@ -115,9 +115,18 @@ export const WorkingHoursForm: React.FC = ( {addWorkingHours , removeWorkingHour
     setEndTime(text);
   };
 
+  const [dayNames,setDayNames] = useState({
+    'Monday' : 'Mon',
+    'Tuesday' : 'Tue',
+    'Wednesday' : 'Wed',
+    'Thursday' : 'Thu',
+    'Friday' : 'Fri',
+    'Saturday' : 'Sat',
+    'Sunday' : 'Sun',
+  })
   const begin = async (a) =>{await setFormComponents(a)}
-  useEffect(()=>{
-    begin({
+  const renderWorkingHours = () => {
+    var a = {
       'Mon' : [],
       'Tue' : [],
       'Wed' : [],
@@ -125,7 +134,46 @@ export const WorkingHoursForm: React.FC = ( {addWorkingHours , removeWorkingHour
       'Fri' : [],
       'Sat' : [],
       'Sun' : [],
-    })
+    };
+    var b = {
+      'Mon' : 0,
+      'Tue' : 0,
+      'Wed' : 0,
+      'Thu' : 0,
+      'Fri' : 0,
+      'Sat' : 0,
+      'Sun' : 0,
+    };
+    console.log(a)
+    for(i in workingHours){
+      a[dayNames[workingHours[i].dayname]].push(
+        <WorkingHoursFormComponent
+          key={b[dayNames[workingHours[i].dayname]]+dayNum[dayNames[workingHours[i].dayname]]+1}
+          deleteInterval={removeInterval}
+          startTime={workingHours[i].start_time}
+          endTime={workingHours[i].end_time}
+        />
+      )
+      b[dayNames[workingHours[i].dayname]]+=1;
+    }
+    setFormComponents(a);
+    // Update the depth after removing the item
+    updateDepth(a[selectedDay].length);
+  }
+  useEffect(()=>{
+    if(workingHours==undefined || workingHours==null){
+      begin({
+        'Mon' : [],
+        'Tue' : [],
+        'Wed' : [],
+        'Thu' : [],
+        'Fri' : [],
+        'Sat' : [],
+        'Sun' : [],
+      })
+    }else{
+      renderWorkingHours()
+    }//you have to do a match
   },[])
 
   return(
@@ -233,13 +281,9 @@ export const EmployeeForm: React.FC = ({ onSubmit , employee }) => {
     setSirname(employee.sirname);
     setEmail(employee.email);
     setPhone(employee.phone);
-    setTypeOfEmployee(employee.typeOfEmployee);
+    if(employee.typeofemployee==1){button1()}
+    else if(employee.typeofemployee==2){button2()}
     setWorkingHours(employee.workingHours);
-    beginWorkingHours()
-  }
-  // Change to Log In Form
-  const toLogIn = () => {
-    changeForm();
   }
   // name and sirname must be over 2 characters long
   useEffect(() => {
@@ -346,7 +390,7 @@ export const EmployeeForm: React.FC = ({ onSubmit , employee }) => {
 
   useEffect(() => {
     if(!(employee==undefined)){
-
+      beginModification();
     }
   },[])
 
@@ -355,7 +399,7 @@ export const EmployeeForm: React.FC = ({ onSubmit , employee }) => {
       <Text
         style={styles.formHeader}
       >
-        {"Register"}
+        { (employee==undefined) ? ("Register"):("Modify " + employee.name)}
       </Text>
       <TextInput
         style={styles.input}
@@ -385,7 +429,11 @@ export const EmployeeForm: React.FC = ({ onSubmit , employee }) => {
         onChangeText={(tphone)=>setPhone(tphone.trim())}
       />
       {phoneErrorLabel}
-      <WorkingHoursForm addWorkingHours={addWorkingHours} removeWorkingHours={removeWorkingHours}/>
+      {
+        (employee==undefined) ?
+        (<WorkingHoursForm addWorkingHours={addWorkingHours} removeWorkingHours={removeWorkingHours}/>) :
+        (<WorkingHoursForm addWorkingHours={addWorkingHours} removeWorkingHours={removeWorkingHours} workingHours={employee.workinghours}/>)
+      }
       <Text style={styles.typeOfEmployeeHeader}>{"Choose type of Employee"}</Text>
       <View
         style={styles.typeOfUserView}
