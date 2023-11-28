@@ -167,8 +167,8 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={(canDelete) ? styles.disabledDeleteButton : styles.deleteButton}
-          disabled={canDelete}
+          style={(!canDelete) ? styles.disabledDeleteButton : styles.deleteButton}
+          disabled={!canDelete}
           onPress={serviceDeletion}
         >
           <Text>

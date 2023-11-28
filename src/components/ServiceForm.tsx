@@ -14,12 +14,29 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
   const [employeeCost, setEmployeeCost] = useState<string>('5');
   const [description, setDescription] = useState<string>('A new simple Service . \nCost is logically calculated.\n');
   const [toSubmit, setToSubmit ] = useState(false);
+  // handle errors
+  // name error
+  const [nameError,setNameError] = useState(null);
+  useEffect(()=>{
+    if (typeof name == 'string' && name.length > 3 && /[a-zA-Z ]/.test(name)){setNameError(null)}
+    else{setNameError(<Text style={styles.errorLabel}>{'Name must be over 3 characters long .'}</Text>)}
+  },[name])
+  // cost error
+  const [costError,setCostError] = useState(null);
+  useEffect(()=>{
+    if (/^\d+(\.\d{0,1,2})?$/.test(clientCost) && parseFloat(clientCost)>0
+    && /^\d+(\.\d{0,1,2})?$/.test(employeeCost) && parseFloat(employeeCost)>0){setCostError(null)}
+    else{setCostError(<Text style={styles.errorLabel}>{'Cost must be a valid currency number .'}</Text>)}
+  },[clientCost , employeeCost])
+  // time error
+  const [timeError,setTimeError] = useState(null);
+  useEffect(()=>{
+    if (/^\d+$/.test(hours) && /^\d+$/.test(minutes) && parseInt(minutes)>0 && /^\d+$/.test(seconds)){setTimeError(null)}
+    else{setTimeError(<Text style={styles.errorLabel}>{'Time must be a valid time unit numbers .'}</Text>)}
+  },[seconds ,minutes , hours])
   // store service
   const handleService = async () => {// den exw valei to alert
-    if (typeof name == 'string' && name.length > 3 && /[a-zA-Z ]/.test(name) &&// name constraint
-    /^\d+$/.test(hours) && /^\d+$/.test(minutes) && parseInt(minutes)>0 && /^\d+$/.test(seconds) &&// duration constraint
-    /^\d+(\.\d{0,1,2})?$/.test(clientCost) && parseFloat(clientCost)>0
-    && /^\d+(\.\d{0,1,2})?$/.test(employeeCost) && parseFloat(employeeCost)>0 ){// cost constraints
+    if (nameError==null && costError==null && timeError==null){// cost constraints
       onSubmit(name ,hours ,minutes ,seconds,employeeCost,clientCost,description);
     }
   };
@@ -46,6 +63,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
           onChangeText={setName}
         />
       </View>
+      {nameError}
       <View
         style={styles.formContentsView}
       >
@@ -76,6 +94,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
         />
         <Text style={styles.timeUnit}>s</Text>
       </View>
+      {timeError}
       <View
         style={styles.formContentsView}
       >
@@ -97,6 +116,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
         />
         <Text style={styles.currencyText}>eur</Text>
       </View>
+      {costError}
       <Text style={styles.label}>Description</Text>
       <TextInput
         style={styles.descriptionInput}
@@ -276,7 +296,7 @@ const styles = StyleSheet.create({
     borderRadius : 8,
     borderWidth : 1,
     borderColor : 'gray',
-    marginHorizontal : 5,
+    marginHorizontal : 0,
   },
   label: {
     marginHorizontal : 5,
@@ -284,7 +304,7 @@ const styles = StyleSheet.create({
     color : 'white',
   },
   currencyText : {
-    marginRight : 10,
+    marginHorizontal : 5,
     fontWeight : 'bold',
     color : 'white',
   },
@@ -301,5 +321,9 @@ const styles = StyleSheet.create({
     borderRadius : 8,
     padding : 5,
     marginVertical : 10,
+  },
+  errorLabel : {
+    color : 'red',
+    marginBottom : 1,
   },
 });

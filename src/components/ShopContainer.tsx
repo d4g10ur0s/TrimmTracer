@@ -57,7 +57,7 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
     for(emp in shopEmployees){// render employees' containers
       empContainers.push(<EmployeeContainer
                             key={emp}
-                            employee={shopEmployees[emp]} 
+                            employee={shopEmployees[emp]}
                             canDelete={(employee.typeofemployee>1)} refresh={reload}
                             userEmail={employee.email}
                           />);
@@ -85,8 +85,12 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
   // add new service , store and refresh
   const addNewService = async (name ,hours ,minutes ,seconds,employeeCost,clientCost,description) => {
     const dur = hours+'h'+minutes+'m'+seconds+'s';
-    await addService(employee.shop_id , employee.email ,name , dur , clientCost , employeeCost ,description )
-    setEnableForm((prevState) => !prevState)
+    try {
+      await addService(employee.shop_id , employee.email ,name , dur , clientCost , employeeCost ,description )
+      setEnableForm((prevState) => !prevState)
+    } catch (error) {
+      Alert.alert('Service Storing Failed', error + ' , please try again.');
+    }
     renderShopServices();
   }
 
