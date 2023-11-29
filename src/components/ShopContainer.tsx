@@ -5,6 +5,7 @@ import EmployeeContainer from '../components/EmployeeContainer';
 import { getEmployees,addEmployee } from '../utils/EmployeeHandling';
 import { EmployeeForm } from '../components/EmployeeForm';
 import { getServices,addService,deleteService } from '../utils/ServiceHandling';
+import { checkForAppointmentsService } from '../utils/AppointmentHandling'
 import ServiceContainer from '../components/ServiceContainer';
 import { ServiceForm } from '../components/ServiceForm';
 
@@ -99,8 +100,9 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
     renderShopServices();
   }
   // delete a service
-  const deleteAService = (serviceName) => {
-    if(checkForAppointmentsService(employee.shop_id,employee.email,serviceName)){
+  const deleteAService = async (serviceName) => {
+    const a = await checkForAppointmentsService(employee.shop_id,employee.email,serviceName);
+    if(a.hasAppointments){
       Alert.alert('Service has Appointments');
     }else{// employee can be deleted
       deleteService(employee.shop_id,serviceName);

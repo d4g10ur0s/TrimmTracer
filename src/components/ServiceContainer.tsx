@@ -28,7 +28,7 @@ import { updateService,assignService,getServiceEmployees,nanosecondsToHoursMinut
 import { getEmployees } from '../utils/EmployeeHandling';
 
 import EmployeeSelection from '../components/EmployeeSelection';
-import {ServiceModificationForm} from '../components/ServiceForm';
+import {ServiceForm} from '../components/ServiceForm';
 
 interface ServiceContainerProps {
   service : {};
@@ -55,7 +55,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   // delete service
   const serviceDeletion = () => {
     setDeletionModalVisible(false);
-    deleteService(service.shop_id, service.name);
+    deleteService(service.name);
   }
   // assign service
   const assign = async (assign_emails,unassign_emails) => {
@@ -92,7 +92,8 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
 
   const modify = async () => {await setMService((prevState) => !prevState)}
 
-  const serviceModification = async (serv) => {
+  const serviceModification = async (name ,hours ,minutes ,seconds,employeeCost,clientCost,description) => {
+    const serv = {name ,hours ,minutes ,seconds,employeeCost,clientCost,description}
     if(mService){//save editted service
       var nameChanged = false;
       serv.numberOfEmployees=serviceInfo.numberOfEmployees;
@@ -157,7 +158,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
             </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.controlButtons}
+          style={(!canDelete) ? styles.controlButtonsDisabled : styles.controlButtons }
           onPress={modify}
         >
           <Text>
@@ -214,7 +215,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
       </Modal>
       {
         (mService) ?
-        (<ServiceModificationForm onSubmit={serviceModification} service={service} />) :
+        (<ServiceForm onSubmit={serviceModification} service={service} />) :
         (null)
       }
     </View>
@@ -253,6 +254,13 @@ const styles = StyleSheet.create({
   },
   controlButtons : {
     backgroundColor : '#574C9EAA',
+    borderRadius : 8,
+    marginVertical : 5,
+    marginHorizontal : 10,
+    padding : 5,
+  },
+  controlButtonsDisabled : {
+    backgroundColor : '#574C9E77',
     borderRadius : 8,
     marginVertical : 5,
     marginHorizontal : 10,
