@@ -11,6 +11,7 @@ router.post('/getShopNumberAppointments', appointmentShopController.getShopNumbe
 router.post('/getEmployeeNumberAppointments', appointmentShopController.getEmployeeNumberAppointments);
 router.post('/getEmployeeAppointments', appointmentShopController.getEmployeeAppointments);
 router.post('/checkForAppointments', appointmentShopController.checkForAppointments);
+router.post('/checkForAppointmentsService', appointmentShopController.checkForAppointmentsService);
 router.post('/getAppointmentTimesForDate', appointmentSchedulingController.getAppointmentTimesForDate);
 
 module.exports = router;

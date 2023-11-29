@@ -146,3 +146,22 @@ exports.checkForAppointments = async (req, res) => {
     res.status(500).json({ error: 'Error during storing' });
   }
 };
+// check for appointments ( service version )
+exports.checkForAppointmentsService = async (req, res) => {
+  const {shop_id,email,service_name} = req.body;
+  console.log(req.body);
+  try {
+    for(i in appointments){
+      var tempDuration=formatDuration(appointments[i].dur);
+      const numberOfAppointments = client.execute(
+        'select COUNT(*) from appointment where shop_id=? and email=? and service_name=? allow filtering;',
+        [shop_id,email,service_name], { prepare: true }
+      );
+    }// store every service for appointment
+    var hasAppointments = (numberOfAppointments.rows[0].count > 0);
+    res.json({ hasAppointments });
+  } catch (err) {
+    console.error('Error during storing:', err);
+    res.status(500).json({ error: 'Error during storing' });
+  }
+};

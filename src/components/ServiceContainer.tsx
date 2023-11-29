@@ -24,7 +24,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { updateService,deleteService,assignService,getServiceEmployees,nanosecondsToHoursMinutesSeconds,nanosecondsToString } from '../utils/ServiceHandling';
+import { updateService,assignService,getServiceEmployees,nanosecondsToHoursMinutesSeconds,nanosecondsToString } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
 
 import EmployeeSelection from '../components/EmployeeSelection';
@@ -34,7 +34,7 @@ interface ServiceContainerProps {
   service : {};
 }
 
-const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,refresh}) => {
+const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,refresh,deleteService}) => {
   const [serviceInfo, setServiceInfo] = useState(service);
   const [modalVisible, setModalVisible ] = useState(false);
   const [modalContent , setModalContent] = useState(null);
@@ -46,10 +46,16 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   const handleShowModal = () => {
     setModalVisible(true);
   };
+  // deletion modal
+  const [deletionModalVisible , setDeletionModalVisible] = useState(false);
+  // deletion modal handling
+  const handleHideDeletionModal = () => {setDeletionModalVisible(false);};
+  // to service deletion
+  const toServiceDeletion = () => {setDeletionModalVisible(true);};
   // delete service
   const serviceDeletion = () => {
+    setDeletionModalVisible(false);
     deleteService(service.shop_id, service.name);
-    refresh();
   }
   // assign service
   const assign = async (assign_emails,unassign_emails) => {
@@ -169,7 +175,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
         <TouchableOpacity
           style={(!canDelete) ? styles.disabledDeleteButton : styles.deleteButton}
           disabled={!canDelete}
-          onPress={serviceDeletion}
+          onPress={toServiceDeletion}
         >
           <Text>
             {"Delete Service"}
@@ -183,6 +189,28 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
         onRequestClose={handleHideModal}
       >
         {modalContent}
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={deletionModalVisible}
+      >
+        <View style={styles.deletionModal}>
+          <Text style={styles.deletionModalHeader}>{'Service Deletion'}</Text>
+          <View style={{padding: 10, borderRadius: 10 }}>
+            <Text style={{marginHorizontal : 5,}}>{'Are you sure you want to delete '+service.name + ' ?'}</Text>
+          </View>
+          <View
+            style={styles.deletionModalButtonView}
+          >
+          <TouchableOpacity style={styles.controlButtons} onPress={handleHideDeletionModal}>
+            <Text>Close</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.controlButtons} onPress={serviceDeletion}>
+            <Text>Submit</Text>
+          </TouchableOpacity>
+          </View>
+        </View>
       </Modal>
       {
         (mService) ?
@@ -250,6 +278,26 @@ const styles = StyleSheet.create({
     fontSize : 15,
     fontWeight : 'bold',
   },
+  deletionModal : {
+    backgroundColor : '#495866',
+    height : '15%',
+    alignSelf : 'center',
+    marginTop : '25%',
+    borderRadius : 8,
+    borderWidth : 2,
+    justifyContent : 'center',
+    alignItems : 'center',
+  },
+  deletionModalHeader : {
+    fontSize : 20,
+    fontWeight : 'bold',
+    color : 'white',
+  },
+  deletionModalButtonView : {
+    justifyContent : 'space-between',
+    alignItems : 'center',
+    flexDirection : 'row',
+  }
 });
 
 export default ServiceContainer;

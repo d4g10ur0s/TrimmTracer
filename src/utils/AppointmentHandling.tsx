@@ -175,3 +175,28 @@ export const checkForAppointments = async (shop_id,email) => {
     throw error;
   }
 }
+// check for appointments ( service version )
+export const checkForAppointmentsService = async (shop_id,email,service_name) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/shop/checkForAppointmentsService`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        shop_id,
+        email,
+        service_name,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error('Invalid credentials');
+    }
+    const data = await response.json();
+    console.log(data)
+    return data;
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+}

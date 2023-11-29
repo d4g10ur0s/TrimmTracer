@@ -4,7 +4,7 @@ import ShopMenu from '../components/ShopMenu';
 import EmployeeContainer from '../components/EmployeeContainer';
 import { getEmployees,addEmployee } from '../utils/EmployeeHandling';
 import { EmployeeForm } from '../components/EmployeeForm';
-import { getServices,addService } from '../utils/ServiceHandling';
+import { getServices,addService,deleteService } from '../utils/ServiceHandling';
 import ServiceContainer from '../components/ServiceContainer';
 import { ServiceForm } from '../components/ServiceForm';
 
@@ -77,7 +77,12 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
     const shopServices = await getServices(employee.shop_id);//get employees from db
     var servContainers = []
     for(serv in shopServices){// render employees' containers
-      servContainers.push(<ServiceContainer key={serv} service={shopServices[serv]} canDelete={(employee.typeofemployee==1)} refresh={reload}/>);
+      servContainers.push(<ServiceContainer key={serv}
+                                            service={shopServices[serv]}
+                                            canDelete={(employee.typeofemployee==1)}
+                                            refresh={reload}
+                                            deleteService={deleteAService}
+                                            />);
     }
     await setServiceContainers(servContainers);
     setEmployeeContainers(null);// don't waste
@@ -92,6 +97,15 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
       Alert.alert('Service Storing Failed', error + ' , please try again.');
     }
     renderShopServices();
+  }
+  // delete a service
+  const deleteAService = (serviceName) => {
+    if(checkForAppointmentsService(employee.shop_id,employee.email,serviceName)){
+      Alert.alert('Service has Appointments');
+    }else{// employee can be deleted
+      deleteService(employee.shop_id,serviceName);
+      reload();
+    }
   }
 
   return (
