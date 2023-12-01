@@ -81,7 +81,7 @@ const EmployeeServicesListComponent : React.FC = ({employee , service , select,u
   );
 }
 // the employee and his services
-const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, createAppointment}) =>{
+const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, createAppointment,canSelect}) =>{
 
   const [serviceList , setServiceList] = useState(null);
   const [selectedServices , setSelectedServices] = useState({});
@@ -154,6 +154,7 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, creat
       <TouchableOpacity
         onPress={toSelect}
         style={styles.selectButton}
+        disabled={canSelect}
       >
         <Text>{'Select'}</Text>
       </TouchableOpacity>
@@ -171,7 +172,7 @@ const MiniEmployeeContainer: React.FC<MiniEmployeeContainer> = ({employee, creat
 
 }
 // this is basically a modal
-const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> = ({hide , employees, submit , client}) => {
+const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> = ({hide , employees, submit , client,employeeEmail,canSelect}) => {
   // assign
   const [currentClient , setCurrentClient] = useState(client)
   const [containers , setContainers] = useState([])
@@ -185,6 +186,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
           key={i}
           employee={employees[i]}
           createAppointment={toDateSelection}
+          canSelect={( !(employees[i].email==employeeEmail) && canSelect)}
         />
       );
     }

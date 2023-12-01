@@ -7,7 +7,7 @@ import {addClient,deleteShopClient,getClients} from '../utils/ClientHandling'
 import { getServices,getServiceEmployees } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
 
-const ClientContainer: React.FC = ({client,deleteClient}) => {
+const ClientContainer: React.FC = ({client,deleteClient,canDelete,employeeEmail}) => {
   // current employee
   const [currentClient ,setCurrentClient] = useState(client);
   // appointment modal
@@ -31,6 +31,8 @@ const ClientContainer: React.FC = ({client,deleteClient}) => {
               employees={shopEmployees}
               submit={toServices}
               client={currentClient}
+              employeeEmail={employeeEmail}
+              canSelect={!(canDelete)}
             />
           );
     setModalVisible(true);
@@ -70,6 +72,7 @@ const ClientContainer: React.FC = ({client,deleteClient}) => {
       >
         <TouchableOpacity
           style={styles.controlButtons}
+          disabled={!(canDelete)}
         >
           <Text>
             {"Modify Client"}
@@ -86,6 +89,7 @@ const ClientContainer: React.FC = ({client,deleteClient}) => {
         <TouchableOpacity
           style={styles.deleteButton}
           onPress={()=>{deleteClient(client.email)}}
+          disabled={!(canDelete)}
         >
           <Text>
             {"Delete Client"}
@@ -136,6 +140,8 @@ const ShopClientsContainer: React.FC = ({employee}) => {
                         key={i}
                         client={clients[i]}
                         deleteClient={deleteClient}
+                        canDelete={(employee.typeofemployee<3)}
+                        employeeEmail={employee.email}
                       />)
     }
     setClientContainers(containers)
