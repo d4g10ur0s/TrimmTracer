@@ -97,7 +97,6 @@ export const addService = async (shop_id , employee_email ,name , dur , client_c
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error logging in:', error);
     throw error;
   }
 }

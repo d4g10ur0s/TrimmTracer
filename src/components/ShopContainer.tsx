@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity, ScrollView } from 'react-native';
+import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity, ScrollView,Modal } from 'react-native';
 import ShopMenu from '../components/ShopMenu';
 import EmployeeContainer from '../components/EmployeeContainer';
 import { getEmployees,addEmployee } from '../utils/EmployeeHandling';
@@ -8,6 +8,7 @@ import { getServices,addService,deleteService } from '../utils/ServiceHandling';
 import { checkForAppointmentsService } from '../utils/AppointmentHandling'
 import ServiceContainer from '../components/ServiceContainer';
 import { ServiceForm } from '../components/ServiceForm';
+import {MessageError} from '../components/MessageError';
 
 interface ShopContainerProps {
 
@@ -92,6 +93,17 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
     await setServiceContainers(servContainers);
     setEmployeeContainers(null);// don't waste
   }
+  // service storing error
+  const [modalContent, setModalContent] = useState(null);
+  const [modalVisible, setModalVisible ] = useState(false);
+  // modal handling
+  const handleHideModal = () => {
+    setModalVisible(false);
+    setModalContent(null);
+  };
+  const handleShowModal = () => {
+    setModalVisible(true);
+  };
   // add new service , store and refresh
   const addNewService = async (name ,hours ,minutes ,seconds,employeeCost,clientCost,description) => {
     const dur = hours+'h'+minutes+'m'+seconds+'s';
@@ -99,7 +111,13 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
       await addService(employee.shop_id , employee.email ,name , dur , clientCost , employeeCost ,description )
       setEnableForm((prevState) => !prevState)
     } catch (error) {
-      Alert.alert('Service Storing Failed', error + ' , please try again.');
+      console.log(error)
+      await setModalContent(<MessageError
+                              title={'Service Storing Failed'}
+                              message={'There is a service named : ' + name}
+                              close={handleHideModal}
+                            />)
+      handleShowModal()
     }
     renderShopServices();
   }
@@ -129,6 +147,14 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
         {(enableForm) ? (null) : (formComponent)}
         {(es) ? (employeeContainers) : (serviceContainers)}
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={handleHideModal}
+      >
+        {modalContent}
+      </Modal>
     </View>
   );
 };

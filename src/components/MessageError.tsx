@@ -25,6 +25,37 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+export const MessageError: React.FC = ({close, title, message }) => {
+
+  return(
+    <View
+      style={styles.submitionMessageView}
+    >
+      <Text
+        style={styles.submitionMessageTitle}
+      >{title}</Text>
+      <View
+        style={styles.contentView}
+      >
+        <Text
+          style={styles.messageText}
+        >{message}</Text>
+      </View>
+      <View
+        style={styles.errorButtonView}
+      >
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={close}
+        >
+          <Text>
+            {"Close"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+}
 
 export const SubmitionMessage: React.FC = ({submit, close, title, message }) => {
 
@@ -44,7 +75,7 @@ export const SubmitionMessage: React.FC = ({submit, close, title, message }) => 
         >{message}</Text>
       </View>
       <View
-        style={styles.buttonView}
+        style={styles.submitionButtonView}
       >
         <TouchableOpacity
           style={styles.closeButton}
@@ -93,9 +124,16 @@ const styles = StyleSheet.create({
     fontSize : 15,
     color : 'white',
   },
-  buttonView : {
+  submitionButtonView : {
     flexDirection : 'row',
     justifyContent : 'space-between',
+    marginTop : 2,
+    marginBottom : 5,
+    marginHorizontal : 20,
+  },
+  errorButtonView : {
+    flexDirection : 'row',
+    justifyContent : 'center',
     marginTop : 2,
     marginBottom : 5,
     marginHorizontal : 20,
