@@ -81,9 +81,9 @@ exports.addShopService = async (req, res) => {
 exports.updateShopService = async (req, res) => {
   const { service,nameChanged,old_name } = req.body;
   console.log(req.body)
-  console.log(service);
   try {
-    const duration = cassandra.types.Duration.fromString(service.dur);
+    const duration = formatDuration(service.dur);
+    console.log(duration)
     // insert service
     await client.execute(
       'INSERT INTO trimmtracer.service (shop_id ,name , dur , average_dur, client_cost , employee_cost ,description,numberofemployees) VALUES (?,?,?,?,?,?,?,?)',

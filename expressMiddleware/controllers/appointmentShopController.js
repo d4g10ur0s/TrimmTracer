@@ -131,12 +131,14 @@ exports.getAppointmentTimesForDate = async (req, res) => {
 exports.checkForAppointments = async (req, res) => {
   const {shop_id,email} = req.body;
   console.log(req.body);
+  const specificDate = new Date();
+  const startTimestamp = specificDate.setHours(0, 0, 0, 0); // Set to start working hours of the day
   try {
     for(i in appointments){
       var tempDuration=formatDuration(appointments[i].dur);
       const numberOfAppointments = client.execute(
-        'select COUNT(*) from appointment where shop_id=? and email=? allow filtering;',
-        [shop_id,email], { prepare: true }
+        'select COUNT(*) from appointment where shop_id=? and when>=? and email=? allow filtering;',
+        [shop_id,startTimestamp,email], { prepare: true }
       );
     }// store every service for appointment
     var hasAppointments = (numberOfAppointments.rows[0].count > 0);
@@ -148,14 +150,14 @@ exports.checkForAppointments = async (req, res) => {
 };
 // check for appointments ( service version )
 exports.checkForAppointmentsService = async (req, res) => {
-  const {shop_id,email,service_name} = req.body;
+  const {shop_id,service_name} = req.body;
   console.log(req.body);
   try {
     const specificDate = new Date();
     const startTimestamp = specificDate.setHours(0, 0, 0, 0); // Set to start working hours of the day
     const numberOfAppointments = await client.execute(
-      'select COUNT(*) from appointment where shop_id=? and when<=? and employee_email=? and service_name=? allow filtering;',
-      [shop_id,startTimestamp,email,service_name], { prepare: true }
+      'select COUNT(*) from appointment where shop_id=? and when>=? and service_name=? allow filtering;',
+      [shop_id,startTimestamp,service_name], { prepare: true }
     );
     console.log(numberOfAppointments.rows[0].count)
     var hasAppointments = (numberOfAppointments.rows[0].count > 0);

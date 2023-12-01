@@ -176,7 +176,7 @@ export const checkForAppointments = async (shop_id,email) => {
   }
 }
 // check for appointments ( service version )
-export const checkForAppointmentsService = async (shop_id,email,service_name) => {
+export const checkForAppointmentsService = async (shop_id,service_name) => {
   try {
     const response = await fetch(`${BASE_URL}/api/shop/checkForAppointmentsService`, {
       method: 'POST',
@@ -185,7 +185,6 @@ export const checkForAppointmentsService = async (shop_id,email,service_name) =>
       },
       body: JSON.stringify({
         shop_id,
-        email,
         service_name,
       }),
     });

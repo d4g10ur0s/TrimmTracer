@@ -26,6 +26,7 @@ import {
 
 import { updateService,assignService,getServiceEmployees,nanosecondsToHoursMinutesSeconds,nanosecondsToString } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
+import { checkForAppointmentsService } from '../utils/AppointmentHandling';
 
 import EmployeeSelection from '../components/EmployeeSelection';
 import {ServiceForm} from '../components/ServiceForm';
@@ -90,17 +91,25 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
     setModalVisible(true);
   }
 
-  const modify = async () => {await setMService((prevState) => !prevState)}
+  const modify = async () => {console.log(service.dur);await setMService((prevState) => !prevState)}
 
   const serviceModification = async (name ,hours ,minutes ,seconds,employeeCost,clientCost,description) => {
-    const serv = {name ,hours ,minutes ,seconds,employeeCost,clientCost,description}
-    if(mService){//save editted service
+    const totalNanoseconds = (hours * 60 * 60 + minutes * 60 + seconds) * 1e9;
+    // Create the desired structure
+    const durationStructure = {
+      days: 0,
+      months: 0,
+      nanoseconds: totalNanoseconds.toString(),
+    };
+    const serv = {shop_id : service.shop_id, name ,dur : durationStructure,average_dur : durationStructure,employeeCost,clientCost,description}
+    const a = await checkForAppointmentsService(service.shop_id,service.name);
+    if(!(a.hasAppointments)){//save editted service
       var nameChanged = false;
       serv.numberOfEmployees=serviceInfo.numberOfEmployees;
       if(serv.name!=service.name){nameChanged=true}
       setServiceInfo(serv)
       await updateService(serv,nameChanged,service.name);
-    }
+    }else{Alert.alert('Service has appointments .');}
     await setMService((prevState) => !prevState)
   }
 

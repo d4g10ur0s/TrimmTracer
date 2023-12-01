@@ -42,19 +42,21 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit,service }) =>
   };
 
   const durationSetUP = async () => {
-    const sec = Math.floor(service.duration / 1000);
-    await setSeconds(sec)
-    const min = Math.floor((seconds % 3600) / 60);
-    await setMinutes(min)
-    const hou = Math.floor(seconds / 3600);
-    await setHours(hou)
+    const totalMilliseconds = parseInt(service.dur.nanoseconds) / 1000000;
+    const totalSeconds = Math.floor(totalMilliseconds / 1000);
+    const hou = Math.floor((totalSeconds % 86400) / 3600);
+    const min = Math.floor(((totalSeconds % 86400) % 3600) / 60);
+    const sec = ((totalSeconds % 86400) % 3600) % 60;
+    await setSeconds(sec.toString())
+    await setMinutes(min.toString())
+    await setHours(hou.toString())
   }
 
   useEffect(()=>{
     if(!(service==undefined)){
       setName(service.name)
-      setClientCost(service.client_cost)
-      setEmployeeCost(service.employee_cost)
+      setClientCost(service.client_cost.toString())
+      setEmployeeCost(service.employee_cost.toString())
       setDescription(service.description)
       durationSetUP()
     }
@@ -154,3 +156,85 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onSubmit,service }) =>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor : '#495866',
+    width : '90%',
+    alignItems : 'center',
+    borderRadius : 8,
+  },
+  formHeader : {
+      alignSelf : 'center',
+      fontSize : 20,
+      fontWeight : 'bold',
+      color : 'white',
+      marginVertical : 10,
+    },
+    formContentsView : {
+      flexDirection : "row",
+      justifyContent : 'space-between',
+      alignItems : 'center',
+      marginVertical : 5,
+      marginHorizontal : 15,
+    },
+    nameInput : {
+      flex : 1,
+      paddingLeft : 5,
+      paddingRight : -5,
+      paddingVertical : -5,
+      borderRadius : 8,
+      borderWidth : 1,
+      borderColor : 'gray',
+      marginHorizontal : 15,
+    },
+  timeInput : {
+    flex : 1,
+    paddingLeft : 5,
+    paddingRight : 0,
+    paddingVertical : -5,
+    borderRadius : 8,
+    borderWidth : 1,
+    borderColor : 'gray',
+    marginHorizontal : 8,
+  },
+  costInput : {
+    flex : 1,
+    paddingLeft : 5,
+    paddingVertical : -5,
+    borderRadius : 8,
+    borderWidth : 1,
+    borderColor : 'gray',
+    marginHorizontal : 5,
+    marginHorizontal : 0,
+  },
+  label: {
+      marginHorizontal : 5,
+      fontWeight : 'bold',
+      color : 'white',
+    },
+  currencyText : {
+    marginRight : 10,
+    marginHorizontal : 5,
+    fontWeight : 'bold',
+    color : 'white',
+  },
+  descriptionInput : {
+    height : 75,
+    borderWidth : 1,
+    borderColor : 'gray',
+    borderRadius : 8,
+    marginVertical : 5,
+    paddingHorizontal : 15,
+  },
+  submitButton : {
+    backgroundColor : "#349CCFFF",
+    borderRadius : 8,
+    padding : 5,
+    marginVertical : 10,
+  },
+  errorLabel : {
+    color : 'red',
+    marginBottom : 1,
+},
+});
