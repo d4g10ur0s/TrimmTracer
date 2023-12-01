@@ -80,7 +80,7 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
     for(serv in shopServices){// render employees' containers
       servContainers.push(<ServiceContainer key={serv}
                                             service={shopServices[serv]}
-                                            canDelete={(employee.typeofemployee==1)}
+                                            canDelete={(employee.typeofemployee<3)}
                                             refresh={reload}
                                             deleteService={deleteAService}
                                             />);

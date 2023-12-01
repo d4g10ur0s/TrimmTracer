@@ -60,9 +60,12 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
   }
   // assign service
   const assign = async (assign_emails,unassign_emails) => {
-    await assignService(service.shop_id,assign_emails,unassign_emails,service.name)
+    const a = await checkForAppointmentsService(service.shop_id,service.name);
+    if(!(a.hasAppointments)){//save editted service
+      await assignService(service.shop_id,assign_emails,unassign_emails,service.name)
+      refresh();
+    }else{Alert.alert('Service has appointments .')}
     await setModalVisible(false);
-    refresh();
   }
   // to assign-unassign service - employee selection
   const toAssign = async () => {
@@ -175,7 +178,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
             </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.controlButtons}
+          style={(!canDelete) ? styles.controlButtonsDisabled : styles.controlButtons }
           onPress={toAssign}
         >
           <Text>
