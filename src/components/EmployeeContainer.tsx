@@ -32,6 +32,7 @@ import { checkForAppointments } from '../utils/AppointmentHandling';
 import {EmployeeModificationForm} from '../components/RegistrationForm'
 import ServiceSelection from '../components/ServiceSelection';
 import {EmployeeForm} from '../components/EmployeeForm';
+import {SubmitionMessage} from '../components/MessageError';
 
 
 interface EmployeeContainerProps {
@@ -74,16 +75,34 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
     setM(null);
     await refresh();
   }
+  // deletion submition message
+  const submitDeletion = async () => {
+    await setModalContent(
+      <SubmitionMessage
+        submit={deletionEmployee}
+        close={handleHideModal}
+        title={'Delete Employee'}
+        message={'Are you sure you want to delete : '+ employee.name + ' ' + employee.sirname + ' ?'}
+      />
+    );
+    setModalVisible(true);
+  }
   // delete employee
   const employeeDeletion = async () => {
+    const a = await checkForAppointments(employee.shop_id,employee.email)
     if(employee.email==userEmail){// employee is self , cannot be deleted
       Alert.alert('You cannot delete yourself !');
-    }else if(checkForAppointments(employee.shop_id,employee.email)){
+    }else if(a.hasAppointments){
       Alert.alert('Employee has Appointments');
     }else{// employee can be deleted
-      deleteEmployee(employee.email,employee.shop_id);
-      await refresh();
+      submitDeletion()
     }
+  }
+  // delete the employee
+  const deletionEmployee = async () => {
+    deleteEmployee(employee.email,employee.shop_id);
+    setModalVisible(false);
+    await refresh();
   }
   // assign-unassign services
   const toAssignServices = async () => {
@@ -103,7 +122,7 @@ const EmployeeContainer: React.FC<EmployeeContainerProps> = ({employee,canDelete
     // show modal
     await setModalContent(
       <ServiceSelection
-        hide={handleHideModal}
+        close={handleHideModal}
         assigned={a}
         unassigned={u}
         emails={employeeServices}

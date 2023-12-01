@@ -134,13 +134,10 @@ exports.checkForAppointments = async (req, res) => {
   const specificDate = new Date();
   const startTimestamp = specificDate.setHours(0, 0, 0, 0); // Set to start working hours of the day
   try {
-    for(i in appointments){
-      var tempDuration=formatDuration(appointments[i].dur);
-      const numberOfAppointments = client.execute(
-        'select COUNT(*) from appointment where shop_id=? and when>=? and email=? allow filtering;',
-        [shop_id,startTimestamp,email], { prepare: true }
-      );
-    }// store every service for appointment
+    const numberOfAppointments = await client.execute(
+      'select COUNT(*) from appointment where shop_id=? and when>=? and employee_email=? allow filtering;',
+      [shop_id,startTimestamp,email], { prepare: true }
+    );
     var hasAppointments = (numberOfAppointments.rows[0].count > 0);
     res.json({ hasAppointments });
   } catch (err) {

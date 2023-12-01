@@ -68,9 +68,13 @@ const ShopContainer: React.FC<ShopContainerProps> = ({employee}) => {
   }
   // add new employee , store and refresh
   const addNewEmployee = async (name,sirname,email,phone,typeofemployee,code,workingHours) => {
-    await addEmployee(name,sirname,email,phone,typeofemployee,code,employee.shop_id,workingHours)
-    setEnableForm((prevState) => !prevState)
-    renderShopEmployees();
+    try{
+      await addEmployee(name,sirname,email,phone,typeofemployee,code,employee.shop_id,workingHours)
+      setEnableForm((prevState) => !prevState)
+      renderShopEmployees();
+    }catch (error){
+      Alert.alert('There is already an employee with email ' + email)
+    }
   }
   // Service Functions
   // get and render services

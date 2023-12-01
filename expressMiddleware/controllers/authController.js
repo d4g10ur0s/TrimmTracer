@@ -7,8 +7,8 @@ exports.registerEmployee = async (req, res) => {
   try {
     // Check if the username already exists in the database
     const userExists = await client.execute(
-      'SELECT * FROM trimmtracer.user WHERE employee=? and email = ?',
-      [true,email]
+      'SELECT * FROM trimmtracer.employee WHERE shop_id=? and email=?',
+      [shop_id,email]
     );
     if (userExists.rows.length > 0) {
       return res.status(400).json({ error: 'Username already exists' });
