@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Alert,
   Modal,
 } from 'react-native';
 
@@ -179,6 +180,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   const [theInfo , setInfo] = useState({})
   // render containers
   const renderEmployees = async () => {
+    setBackLabel(1);
     var containers = []
     for(i in employees){
       containers.push(
@@ -195,10 +197,19 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   // render mini calendar
   const renderMiniCalendar = () => {
     var employee=theInfo.employee;
+    // if back go to service selection
+    setBackLabel((prevState)=>prevState+1)
     setContainers(<MiniCalendar employee={employee} toSubmitionForm={dateSelected} />)
   }
   // date selection
-  const toDateSelection = async (employee, selectedServices ) => {setInfo({employee : employee , theServices : selectedServices});}
+  const toDateSelection = async (employee, selectedServices ) => {
+    if(Object.keys(selectedServices).length > 0){
+      await setInfo({employee : employee , theServices : selectedServices});
+    }else{
+      Alert.alert('You have not selected any services .')
+    }
+  }
+  // render mini calends on info change
   useEffect(()=>{
     renderMiniCalendar()
   }, [theInfo])
@@ -253,7 +264,13 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
   }
   // render at start
   useEffect(()=>{renderEmployees();}, []);
-
+  // go back
+  const [backLabel , setBackLabel] = useState(1);
+  const back = () => {
+    if(backLabel==1){renderEmployees()}
+    else if(backLabel==2){renderMiniCalendar()}
+    setBackLabel((prevState)=>(prevState-1))
+  }
   return(
     <View
       style={styles.employeeSelection}
@@ -277,7 +294,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.submitButton}
-          onPress={submit}
+          onPress={back}
         >
           <Text>{"Back"}</Text>
         </TouchableOpacity>
