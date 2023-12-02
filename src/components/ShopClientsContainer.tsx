@@ -137,7 +137,8 @@ const ShopClientsContainer: React.FC = ({employee}) => {
   const addNewClient = async (email,phone,name,note,sirname) => {
     try {
       await addClient(employee.shop_id,email,phone,name,note,sirname);
-      await reload()
+      setClientForm(null)
+      reload()
     }catch (error) {
       await setModalContent(<MessageError
                               close={handleHideModal}
@@ -146,7 +147,6 @@ const ShopClientsContainer: React.FC = ({employee}) => {
                             />)
       setModalVisible(true)
     }
-    setClientForm(null)
   }
   // client exists error message
   // delete client
