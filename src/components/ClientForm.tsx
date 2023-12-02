@@ -2,12 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text,Picker, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 
 export const ClientForm: React.FC = ({ onSubmit }) => {
-  const [email, setEmail] = useState<string>('pkoutsan@gmail.com');
-  const [phone, setPhone] = useState<string>('6956050752');
   const [note, setNote] = useState<string>('Varaei poly.');
   //errors
-  const [emailError, setEmailError] = useState(null);
-  const [phoneError, setPhoneError] = useState(null);
   const [noteError, setNoteError] = useState(null);
   // name and sirname must be over 2 characters long
   const [name, setName] = useState('Panos');
@@ -38,20 +34,34 @@ export const ClientForm: React.FC = ({ onSubmit }) => {
       setSirnameErrorContent(<Text style={styles.errorLabel}>{'Sirname must be over 3 characters long .'}</Text>)
     }
   },[sirname])
-  // check email
-  const checkEmail = (email) => {
+  // email errors
+  const [email, setEmail] = useState<string>('pkoutsan@gmail.com');
+  const [emailError, setEmailError] = useState(null);
+  const [emailErrorContent ,setEmailErrorContent] = useState(null);
+  useEffect(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(emailRegex.test(email)){
       setEmailError(false)
-    }else{setEmailError(true)}
-  }
+      setEmailErrorContent(null)
+    }else{
+      setEmailError(true)
+      setEmailErrorContent(<Text style={styles.errorLabel}>{'E-mail is not in correct format .'}</Text>)
+    }
+  },[email])
   // check phone number
-  const checkPhoneNumber = (phoneNumber) => {
+  const [phone, setPhone] = useState<string>('6956050752');
+  const [phoneError, setPhoneError] = useState(null);
+  const [phoneErrorContent ,setPhoneErrorContent] = useState(null);
+  useEffect(() => {
     const greekPhoneRegex = /^(\+30|0030)?\s*?(69\d{8}|2\d{9})$/;
-    if(greekPhoneRegex.test(phoneNumber)){
+    if(greekPhoneRegex.test(phone)){
       setPhoneError(false)
-    }else{setPhoneError(true)}
-  }
+      setPhoneErrorContent(null)
+    }else{
+      setPhoneError(true)
+      setPhoneErrorContent(<Text style={styles.errorLabel}>{'Phone number must be 10 digits long .'}</Text>)
+    }
+  },[phone])
   // Register in Application
   const handleRegister = () => {
     // if no errors then register new employee
@@ -106,6 +116,7 @@ export const ClientForm: React.FC = ({ onSubmit }) => {
         onChangeText={setEmail}
         />
       </View>
+      {emailErrorContent}
       <View style={styles.contentsView}>
         <Text
           style={styles.label}
@@ -117,6 +128,7 @@ export const ClientForm: React.FC = ({ onSubmit }) => {
           onChangeText={setPhone}
         />
       </View>
+      {phoneErrorContent}
       <Text style={styles.noteHeader}>Note</Text>
       <TextInput
         style={styles.noteInput}
