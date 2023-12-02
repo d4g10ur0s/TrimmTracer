@@ -2,30 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text,Picker, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 
 export const ClientForm: React.FC = ({ onSubmit }) => {
-  const [name, setName] = useState<string>('Panos');
-  const [sirname, setSirname] = useState<string>('Koutsis');
   const [email, setEmail] = useState<string>('pkoutsan@gmail.com');
   const [phone, setPhone] = useState<string>('6956050752');
   const [note, setNote] = useState<string>('Varaei poly.');
   //errors
-  const [nameError, setNameError] = useState(null);
-  const [sirnameError, setSirnameError] = useState(null);
   const [emailError, setEmailError] = useState(null);
   const [phoneError, setPhoneError] = useState(null);
   const [noteError, setNoteError] = useState(null);
   // name and sirname must be over 2 characters long
-  const checkName = (name) => {
+  const [name, setName] = useState('Panos');
+  const [nameError, setNameError] = useState(null);
+  const [nameErrorContent ,setNameErrorContent] = useState(null);
+  // name error
+  useEffect(()=>{
     const containsLetters = /[a-zA-Z]/.test(name);
     if (typeof name === 'string' && name.length > 3 && containsLetters) {
       setNameError(false);
-    }else{setNameError(true);}
-  }
-  const checkSirname = (name) => {
-    const containsLetters = /[a-zA-Z]/.test(name);
-    if (typeof name === 'string' && name.length > 3 && containsLetters) {
+      setNameErrorContent(null)
+    }else{
+      setNameErrorContent(<Text style={styles.errorLabel}>{'Name must be over 3 characters long .'}</Text>)
+      setNameError(true);
+    }
+  },[name])
+  const [sirname, setSirname] = useState<string>('Koutsis');
+  const [sirnameError, setSirnameError] = useState(null);
+  const [sirnameErrorContent ,setSirnameErrorContent] = useState(null);
+  // sirname error
+  useEffect(()=>{
+    const containsLetters = /[a-zA-Z]/.test(sirname);
+    if (typeof sirname === 'string' && name.length > 3 && containsLetters) {
       setSirnameError(false);
-    }else{setSirnameError(true);}
-  }
+      setSirnameErrorContent(null)
+    }else{
+      setSirnameError(true);
+      setSirnameErrorContent(<Text style={styles.errorLabel}>{'Sirname must be over 3 characters long .'}</Text>)
+    }
+  },[sirname])
   // check email
   const checkEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,37 +67,64 @@ export const ClientForm: React.FC = ({ onSubmit }) => {
       >
         {"Add New Client"}
       </Text>
-      <TextInput
-        style={styles.input}
+      <View style={styles.contentsView}>
+        <Text
+          style={styles.label}
+        >
+          {'Name'}
+        </Text>
+        <TextInput
+        style={styles.nameInput}
         placeholder="Name"
         value={name}
         onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Sirname"
-        value={sirname}
-        onChangeText={setSirname}
-      />
-      <TextInput
-        style={styles.input}
+        />
+      </View>
+      {nameErrorContent}
+      <View style={styles.contentsView}>
+        <Text
+          style={styles.label}
+        >
+          {'Sirname'}
+        </Text>
+        <TextInput
+          style={styles.nameInput}
+          placeholder="Sirname"
+          value={sirname}
+          onChangeText={setSirname}
+        />
+      </View>
+      {sirnameErrorContent}
+      <View style={styles.contentsView}>
+        <Text
+          style={styles.label}
+        >{'E-Mail'}</Text>
+        <TextInput
+        style={styles.nameInput}
         placeholder="E-Mail"
         value={email}
         onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Phone Number"
-        value={phone}
-        onChangeText={setPhone}
-      />
-      <Text style={styles.label}>Note</Text>
+        />
+      </View>
+      <View style={styles.contentsView}>
+        <Text
+          style={styles.label}
+        >{'Phone'}</Text>
+        <TextInput
+          style={styles.nameInput}
+          placeholder="Phone Number"
+          value={phone}
+          onChangeText={setPhone}
+        />
+      </View>
+      <Text style={styles.noteHeader}>Note</Text>
       <TextInput
         style={styles.noteInput}
         multiline
         numberOfLines={8}
         onChangeText={setNote}
         placeholder="Enter your note here"
+        value={note}
       />
       <View
         style={{flexDirection : "row",padding : 10,}}
@@ -109,19 +148,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius : 8,
   },
-  input: {
-    width: '80%',
-    height: 40,
-    borderColor: 'gray',
-    borderRadius : 8,
-    borderWidth: 2,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
   formHeader : {
-    margin : 5,
-    fontSize : 20,
+    marginVertical : 10,
+    fontSize : 18,
     fontWeight : 'bold',
+    color : 'white',
   },
   logInButton : {
     borderRadius : 8,
@@ -157,29 +188,50 @@ const styles = StyleSheet.create({
     padding : 5,
   },
   modificationContainer: {
-    backgroundColor : "#6465A1AA",
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '80%',
-    paddingTop : 10,
-    paddingBottom : 10,
-    margin : 5,
-    borderRadius : 8,
-    alignSelf : 'center',
-  },
-  noteInput : {
+    backgroundColor : '#495866',
     width : '80%',
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    textAlignVertical: 'top',
-    height: 100,
+    alignItems : 'center',
+    borderRadius : 8,
+  },
+  contentsView : {
+    flexDirection : "row",
+    justifyContent : 'space-between',
+    alignItems : 'center',
+    marginVertical : 5,
+    marginHorizontal : 30,
   },
   label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
+    flex : 1,
+    fontWeight : 'bold',
+    color : 'white',
+  },
+  nameInput : {
+    flex : 2,
+    paddingVertical : -3,
+    paddingLeft : 10,
+    borderRadius : 8,
+    borderWidth : 1,
+    borderColor : 'gray',
+  },
+  noteHeader : {
+    fontSize : 15,
+    fontWeight : 'bold',
+    color : 'white',
+    marginTop : 10,
+  },
+  noteInput : {
+    width : '75%',
+    height : 100,
+    paddingHorizontal : 7,
+    paddingVertical : 10,
+    marginVertical : 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 8,
+    textAlignVertical: 'top',
+  },
+  errorLabel : {
+    color : 'red',
+    marginBottom : 1,
   },
 });

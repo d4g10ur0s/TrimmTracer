@@ -160,14 +160,16 @@ const ShopClientsContainer: React.FC = ({employee}) => {
       <View
         style={styles.clientArea}
       >
-        <TouchableOpacity
-          style={styles.controlButton}
-          onPress={newClient}
-        >
-          <Text>
-            {'New Client'}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.newClientButtonView}>
+          <TouchableOpacity
+            style={styles.controlButton}
+            onPress={newClient}
+          >
+            <Text>
+              {'New Client'}
+            </Text>
+          </TouchableOpacity>
+        </View>
         {clientForm}
         {clientContainers}
       </View>
@@ -208,6 +210,14 @@ const styles = StyleSheet.create({
     backgroundColor : '#FFFFFFAD',
     margin : 5,
     borderRadius : 8,
+  },
+  newClientButtonView : {
+    backgroundColor : '#495866',
+    margin : 5,
+    borderRadius : 8,
+    width : '95%',
+    flexDirection : 'row',
+    justifyContent : 'center',
   },
   controlButtons : {
     backgroundColor : '#574C9EAA',
