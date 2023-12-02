@@ -15,11 +15,26 @@ exports.getClients = async (req, res) => {
 exports.addClient = async (req, res) => {
   const { shop_id,email,phone,name,note,sirname } = req.body;
   console.log(req.body);
-  await client.execute(
-    'Insert into trimmtracer.clients(shop_id,email,phone,name,note,sirname) VALUES (?,?,?,?,?,?)',
-    [shop_id,email,phone,name,note,sirname]
-  );
-  res.status(201).json({ message: 'Client registered successfully' });
+  // check if client exists
+  try {
+    // Check if the username already exists in the database
+    const userExists = await client.execute(
+      'SELECT * FROM trimmtracer.clients WHERE shop_id=? and email=?',
+      [shop_id,email]
+    );
+    if (userExists.rows.length > 0) {
+      return res.status(400).json({ error: 'Client already exists' });
+    }
+    // Insert the new client into the database
+    await client.execute(
+      'Insert into trimmtracer.clients(shop_id,email,phone,name,note,sirname) VALUES (?,?,?,?,?,?)',
+      [shop_id,email,phone,name,note,sirname]
+    );
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (err) {
+    console.error('Error during registration:', err);
+    res.status(500).json({ error: 'Error during registration' });
+  }
 };
 // delete client
 exports.deleteClient = async (req, res) => {

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, Button, StyleSheet, Alert,TouchableOpacity, ScrollView, Modal } from 'react-native';
-
+// components
 import {ClientForm} from '../components/ClientForm';
 import AppointmentEmployeeSelection from '../components/AppointmentEmployeeSelection';
+import {MessageError} from '../components/MessageError';
+// utils
 import {addClient,deleteShopClient,getClients} from '../utils/ClientHandling'
 import { getServices,getServiceEmployees } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
@@ -109,6 +111,17 @@ const ClientContainer: React.FC = ({client,deleteClient,canDelete,employeeEmail}
 };
 // main cointainer
 const ShopClientsContainer: React.FC = ({employee}) => {
+  // error modal
+  const [modalContent , setModalContent] = useState(null);
+  // error modal handling
+  const [modalVisible, setModalVisible ] = useState(false);
+  const handleHideModal = async () => {
+    await setModalContent(null)
+    setModalVisible(false);
+  };
+  const handleShowModal = () => {
+    setModalVisible(true);
+  };
   // current employee
   const [cEmployee ,setCEmployee] = useState(employee);
   // client containers
@@ -122,10 +135,20 @@ const ShopClientsContainer: React.FC = ({employee}) => {
   }
   // add new client
   const addNewClient = async (email,phone,name,note,sirname) => {
-    await addClient(employee.shop_id,email,phone,name,note,sirname);
-    await reload()
+    try {
+      await addClient(employee.shop_id,email,phone,name,note,sirname);
+      await reload()
+    }catch (error) {
+      await setModalContent(<MessageError
+                              close={handleHideModal}
+                              title={'Client storing failed .'}
+                              message={error.message}
+                            />)
+      setModalVisible(true)
+    }
     setClientForm(null)
   }
+  // client exists error message
   // delete client
   const deleteClient = async (clientEmail) => {
     await deleteShopClient(employee.shop_id,clientEmail);
@@ -172,6 +195,14 @@ const ShopClientsContainer: React.FC = ({employee}) => {
         </View>
         {clientForm}
         {clientContainers}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={handleHideModal}
+        >
+          {modalContent}
+        </Modal>
       </View>
     </View>
   );

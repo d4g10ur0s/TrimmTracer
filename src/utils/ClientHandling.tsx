@@ -13,7 +13,7 @@ export const getClients = async (shop_id: string): Promise<any> => {
     });
 
     if (!response.ok) {
-      throw new Error('Invalid credentials');
+      throw new Error('There is a client with these info .');
     }
     const data = await response.json();
     return data.clients;
@@ -39,15 +39,13 @@ export const addClient = async (shop_id,email,phone,name,note,sirname): Promise<
         sirname,
       }),
     });
-
+    // response erros
     if (!response.ok) {
-      throw new Error('Invalid credentials');
+      throw new Error('There is a client with these info .');
     }
-
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error logging in:', error);
     throw error;
   }
 };
