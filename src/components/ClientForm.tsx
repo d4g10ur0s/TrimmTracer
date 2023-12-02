@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text,Picker, Button, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 
-export const ClientForm: React.FC = ({ onSubmit }) => {
+export const ClientForm: React.FC = ({ onSubmit , client }) => {
   const [note, setNote] = useState<string>('Varaei poly.');
   //errors
   const [noteError, setNoteError] = useState(null);
@@ -69,6 +69,17 @@ export const ClientForm: React.FC = ({ onSubmit }) => {
       onSubmit(email,phone,name,note,sirname);
     }
   };
+  const begin = async () => {
+    await setName(client.name)
+    await setSirname(client.sirname)
+    await setEmail(client.email)
+    await setPhone(client.phone)
+    await setNote(client.note)
+  }
+  // if modification form
+  useEffect(()=>{
+    if(!(client==undefined)){begin()}
+  },[])
 
   return (
     <View style={styles.modificationContainer}>

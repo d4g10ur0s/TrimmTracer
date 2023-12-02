@@ -5,7 +5,7 @@ import {ClientForm} from '../components/ClientForm';
 import AppointmentEmployeeSelection from '../components/AppointmentEmployeeSelection';
 import {MessageError} from '../components/MessageError';
 // utils
-import {addClient,deleteShopClient,getClients} from '../utils/ClientHandling'
+import {addClient,deleteShopClient,getClients,updateClient} from '../utils/ClientHandling'
 import { getServices,getServiceEmployees } from '../utils/ServiceHandling';
 import { getEmployees } from '../utils/EmployeeHandling';
 
@@ -43,6 +43,31 @@ const ClientContainer: React.FC = ({client,deleteClient,canDelete,employeeEmail}
   toServices = () =>{
     setModalVisible(false);
   }
+  // modify client
+  const [clientModificationForm , setClientModificationForm] = useState(null);
+  // show form
+  const showClientModificationForm = async () => {
+    await setClientModificationForm(<ClientForm
+                                      onSubmit={updateModifiedClient}
+                                      client={client}
+                                    />)
+  }
+  // remove form
+  const removeClientModificationForm = async () => {await setClientModificationForm(null)}
+  const [showForm , setShowForm] = useState(false)
+  useEffect(()=>{
+    if(showForm){showClientModificationForm()}
+    else{removeClientModificationForm()}
+  },[showForm])
+  const modify = () =>{setShowForm((prevState)=>(!prevState))}
+  // update client
+  const updateModifiedClient = async (email,phone,name,note,sirname) => {
+    try{
+      updateClient(client.shop_id,email,phone,name,note,sirname,client.email)
+    }catch (error) {
+      console.log(error)
+    }
+  }
   // content
   return (
     <View
@@ -75,6 +100,7 @@ const ClientContainer: React.FC = ({client,deleteClient,canDelete,employeeEmail}
         <TouchableOpacity
           style={styles.controlButtons}
           disabled={!(canDelete)}
+          onPress={modify}
         >
           <Text>
             {"Modify Client"}
@@ -98,6 +124,7 @@ const ClientContainer: React.FC = ({client,deleteClient,canDelete,employeeEmail}
           </Text>
         </TouchableOpacity>
       </ScrollView>
+      {clientModificationForm}
       <Modal
         animationType="slide"
         transparent={true}

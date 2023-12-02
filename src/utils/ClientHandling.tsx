@@ -74,3 +74,31 @@ export const deleteShopClient = async (shop_id,clientEmail) => {
     throw error;
   }
 }
+// update client
+export const updateClient = async (shop_id,email,phone,name,note,sirname,oldEmail): Promise<any> => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/shop/updateClient`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        shop_id,
+        email,
+        phone,
+        name,
+        note,
+        sirname,
+        oldEmail,
+      }),
+    });
+    // response erros
+    if (!response.ok) {
+      throw new Error('There is a client with these info .');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

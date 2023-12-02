@@ -4,6 +4,7 @@ const shopClientController = require('../controllers/shopClientController');
 
 router.post('/getShopClients', shopClientController.getClients);
 router.post('/addClient', shopClientController.addClient);
+router.post('/updateClient', shopClientController.updateClient);
 router.post('/deleteClient', shopClientController.deleteClient);
 
 module.exports = router;
