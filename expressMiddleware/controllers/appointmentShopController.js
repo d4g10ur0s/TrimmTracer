@@ -48,10 +48,10 @@ exports.storeAppointments = async (req, res) => {
         appointments[i].employee_cost,
         appointments[i].employee_fullname,
         appointments[i].employee_phone,
-        appointments[i].end_time,
+        new Date(appointments[i].end_time),
         appointments[i].note ,
         appointments[i].service_name,
-        appointments[i].start_time ,], { prepare: true }
+        new Date(appointments[i].start_time) ,], { prepare: true }
       );
     }// store every service for appointment
     res.status(201).json({ message: 'Appointments stored successfully' });

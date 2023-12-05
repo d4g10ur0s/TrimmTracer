@@ -13,8 +13,9 @@ exports.getAppointmentTimesForDate = async (req, res) => {
   // get appointments for day
   const shopAppointments = await client.execute(
     'SELECT * FROM trimmtracer.appointment WHERE shop_id=? and employee_email=? AND when>=? AND when<=? ALLOW FILTERING',
-    [shop_id, employee_email,startTimestamp, endTimestamp]
+    [shop_id, employee_email,new Date(startTimestamp), new Date(endTimestamp)]
   );
+  console.log(shopAppointments.rows)
   // call python script
   const pythonScript = spawn('python', ['..\\appointmentScheduling\\schedulingScriptMain.py',
                               JSON.stringify({
@@ -22,10 +23,20 @@ exports.getAppointmentTimesForDate = async (req, res) => {
                                 shopAppointments : shopAppointments.rows,
                               })]);
   //send feedback
+  var pythonScriptOutput ;
   pythonScript.stdout.on('data', (data) => {
-   console.log(`Python script output: ${JSON.parse(data)}`);
-   res.send({ message: JSON.parse(data) });
+    pythonScriptOutput = data;
  });
+ // send feedback on script completion
+  pythonScript.on('exit', (code) => {
+    if (code === 0) {
+      console.log(`Python script exited successfully: ${pythonScriptOutput}`);
+      res.send({ message: JSON.parse(pythonScriptOutput) });
+    } else {
+      console.error(`Error from Python script: ${pythonScriptOutput}`);
+      res.status(500).send({ error: 'Internal Server Error' });
+    }
+  });
  //send feedback
  pythonScript.stderr.on('data', (data) => {
    console.error(`Error from Python script: ${data}`);

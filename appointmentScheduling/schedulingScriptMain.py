@@ -42,18 +42,51 @@ def main():
     #print(appointments)
     # Case 1 : 0 appointments
     # Your scheduling algorithm logic here
+    intervals = []# array of intervals
+    mul=parse_duration(requestBody['duration'])# timedelta object
     if(len(appointments)==0):
-        mul=parse_duration(requestBody['duration'])# timedelta object
-        intervals = []# array of intervals
         workingHours = requestBody['workinghours']# working hours
         start_time = datetime.strptime(workingHours['start_time'], '%H:%M:%S')
-        while(start_time < datetime.strptime(workingHours['end_time'], '%H:%M:%S')):
+        i=0
+        while(start_time.time() < datetime.strptime(workingHours['end_time'], '%H:%M:%S').time()):
+            i+=1
+            intervals.append(start_time)
+            start_time+=mul
+    else:
+        # find someplace to fit...
+        timeFormat = '%Y-%m-%dT%H:%M:%S.%fZ'
+        # 1. get employee working hours
+        workingHours = requestBody['workinghours']# working hours
+        start_time = datetime.combine(
+                        datetime.strptime(appointments[0]['start_time'], timeFormat).date(),
+                        datetime.strptime(workingHours['start_time'], '%H:%M:%S').time()
+                        )
+        # 1.1 if gap between start_time and first appointment is more than duration , get interval
+        while((start_time+mul).time() < datetime.strptime(appointments[0]['start_time'], timeFormat).time()):
             intervals.append(start_time.time())
             start_time+=mul
-        # Format each time object as a string
-        formatted_times = [t.strftime('%H:%M') for t in intervals]
-        #print(str(formatted_times))
-        print(json.dumps({'timeIntervals': formatted_times}))
+        start_time = datetime.strptime(appointments[0]['end_time'], timeFormat).date()+timedelta(minutes=5)
+        # 2. get appointment gaps
+        for i in range(len(appointments)) :
+            # 2.1 if next appointment exists
+            if(i+1<len(appointments)):
+                # 2.1.1 find the gap between the two appointments
+                gap = datetime.strptime(appointments[i+1]['start_time'], timeFormat)-datetime.strptime(appointments[i]['end_time'], timeFormat)
+                # 2.1.2 if gap is less than appointment time interval
+                start_time = datetime.strptime(appointments[i]['end_time'], timeFormat)+timedelta(minutes=2,seconds=30)
+                while((start_time+mul).time()<(start_time+gap).time()):
+                    intervals.append(start_time)
+                    start_time+=mul# add the gap to the start time
+            # 2.2 if next appointment does not exist go as before
+            else :
+                start_time = datetime.strptime(appointments[i]['end_time'], timeFormat)
+                while(start_time.time() < datetime.strptime(workingHours['end_time'], '%H:%M:%S').time()):
+                    intervals.append(start_time.time())
+                    start_time+=mul
+                break
+    # Format each time object as a string
+    formatted_times = [t.strftime('%H:%M') for t in intervals]
+    print(json.dumps({'timeIntervals': formatted_times}))
 
 if __name__ == '__main__':
     main()

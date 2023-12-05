@@ -69,8 +69,10 @@ const RCalendar: React.FC = ({ shop_id, email, onDateSelect }) => {
     return calendarArray;
   };
 
-  // a daye has been selected
-  const dateSelected=(date,numberOfAppointments)=>{onDateSelect(date,numberOfAppointments)}
+  // a day has been selected
+  const dateSelected=(date,numberOfAppointments)=>{
+    onDateSelect(date,numberOfAppointments)
+  }
 
   return (
     <View style={styles.container}>
