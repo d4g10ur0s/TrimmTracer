@@ -231,6 +231,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
     const [hours, minutes] = time.split(':');
     date.setHours(parseInt(hours, 10));
     date.setMinutes(parseInt(minutes, 10));
+    console.log(hours)
     // appointments to be stored
     var appointments = []
     // create one appointment appointment for each service and then store it
@@ -239,11 +240,11 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
       var checkOut = new Date(date.getTime() + (theInfo.theServices[i].average_dur.nanoseconds / 1e6) );
       var appointment = {
         shop_id : theInfo.employee.shop_id,
-        when : date,
+        when : date.toLocaleString(),
         employee_email : theInfo.employee.email,
         client_email : currentClient.email,
-        check_in : date,
-        check_out : checkOut,
+        check_in : date.toLocaleString(),
+        check_out : checkOut.toLocaleString(),
         client_cost : theInfo.theServices[i].client_cost ,
         client_fullname : currentClient.name + ' ' + currentClient.sirname ,
         client_phone : currentClient.phone,
@@ -251,10 +252,10 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
         employee_cost : theInfo.theServices[i].employee_cost,
         employee_fullname : theInfo.employee.name + ' ' + theInfo.employee.sirname,
         employee_phone : theInfo.employee.phone,
-        end_time : checkOut ,
+        end_time : checkOut.toLocaleString() ,
         note : note,
         service_name : theInfo.theServices[i].name ,
-        start_time : date,
+        start_time : date.toLocaleString(),
       };
       date = checkOut// prepare date for next service
       appointments.push(appointment)// push data to be stored

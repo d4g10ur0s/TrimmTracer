@@ -33,6 +33,7 @@ exports.storeAppointments = async (req, res) => {
   try {
     for(i in appointments){
       var tempDuration=formatDuration(appointments[i].dur);
+      console.log(new Date(appointments[i].when))
       client.execute(
         'INSERT INTO trimmtracer.appointment (shop_id,when,employee_email,client_email,check_in,check_out,client_cost,client_fullname,client_phone,dur,employee_cost,employee_fullname,employee_phone,end_time,note,service_name,start_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
         [appointments[i].shop_id,
@@ -48,10 +49,10 @@ exports.storeAppointments = async (req, res) => {
         appointments[i].employee_cost,
         appointments[i].employee_fullname,
         appointments[i].employee_phone,
-        new Date(appointments[i].end_time),
+        appointments[i].end_time,
         appointments[i].note ,
         appointments[i].service_name,
-        new Date(appointments[i].start_time) ,], { prepare: true }
+        appointments[i].start_time ,], { prepare: true }
       );
     }// store every service for appointment
     res.status(201).json({ message: 'Appointments stored successfully' });

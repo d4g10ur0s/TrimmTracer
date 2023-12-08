@@ -1,6 +1,7 @@
 import sys
 import json
 
+import pytz
 from datetime import datetime, timedelta
 
 def parse_duration(duration_str):
@@ -33,6 +34,7 @@ def process_arguments():
         sys.exit(1)
 
 def main():
+    athens_timezone = pytz.timezone('Europe/Athens')
     # Process command-line arguments
     data = process_arguments()
     # unpack data
@@ -48,7 +50,8 @@ def main():
         workingHours = requestBody['workinghours']# working hours
         start_time = datetime.strptime(workingHours['start_time'], '%H:%M:%S')
         i=0
-        while(start_time.time() < datetime.strptime(workingHours['end_time'], '%H:%M:%S').time()):
+        b=datetime.strptime(workingHours['end_time'], '%H:%M:%S').time()
+        while(start_time.time() < b):
             i+=1
             intervals.append(start_time)
             start_time+=mul
@@ -60,27 +63,28 @@ def main():
         start_time = datetime.combine(
                         datetime.strptime(appointments[0]['start_time'], timeFormat).date(),
                         datetime.strptime(workingHours['start_time'], '%H:%M:%S').time()
-                        )
+                        ).astimezone(athens_timezone)
         # 1.1 if gap between start_time and first appointment is more than duration , get interval
-        while((start_time+mul).time() < datetime.strptime(appointments[0]['start_time'], timeFormat).time()):
+        while((start_time+mul).astimezone(athens_timezone).time() < datetime.strptime(appointments[0]['start_time'], timeFormat).astimezone(athens_timezone).time()) and (start_time+mul).astimezone(athens_timezone).time()<datetime.strptime(workingHours['end_time'], '%H:%M:%S').astimezone(athens_timezone).time():
             intervals.append(start_time.time())
             start_time+=mul
-        start_time = datetime.strptime(appointments[0]['end_time'], timeFormat).date()+timedelta(minutes=5)
+        start_time = datetime.strptime(appointments[0]['end_time'], timeFormat).astimezone(athens_timezone).date()+timedelta(minutes=5)
         # 2. get appointment gaps
         for i in range(len(appointments)) :
             # 2.1 if next appointment exists
             if(i+1<len(appointments)):
                 # 2.1.1 find the gap between the two appointments
-                gap = datetime.strptime(appointments[i+1]['start_time'], timeFormat)-datetime.strptime(appointments[i]['end_time'], timeFormat)
+                gap = datetime.strptime(appointments[i+1]['start_time'], timeFormat).astimezone(athens_timezone)-datetime.strptime(appointments[i]['end_time'], timeFormat).astimezone(athens_timezone)
                 # 2.1.2 if gap is less than appointment time interval
-                start_time = datetime.strptime(appointments[i]['end_time'], timeFormat)+timedelta(minutes=2,seconds=30)
-                while((start_time+mul).time()<(start_time+gap).time()):
+                start_time = datetime.strptime(appointments[i]['end_time'], timeFormat).astimezone(athens_timezone)+timedelta(minutes=2,seconds=30)
+                while((start_time+mul).astimezone(athens_timezone).time()<(start_time+gap).astimezone(athens_timezone).time()) and  (start_time+mul).astimezone(athens_timezone).time()<datetime.strptime(workingHours['end_time'], '%H:%M:%S').astimezone(athens_timezone).time():
                     intervals.append(start_time)
                     start_time+=mul# add the gap to the start time
             # 2.2 if next appointment does not exist go as before
             else :
-                start_time = datetime.strptime(appointments[i]['end_time'], timeFormat)
-                while(start_time.time() < datetime.strptime(workingHours['end_time'], '%H:%M:%S').time()):
+                start_time = datetime.strptime(appointments[i]['end_time'], timeFormat).astimezone(athens_timezone)
+                print(start_time.time())
+                while((start_time+mul).astimezone(athens_timezone).time() < datetime.strptime(workingHours['end_time'], '%H:%M:%S').time()):
                     intervals.append(start_time.time())
                     start_time+=mul
                 break
