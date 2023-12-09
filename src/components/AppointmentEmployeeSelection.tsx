@@ -260,8 +260,16 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
       date = checkOut// prepare date for next service
       appointments.push(appointment)// push data to be stored
     }
-    await storeAppointment(appointments)
-    hide()// before hiding , errors must be checked
+    try{
+      await storeAppointment(appointments)
+      hide()// before hiding , errors must be checked
+    }catch (err) {
+      setErrorMessage(<MessageErrorComponent
+                        close={hideErrorMessage}
+                        title={err}
+                        message={err.message}
+                      />)
+    }
   }
   // render at start
   useEffect(()=>{renderEmployees();}, []);
@@ -272,6 +280,10 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
     else if(backLabel==2){renderMiniCalendar()}
     setBackLabel((prevState)=>(prevState-1))
   }
+  // error message
+  const [errorMessage , setErrorMessage] = useState(null)
+  const hideErrorMessage=()=>{setErrorMessage(null)}
+
   return(
     <View
       style={styles.employeeSelection}
@@ -281,6 +293,7 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
       >
         {"Select Employees"}
       </Text>
+      {errorMessage}
       <ScrollView>
         {containers}
       </ScrollView>
