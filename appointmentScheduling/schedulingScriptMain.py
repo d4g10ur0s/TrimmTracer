@@ -34,16 +34,14 @@ def process_arguments():
         sys.exit(1)
 
 def main():
-    athens_timezone = pytz.timezone('Europe/Athens')
+    # Define the time zone for Greece
+    greece_timezone = pytz.timezone('Europe/Athens')
     # Process command-line arguments
     data = process_arguments()
     # unpack data
     requestBody = data["requestBody"]
     appointments = data["shopAppointments"]
-    #print(requestBody)
-    #print(appointments)
     # Case 1 : 0 appointments
-    # Your scheduling algorithm logic here
     intervals = []# array of intervals
     mul=parse_duration(requestBody['duration'])# timedelta object
     if(len(appointments)==0):
@@ -55,37 +53,41 @@ def main():
             i+=1
             intervals.append(start_time)
             start_time+=mul
-    else:
-        # find someplace to fit...
+    else:# find someplace to fit...
+    # Case 2 : has appointments
         timeFormat = '%Y-%m-%dT%H:%M:%S.%fZ'
-        # 1. get employee working hours
+        # 2.1 get employee working hours
         workingHours = requestBody['workinghours']# working hours
         start_time = datetime.combine(
                         datetime.strptime(appointments[0]['start_time'], timeFormat).date(),
                         datetime.strptime(workingHours['start_time'], '%H:%M:%S').time()
-                        ).astimezone(athens_timezone)
-        # 1.1 if gap between start_time and first appointment is more than duration , get interval
-        while((start_time+mul).astimezone(athens_timezone).time() < datetime.strptime(appointments[0]['start_time'], timeFormat).astimezone(athens_timezone).time()) and (start_time+mul).astimezone(athens_timezone).time()<datetime.strptime(workingHours['end_time'], '%H:%M:%S').astimezone(athens_timezone).time():
-            intervals.append(start_time.time())
+                        )
+        # 2.2 if gap between start_time and first appointment is more than duration , get interval
+        nextAppointmentSTime = datetime.fromisoformat(appointments[0]['start_time'].rstrip("Z") + "+00:00").astimezone(greece_timezone)
+        while( (start_time+mul).time() < nextAppointmentSTime.time() ):
+            intervals.append(start_time)
             start_time+=mul
-        start_time = datetime.strptime(appointments[0]['end_time'], timeFormat).astimezone(athens_timezone).date()+timedelta(minutes=5)
-        # 2. get appointment gaps
+        # 2.3 Go to appointment end time
+        start_time = (datetime.fromisoformat(appointments[0]['end_time'].rstrip("Z") + "+00:00")+timedelta(minutes=5)).astimezone(greece_timezone)
+        # 2.3 get appointment gaps
         for i in range(len(appointments)) :
-            # 2.1 if next appointment exists
+            # 2.4.1 if next appointment exists
             if(i+1<len(appointments)):
                 # 2.1.1 find the gap between the two appointments
-                gap = datetime.strptime(appointments[i+1]['start_time'], timeFormat).astimezone(athens_timezone)-datetime.strptime(appointments[i]['end_time'], timeFormat).astimezone(athens_timezone)
+                gap =   (datetime.fromisoformat(appointments[i+1]['start_time'].rstrip("Z") + "+00:00")
+                        -datetime.fromisoformat(appointments[i]['end_time'].rstrip("Z") + "+00:00"))
                 # 2.1.2 if gap is less than appointment time interval
-                start_time = datetime.strptime(appointments[i]['end_time'], timeFormat).astimezone(athens_timezone)+timedelta(minutes=2,seconds=30)
-                while((start_time+mul).astimezone(athens_timezone).time()<(start_time+gap).astimezone(athens_timezone).time()) and  (start_time+mul).astimezone(athens_timezone).time()<datetime.strptime(workingHours['end_time'], '%H:%M:%S').astimezone(athens_timezone).time():
+                pstart_time=(datetime.fromisoformat(appointments[i]['end_time'].rstrip("Z") + "+00:00")+timedelta(minutes=2,seconds=30)).astimezone(greece_timezone)
+                start_time=pstart_time
+                endOfWorking = datetime.strptime(workingHours['end_time'], '%H:%M:%S')
+                while((start_time+mul).time()<(pstart_time+gap).time()) and  (start_time+mul).time()<endOfWorking.time():
                     intervals.append(start_time)
                     start_time+=mul# add the gap to the start time
-            # 2.2 if next appointment does not exist go as before
+            # 2.4.1 if next appointment does not exist go as before
             else :
-                start_time = datetime.strptime(appointments[i]['end_time'], timeFormat).astimezone(athens_timezone)
-                print(start_time.time())
-                while((start_time+mul).astimezone(athens_timezone).time() < datetime.strptime(workingHours['end_time'], '%H:%M:%S').time()):
-                    intervals.append(start_time.time())
+                start_time=datetime.fromisoformat(appointments[i]['end_time'].rstrip("Z") + "+00:00").astimezone(greece_timezone)
+                while((start_time+mul).time() < datetime.strptime(workingHours['end_time'], '%H:%M:%S').time()):
+                    intervals.append(start_time)
                     start_time+=mul
                 break
     # Format each time object as a string
