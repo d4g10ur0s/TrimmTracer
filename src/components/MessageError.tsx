@@ -25,6 +25,38 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+export const MessageErrorComponent: React.FC = ({close, title, message }) => {
+
+  return(
+    <View
+      style={styles.messageErrorComponentView}
+    >
+      <Text
+        style={styles.submitionMessageTitle}
+      >{title}</Text>
+      <View
+        style={styles.contentView}
+      >
+        <Text
+          style={styles.messageText}
+        >{message}</Text>
+      </View>
+      <View
+        style={styles.errorButtonView}
+      >
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={close}
+        >
+          <Text>
+            {"Close"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+}
+
 export const MessageError: React.FC = ({close, title, message }) => {
 
   return(
@@ -101,6 +133,13 @@ export const SubmitionMessage: React.FC = ({submit, close, title, message }) => 
 const styles = StyleSheet.create({
   submitionMessageView :{
     marginTop : '45%',
+    backgroundColor : "#2C2A33",
+    width : '75%',
+    alignSelf : 'center',
+    borderRadius : 8,
+  },
+  messageErrorComponentView : {
+    marginVertical : 5,
     backgroundColor : "#2C2A33",
     width : '75%',
     alignSelf : 'center',

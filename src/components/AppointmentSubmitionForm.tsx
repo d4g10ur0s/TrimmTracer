@@ -28,6 +28,8 @@ import {
 import { nanosecondsToString,nanosecondsToHoursMinutesSeconds } from '../utils/ServiceHandling';
 import { getAppointmentTimesForDate } from '../utils/AppointmentHandling'
 
+import {MessageErrorComponent} from '../components/MessageError'
+
 interface AppointmentSubmitionFormProps {
 
 }
@@ -98,15 +100,26 @@ const AppointmentSubmitionForm: React.FC<AppointmentSubmitionFormProps> = ({empl
                                                           )
     renderTimeIntervals(timeIntervals);
   }
+  // close error message
+  close=()=>{setIntervalsChoice(null)}
   // render time intervals
   const renderTimeIntervals = (timeIntervals) => {
-    var intervals = []
-    for(i in timeIntervals.timeIntervals){
-      intervals.push(
-        <AppointmentTimeButtons key={i} timeString={timeIntervals.timeIntervals[i]} timeSelected={timeSelected} />
-      )
+    // if time intervals are empty , then error
+    if(timeIntervals.timeIntervals.length==0){
+      setIntervalsChoice(<MessageErrorComponent
+                          close={close}
+                          title='No Time Slot'
+                          message={'Could not find any time slot for this appointment .'}
+                        />)
+    }else{
+      var intervals = []
+      for(i in timeIntervals.timeIntervals){
+        intervals.push(
+          <AppointmentTimeButtons key={i} timeString={timeIntervals.timeIntervals[i]} timeSelected={timeSelected} />
+        )
+      }
+      setIntervalsChoice(intervals)
     }
-    setIntervalsChoice(intervals)
   }
   // set the time of appointment
   const timeSelected = (aTime) => {
