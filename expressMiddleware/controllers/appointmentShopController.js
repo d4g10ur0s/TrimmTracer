@@ -30,32 +30,53 @@ function formatDuration(dur){
 exports.storeAppointments = async (req, res) => {
   const {appointments} = req.body;
   console.log(req.body);
+  const specificDate = new Date(date);
+  const startTimestamp = specificDate.setHours(0, 0, 0, 0); // Set to start working hours of the day
+  const endTimestamp = specificDate.setHours(23, 59, 59, 999); // Set to the last working hours of the day
   try {
-    for(i in appointments){
-      var tempDuration=formatDuration(appointments[i].dur);
-      console.log(new Date(appointments[i].when))
-      client.execute(
-        'INSERT INTO trimmtracer.appointment (shop_id,when,employee_email,client_email,check_in,check_out,client_cost,client_fullname,client_phone,dur,employee_cost,employee_fullname,employee_phone,end_time,note,service_name,start_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-        [appointments[i].shop_id,
-        appointments[i].when ,
-        appointments[i].employee_email,
-        appointments[i].client_email,
-        appointments[i].check_in,
-        appointments[i].check_out,
-        appointments[i].client_cost,
-        appointments[i].client_fullname,
-        appointments[i].client_phone,
-        tempDuration,
-        appointments[i].employee_cost,
-        appointments[i].employee_fullname,
-        appointments[i].employee_phone,
-        appointments[i].end_time,
-        appointments[i].note ,
-        appointments[i].service_name,
-        appointments[i].start_time ,], { prepare: true }
-      );
-    }// store every service for appointment
-    res.status(201).json({ message: 'Appointments stored successfully' });
+    const appointmentExist = await client.execute(
+      'SELECT employee_email FROM appointment WHERE shop_id=? AND when>=? AND when<=? AND employee_email=? ALLOW FILTERING',
+      [
+        appointments[0].shop_id,
+        appointments[0].start_time,
+        appointments[appointments.length - 1].end_time,
+        appointments[0].employee_email,
+      ],
+      { prepare: true }
+    );
+    // check for other appointments
+    if(appointmentExist.rows.length>0){
+      for(i in appointmentExist.rows){
+        if(appointments[0].start_time<appointmentExist.rows[i].end_time || appointments[appointments.length - 1].end_time>appointmentExist.rows[i].start_time){
+          res.status(500).json({ error: 'There is another appointment .' });
+        }
+      }
+    }else{
+      for(i in appointments){
+        var tempDuration=formatDuration(appointments[i].dur);
+        client.execute(
+          'INSERT INTO trimmtracer.appointment (shop_id,when,employee_email,client_email,check_in,check_out,client_cost,client_fullname,client_phone,dur,employee_cost,employee_fullname,employee_phone,end_time,note,service_name,start_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+          [appointments[i].shop_id,
+          appointments[i].when ,
+          appointments[i].employee_email,
+          appointments[i].client_email,
+          appointments[i].check_in,
+          appointments[i].check_out,
+          appointments[i].client_cost,
+          appointments[i].client_fullname,
+          appointments[i].client_phone,
+          tempDuration,
+          appointments[i].employee_cost,
+          appointments[i].employee_fullname,
+          appointments[i].employee_phone,
+          appointments[i].end_time,
+          appointments[i].note ,
+          appointments[i].service_name,
+          appointments[i].start_time ,], { prepare: true }
+        );
+      }// store every service for appointment
+      res.status(201).json({ message: 'Appointments stored successfully' });
+    }
   } catch (err) {
     console.error('Error during storing:', err);
     res.status(500).json({ error: 'Error during storing' });
