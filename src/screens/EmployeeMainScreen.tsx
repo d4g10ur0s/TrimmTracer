@@ -39,7 +39,7 @@ const EmployeeMainScreen: React.FC = () => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor : "#2C2A33",}}>
       <View
         style={styles.container}
       >

@@ -244,6 +244,8 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     width: '95%',
     marginVertical : 3,
+    alignItems : 'center',
+    justifyContent : 'center',
   },
   container : {
     flexDirection : 'column',

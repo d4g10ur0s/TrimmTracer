@@ -189,26 +189,12 @@ const styles = StyleSheet.create({
     marginRight : 15,
   },
   submitButton : {
-    backgroundColor : "#349CCFFF",
+    backgroundColor : '#574C9EAA',
     borderRadius : 8,
     padding : 5,
   },
   typeOfUserView : {
     flexDirection : 'row',
-  },
-  typeButton : {
-    backgroundColor : '#574C9EAA',
-    borderRadius : 8,
-    marginVertical : 8,
-    marginHorizontal : 15,
-    padding : 5,
-  },
-  typeButtonDisabled:{
-    backgroundColor : '#574C9E77',
-    borderRadius : 8,
-    marginVertical : 8,
-    marginHorizontal : 15,
-    padding : 5,
   },
   modificationContainer: {
     backgroundColor : '#495866',
