@@ -66,7 +66,7 @@ const LogInForm: React.FC<LogInFormProps> = ({ onSubmit, changeForm }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor : "#6465A1AA",
+    backgroundColor : '#495866',
     justifyContent: 'center',
     alignItems: 'center',
     width: '80%',

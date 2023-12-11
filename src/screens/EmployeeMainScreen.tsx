@@ -8,6 +8,7 @@ import DayContainer from '../components/DayContainer';
 import ShopContainer from '../components/ShopContainer';
 import ShopClientsContainer from '../components/ShopClientsContainer';
 import EmployeeAppMenu from '../components/EmployeeAppMenu';
+import {Options} from '../components/Options'
 import { login } from '../utils/EnterApp';
 
 const EmployeeMainScreen: React.FC = () => {
@@ -35,7 +36,14 @@ const EmployeeMainScreen: React.FC = () => {
               />);
   }
   const toggleOptions = () => {
-    setContent(null);
+    setContent(<Options
+                employee={employee}
+                logOut={logOut}
+               />);
+  }
+
+  const logOut = () =>{
+    navigation.navigate('Register');
   }
 
   return (
