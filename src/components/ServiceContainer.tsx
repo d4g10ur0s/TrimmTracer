@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useCallback , useMemo } from 'react';
 
 import type {PropsWithChildren} from 'react';
@@ -30,6 +30,7 @@ import { checkForAppointmentsService } from '../utils/AppointmentHandling';
 
 import EmployeeSelection from '../components/EmployeeSelection';
 import {ServiceForm} from '../components/ServiceForm';
+import ServiceStatisticsContainer from '../components/ServiceStatisticsContainer'
 
 interface ServiceContainerProps {
   service : {};
@@ -115,7 +116,15 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
     }else{Alert.alert('Service has appointments .');}
     await setMService((prevState) => !prevState)
   }
-
+  // for service statistics
+  const [serviceStatistics , setServiceStatistics] = useState(null)
+  const showServiceStatistics = async () => {
+    if(serviceStatistics==null){
+      setServiceStatistics(<ServiceStatisticsContainer service={serviceInfo} />)
+    }
+    else{setServiceStatistics(null)}
+  }
+  
   return(
     <View
       style={styles.outsideContainer}
@@ -164,6 +173,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
       >
         <TouchableOpacity
           style={styles.controlButtons}
+          onPress={showServiceStatistics}
         >
           <Text>
             {"Show Service Statistics"}
@@ -230,6 +240,7 @@ const ServiceContainer: React.FC<ServiceContainerProps> = ({service,canDelete,re
         (<ServiceForm onSubmit={serviceModification} service={service} />) :
         (null)
       }
+    {serviceStatistics}
     </View>
   )
 }

@@ -194,3 +194,13 @@ exports.deleteShopService = async (req, res) => {
 
   res.json({message: 'Data deleted successfully'});
 };
+// service statistics
+exports.getServiceStatistics = async (req, res) => {
+  const { shop_id,when_0,when_1,serviceName } = req.body;
+  console.log(req.body);
+  const serviceUse = await client.execute(
+    'select when from appointment where shop_id=? and when>=? and when<=? and service_name=? ALLOW FILTERING',
+    [shop_id,when_0,when_1,serviceName]
+  );
+  res.json({serviceUse});
+};
