@@ -30,9 +30,7 @@ function formatDuration(dur){
 exports.storeAppointments = async (req, res) => {
   const {appointments} = req.body;
   console.log(req.body);
-  const specificDate = new Date(date);
-  const startTimestamp = specificDate.setHours(0, 0, 0, 0); // Set to start working hours of the day
-  const endTimestamp = specificDate.setHours(23, 59, 59, 999); // Set to the last working hours of the day
+
   try {
     const appointmentExist = await client.execute(
       'SELECT employee_email FROM appointment WHERE shop_id=? AND when>=? AND when<=? AND employee_email=? ALLOW FILTERING',
@@ -47,7 +45,11 @@ exports.storeAppointments = async (req, res) => {
     // check for other appointments
     if(appointmentExist.rows.length>0){
       for(i in appointmentExist.rows){
-        if(appointments[0].start_time<appointmentExist.rows[i].end_time || appointments[appointments.length - 1].end_time>appointmentExist.rows[i].start_time){
+        if(
+            appointments[0].start_time<appointmentExist.rows[i].end_time
+            ||
+            appointments[appointments.length - 1].end_time>appointmentExist.rows[i].start_time
+        ){
           res.status(500).json({ error: 'There is another appointment .' });
         }
       }

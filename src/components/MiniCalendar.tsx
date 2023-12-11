@@ -53,7 +53,15 @@ const RCalendar: React.FC = ({ shop_id, email, onDateSelect }) => {
         } else if (dayCounter <= daysInMonth) {
           const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCounter);
           week.push(
-            <DayButton key={j} shop_id={shop_id} email={email} date={date} selectDate={dateSelected} dayCounter={dayCounter}/>
+            <DayButton
+              key={j}
+              shop_id={shop_id}
+              email={email}
+              date={date}
+              selectDate={dateSelected}
+              dayCounter={dayCounter}
+              disable={true}
+            />
           );
           dayCounter++;
         } else {

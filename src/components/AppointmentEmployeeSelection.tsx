@@ -25,6 +25,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+// for error
+import {MessageErrorComponent} from '../components/MessageError';
 // for employees
 import {getEmployeeServices} from '../utils/EmployeeHandling';
 // for services
@@ -264,9 +266,10 @@ const AppointmentEmployeeSelection: React.FC<AppointmentEmployeeSelectionProps> 
       await storeAppointment(appointments)
       hide()// before hiding , errors must be checked
     }catch (err) {
+      console.log(err.message)
       setErrorMessage(<MessageErrorComponent
                         close={hideErrorMessage}
-                        title={err}
+                        title={'Error Storing Appointment'}
                         message={err.message}
                       />)
     }

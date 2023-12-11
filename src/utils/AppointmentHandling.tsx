@@ -13,16 +13,14 @@ export const storeAppointment = async (appointments) => {
     });
 
     if (!response.ok) {
-      console.log(response.error)
-      throw new Error('Invalid credentials');
+      const data = await response.json();
+      throw new Error(data.error);
     }
-
     const data = await response.json();
     console.log(data)
     return data;
   } catch (error) {
-    console.error('Error logging in:', error);
-    return error;
+    throw error
   }
 }
 // get appointments for shop
